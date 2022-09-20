@@ -21,7 +21,7 @@ class validate extends moodleform{
 
         $types = array();
         $types['0'] = "Deadline extension";
-        $types['1'] = "Informing fail to attempt";
+        $types['1'] = "Failure to attempt";
         $types['2'] = "Late submission";
 
         $elem_type = $mform->addElement('select','type','Select type',$types);
