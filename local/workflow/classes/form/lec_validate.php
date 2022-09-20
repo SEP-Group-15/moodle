@@ -38,7 +38,7 @@ class lec_validate extends moodleform{
         $validity['1'] = "Reject";
 
         $elem_validty = $mform->addElement('select','validity','Validity',$validity);
-        $mform->setDefault('validty',0);
+        $mform->setDefault('validity',0);
 
         $elem_request->freeze();
         $elem_radio->freeze();
@@ -50,6 +50,8 @@ class lec_validate extends moodleform{
         $elem_lec_comment = $mform->addElement('textarea', 'lec_comment', "Feedback", 'wrap="virtual" rows="5" cols="50"');
         $mform->setDefault('instructor_comment',"Enter feedback regarding request");
 
+        $mform->addElement('date_time_selector','extended_date',"Extend due date to");
+        
         $buttonarray=array();
         $buttonarray[] = $mform->createElement('submit', 'submitbutton', "Approve");
         $buttonarray[] = $mform->createElement('cancel');
