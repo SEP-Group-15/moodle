@@ -6,7 +6,7 @@ use moodleform;
 //moodleform is defined in formslib.php
 require_once("$CFG->libdir/formslib.php");
 
-class lec_validate extends moodleform{
+class approve extends moodleform{
     public function definition() {
 
         $mform = $this->_form; // Don't forget the underscore!
@@ -55,6 +55,13 @@ class lec_validate extends moodleform{
         $buttonarray=array();
         $buttonarray[] = $mform->createElement('submit', 'submitbutton', "Approve");
         $buttonarray[] = $mform->createElement('cancel');
+
+        $validity = array();
+        $validity['0'] = "Approve";
+        $validity['1'] = "Reject";
+
+        $elem_validty = $mform->addElement('select','validity','',$validity);
+        $mform->setDefault('validity',0);
         $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
     }
 

@@ -48,7 +48,7 @@ class validate extends moodleform{
         $mform->setDefault('type',0);
 
         $buttonarray=array();
-        $buttonarray[] = $mform->createElement('submit', 'submitbutton', "Validate");
+        $buttonarray[] = $mform->createElement('submit', 'submitbutton', "Submit");
         $buttonarray[] = $mform->createElement('cancel');
         $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
     }

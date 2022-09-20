@@ -24,19 +24,19 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_workflow\form\lec_validate;
+use local_workflow\form\approve;
 
 require_once(__DIR__ .'/../../config.php'); // setup moodle
 require_login();
 $context = context_system::instance();
 
 global $DB;
-$PAGE->set_url(new moodle_url('/local/workflow/lec_validate.php'));
+$PAGE->set_url(new moodle_url('/local/workflow/approve.php'));
 $PAGE->set_context (\context_system::instance());
 $PAGE->set_title('Validate request');
 $PAGE->set_heading('Student Request');
 
-$mform = new lec_validate();
+$mform = new approve();
 
 echo $OUTPUT->header();
 $mform->display();
