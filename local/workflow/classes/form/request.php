@@ -15,9 +15,9 @@ class request extends moodleform{
         $mform->setDefault('request',"Enter your request");
 
         $radioarray=array();
-        $radioarray[] = $mform->createElement('radio', 'is_batch_rep', '', 'Individual', 0);
-        $radioarray[] = $mform->createElement('radio', 'is_batch_rep', '', 'Batch', 1);
-        $mform->addGroup($radioarray, 'is_batch_rep', 'Batch/ Individual request', array(' '), false);
+        $radioarray[] = $mform->createElement('radio', 'is_batch_req', '', 'Individual', 0);
+        $radioarray[] = $mform->createElement('radio', 'is_batch_req', '', 'Batch', 1);
+        $mform->addGroup($radioarray, 'is_batch_req', 'Batch/ Individual request', array(' '), false);
 
         $types = array();
         $types['0'] = "Deadline extension";
