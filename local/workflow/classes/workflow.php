@@ -28,19 +28,44 @@ use stdClass;
 use dml_exception;
 
 class workflow{
-    public function create(){
+    public function create($name, $courseid, $activityid, $instructorid, $startdate, $enddate, $commentsallowed, $filesallowed){
+        global $DB;
+        $record = new stdClass();
+        $record->courseid = $courseid;
+        $record->activityid = $activityid;
+        $record->instructorid = $instructorid;
+        $record->startdate = $startdate;
+        $record->enddate = $enddate;
+        $record->commentsallowed = $commentsallowed;
+        $record->filesallowed = $filesallowed;
 
+        try{
+            return $DB->insert_record('local_workflow',$record,false);
+        }catch (dml_exception $e){
+            return false;
+        }
     }
 
-    public function remove(string $wofkflowid){
-
+    public function remove(string $workflowid){
+        global $DB;
+        $DB->delete_records_select('local_workflow','workflowid = ?',[$workflowid]);
     }
 
     public function getName(string $workflowid){
+        global $DB;
+        $sql = 'workflowid = :workflowid;';
+        $params=[
+            'workflowid'=>$workflowid,
+        ];
 
+        return $DB->get_field_select('local_workflow','name',$sql,$params);
     }
 
-    public function getType(string $workflowid){
-        
+    public function getWorkflow(string $workflowid){
+        global $DB;
+        return $DB->get_record('local_workflow',
+        [
+            'workflowid'=>$workflowid
+        ]);
     }
 }

@@ -24,24 +24,95 @@
  */
 
 namespace local_workflow;
+
 use stdClass;
 use dml_exception;
 
-class request{
+class request
+{
 
-    public function changeStatus(string $requestid, string $status){
+    public function changeStatus(string $requestid, string $status)
+    {
+        global $DB;
+        $request = new stdClass();
+        $request->requestid = $requestid;
+        $request->status = $status;
 
+        try {
+            return $DB->update_record('local_request', $request);
+        } catch (dml_exception $e) {
+            return false;
+        }
     }
 
-    public function getAllRequests(){
+    public function createRequest(
+        $request,
+        $workflowid,
+        $studentid,
+        $type,
+        $isbatchrequest,
+        $timecreated,
+        $files,
+        $instructorcomment,
+        $lecturercomment
+    ) {
 
+        global $DB;
+        $record = new stdClass();
+        $record->request = $request;
+        $record->workflowid = $workflowid;
+        $record->studentid = $studentid;
+        $record->type = $type;
+        $record->status = 'pending';
+        $record->isbatchrequest = $isbatchrequest;
+        $record->timecreated = $timecreated;
+        $record->files = $files;
+        $record->instructorcomment = $instructorcomment;
+        $record->lecturercomment = $lecturercomment;
+
+        try{
+            return $DB->insert_record('local_request',$record,false);
+        }catch (dml_exception $e){
+            return false;
+        }
+    }
+    public function getAllRequests()
+    {
+        global $DB;
+        try {
+            return $DB->get_records('local_request');
+        } catch (dml_exception $e) {
+            return [];
+        }
     }
 
-    public function filterRequests(string $type){
-
+    public function filterRequests(string $type)
+    {
+        global $DB;
+        return $DB->get_records_select('local_request', 'type = :type', [
+            'type' => $type
+        ]);
     }
 
-    public function getState(){
-        
+    public function getStatus($requestid)
+    {
+        global $DB;
+        $sql = 'requestid = :requestid;';
+        $params = [
+            'requestid' => $requestid,
+        ];
+
+        return $DB->get_field_select('local_request', 'status', $sql, $params);
+    }
+
+    public function getRequest($requestid)
+    {
+        global $DB;
+        return $DB->get_record(
+            'local_request',
+            [
+                'requestid' => $requestid
+            ]
+        );
     }
 }
