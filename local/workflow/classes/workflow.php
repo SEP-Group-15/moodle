@@ -31,6 +31,7 @@ class workflow{
     public function create($name, $courseid, $activityid, $instructorid, $startdate, $enddate, $commentsallowed, $filesallowed){
         global $DB;
         $record = new stdClass();
+        $record->name = $name;
         $record->courseid = $courseid;
         $record->activityid = $activityid;
         $record->instructorid = $instructorid;
@@ -67,5 +68,14 @@ class workflow{
         [
             'workflowid'=>$workflowid
         ]);
+    }
+
+    public function getAllWorkflows(){
+        global $DB;
+        try {
+            return $DB->get_records('local_workflow');
+        } catch (dml_exception $e) {
+            return [];
+        }
     }
 }
