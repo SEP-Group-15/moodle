@@ -34,12 +34,14 @@ class request
     public function changeStatus(string $requestid, string $status)
     {
         global $DB;
-        $request = new stdClass();
-        $request->requestid = $requestid;
-        $request->status = $status;
+        $sql = 'update {local_request} set status = :status where requestid= :requestid';
+        $params = [
+            'status'=>$status,
+            'requestid'=>$requestid,
+        ];
 
-        try {
-            return $DB->update_record('local_request', $request);
+        try{
+            return $DB->execute($sql, $params);
         } catch (dml_exception $e) {
             return false;
         }
