@@ -31,7 +31,7 @@ require_login();
 $context = context_system::instance();
 
 global $DB;
-$PAGE->set_url(new moodle_url('/local/workflow/add.php'));
+$PAGE->set_url(new moodle_url('/local/workflow/addworkflow.php'));
 $PAGE->set_context (\context_system::instance());
 $PAGE->set_title('Create workflow');
 $PAGE->set_heading('Create workflow');
