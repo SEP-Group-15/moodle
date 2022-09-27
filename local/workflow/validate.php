@@ -30,6 +30,8 @@ use local_workflow\request_manager;
 require_once(__DIR__ .'/../../config.php'); // setup moodle
 require_login();
 $context = context_system::instance();
+// require_capability('local/workflow:validaterequests',$context);
+
 
 global $DB;
 $PAGE->set_url(new moodle_url('/local/workflow/validate.php'));

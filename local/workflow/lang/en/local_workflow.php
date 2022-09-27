@@ -23,3 +23,5 @@
  */
 
 $string['pluginname'] = 'Student Requests Workflow';
+$string['workflow:validaterequests'] = 'Validate Requests';
+$string['workflow:approverequests'] = 'Approve requests';
