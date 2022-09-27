@@ -28,9 +28,7 @@ class request extends moodleform{
         $mform->setDefault('type',0);
 
         $mform->addElement('filemanager', 'files', 'File submission', null,
-        array('subdirs' => 0, 'maxbytes' => 50, 'areamaxbytes' => 10485760, 'maxfiles' => 50, 
-        'return_types'=> FILE_INTERNAL | FILE_EXTERNAL));
-
+        array('subdirs' => 1,'maxfiles'=>50,'accepted_types' => '*'));
         $this->add_action_buttons();
     }
 

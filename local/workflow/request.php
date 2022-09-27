@@ -25,6 +25,7 @@
  */
 
 use local_workflow\form\request;
+use local_workflow\request_manager;
 
 require_once(__DIR__ .'/../../config.php'); // setup moodle
 require_login();
@@ -37,6 +38,31 @@ $PAGE->set_title('Submit request');
 $PAGE->set_heading('Student Request');
 
 $mform = new request();
+
+if ($mform->is_cancelled()) {
+    //go back to manage page
+    redirect($CFG->wwwroot.'/local/workflow/request.php','Request is Cancelled');
+} else if ($fromform = $mform->get_data()) {    
+    $types['0'] = "Deadline extension";
+    $types['1'] = "Failure to attempt";
+    $types['2'] = "Late submission";
+    $request_manager = new request_manager();
+    $workflowid = 1;
+    $t = time();
+    $timecreated = date("Y-m-d H:i:s",$t);
+    $request_manager->createRequest(
+        $fromform->request,
+        $workflowid,
+        $USER->id,
+        $types[$fromform->type],
+        $fromform->isbatchrequest,
+        $fromform->files,
+        "",
+        ""
+    );
+    
+    redirect($CFG->wwwroot.'/local/workflow/request.php','Request is submitted');
+}
 
 echo $OUTPUT->header();
 $mform->display();

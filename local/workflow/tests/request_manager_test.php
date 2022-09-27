@@ -23,17 +23,17 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-use local_workflow\request;
+use local_workflow\request_manager;
 
 global $CFG;
 require_once($CFG->dirroot . '/local/workflow/lib.php');
 
-class local_workflow_request_test extends advanced_testcase{
+class local_workflow_request_manager_test extends advanced_testcase{
 
     public function test_createRequest(){
         $this->resetAfterTest();
         $this->setUser(2);
-        $request = new request();
+        $request = new request_manager();
         $requests = $request->getAllRequests();
         $this->assertEmpty($requests);
 
@@ -73,7 +73,7 @@ class local_workflow_request_test extends advanced_testcase{
     public function test_changeStatus(){
         $this->resetAfterTest();
         $this->setUser(2);
-        $request = new request();
+        $request = new request_manager();
         $requests = $request->getAllRequests();
         $this->assertEmpty($requests);
 
@@ -110,7 +110,7 @@ class local_workflow_request_test extends advanced_testcase{
     public function test_filterRequests(){
         $this->resetAfterTest();
         $this->setUser(2);
-        $request = new request();
+        $request = new request_manager();
         $requests = $request->getAllRequests();
         $this->assertEmpty($requests);
 

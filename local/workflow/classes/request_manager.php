@@ -28,7 +28,7 @@ namespace local_workflow;
 use stdClass;
 use dml_exception;
 
-class request
+class request_manager
 {
 
     public function changeStatus(string $requestid, string $status)
@@ -47,6 +47,36 @@ class request
         }
     }
 
+    public function validate(string $requestid,string $status, string $ins_comment=""){
+        global $DB;
+        $this->changeStatus($requestid, $status);
+        $sql = 'update {local_request} set instructorcomment = :ins_comment where requestid= :requestid';
+        $params = [
+            'ins_comment'=>$ins_comment,
+            'requestid'=>$requestid,
+        ];
+        try{
+            return $DB->execute($sql, $params);
+        } catch (dml_exception $e) {
+            return false;
+        }
+    }
+
+    public function approve(string $requestid, string $status, string $lec_comment=""){
+        global $DB;
+        $this->changeStatus($requestid, $status);
+        $sql = 'update {local_request} set lecturercomment = :lec_comment where requestid= :requestid';
+        $params = [
+            'lec_comment'=>$lec_comment,
+            'requestid'=>$requestid,
+        ];
+        try{
+            return $DB->execute($sql, $params);
+        } catch (dml_exception $e) {
+            return false;
+        }
+    }
+
     public function createRequest(
         $request,
         $workflowid,
@@ -55,8 +85,8 @@ class request
         $isbatchrequest,
         $timecreated,
         $files,
-        $instructorcomment,
-        $lecturercomment
+        $instructorcomment = "",
+        $lecturercomment = ""
     ) {
 
         global $DB;
