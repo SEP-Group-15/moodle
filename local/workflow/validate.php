@@ -40,6 +40,7 @@ $PAGE->set_title('Validate request');
 $PAGE->set_heading('Student Request');
 
 $requestid = optional_param('requestid',null,PARAM_INT);
+$edit = optional_param('edit', true, PARAM_BOOL);
 
 $mform = new validate();
 

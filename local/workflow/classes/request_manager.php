@@ -126,6 +126,13 @@ class request_manager
         ]);
     }
 
+    public function getRequestsByStudentId($studentID){
+        global $DB;
+        return $DB->get_records_select('local_request', 'studentid = :studentid', [
+            'studentid' => $studentID
+        ]);
+    }
+
     public function getStatus($requestid)
     {
         global $DB;

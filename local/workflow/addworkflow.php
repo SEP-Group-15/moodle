@@ -25,6 +25,7 @@
  */
 
 use local_workflow\form\addworkflow;
+use local_workflow\workflow;
 
 require_once(__DIR__ .'/../../config.php'); // setup moodle
 require_login();
@@ -37,6 +38,31 @@ $PAGE->set_title('Create workflow');
 $PAGE->set_heading('Create workflow');
 
 $mform = new addworkflow();
+
+if ($mform->is_cancelled()) {
+    //go back to manage page
+    redirect($CFG->wwwroot.'/local/workflow/request.php','Workflow creation is cancelled');
+} else if ($fromform = $mform->get_data()) {    
+    $types['0'] = "Deadline extension";
+    $types['1'] = "Failure to attempt";
+    $types['2'] = "Late submission";
+    $request_manager = new workflow();
+    $workflowid = 1;
+    $t = time();
+    $timecreated = date("Y-m-d H:i:s",$t);
+    $request_manager->create(
+        $fromform->name,
+        "100",
+        '100',
+        '200',
+        $fromform->startdate,
+        $fromform->enddate,
+        $fromform->commentsallowed,
+        $fromform->filesallowed
+    );
+    
+    redirect($CFG->wwwroot.'/local/workflow/addworkflow.php','Workflow is created');
+}
 
 echo $OUTPUT->header();
 $mform->display();

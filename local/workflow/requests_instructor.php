@@ -23,6 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_workflow\request_manager;
 
 require_once(__DIR__ . '/../../config.php'); // setup moodle
 require_login();
@@ -34,11 +35,17 @@ $PAGE->set_context(\context_system::instance());
 $PAGE->set_title('Student Requests');
 $PAGE->set_heading('Assignment 1 - Student Requests');
 
-$templatecontext = (object)[
-    'text' => 'text'
-];
+$request_manager = new request_manager();
 
 echo $OUTPUT->header();
+
+$requests = $request_manager->getAllRequests();
+
+$templatecontext = (object)[
+    'requests'=>array_values($requests),
+    'text' => 'text',
+    'url' => $CFG->wwwroot.'/local/workflow/validate.php?requestid=',
+];
 
 echo $OUTPUT->render_from_template('local_workflow/requests_instructor', $templatecontext);
 

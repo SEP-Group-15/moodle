@@ -25,6 +25,8 @@
 
 
 require_once(__DIR__ . '/../../config.php'); // setup moodle
+use local_workflow\request_manager;
+
 require_login();
 $context = context_system::instance();
 
@@ -34,8 +36,13 @@ $PAGE->set_context(\context_system::instance());
 $PAGE->set_title('Student Requests');
 $PAGE->set_heading('Assignment 1 - Student Requests');
 
+$request_manager = new request_manager();
+$requests = $request_manager->getRequestsByStudentId($USER->id);
+
 $templatecontext = (object)[
-    'text' => 'text'
+    'requests'=>array_values($requests),
+    'text' => 'text',
+    'url' => $CFG->wwwroot.'/local/workflow/validate.php?requestid=',
 ];
 
 echo $OUTPUT->header();
