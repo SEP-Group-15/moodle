@@ -1,0 +1,150 @@
+<?php
+
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Version details
+ *
+ * @package    mod_workflow
+ * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+namespace mod_workflow;
+
+use stdClass;
+use dml_exception;
+
+class request_manager
+{
+
+    public function changeStatus(string $requestid, string $status)
+    {
+        global $DB;
+        $sql = 'update {request} set status = :status where requestid= :requestid';
+        $params = [
+            'status'=>$status,
+            'requestid'=>$requestid,
+        ];
+
+        try{
+            return $DB->execute($sql, $params);
+        } catch (dml_exception $e) {
+            return false;
+        }
+    }
+
+    public function validate(string $requestid,string $status, string $ins_comment=""){
+        global $DB;
+        $this->changeStatus($requestid, $status);
+        $sql = 'update {request} set instructorcomment = :ins_comment where requestid= :requestid';
+        $params = [
+            'ins_comment'=>$ins_comment,
+            'requestid'=>$requestid,
+        ];
+        try{
+            return $DB->execute($sql, $params);
+        } catch (dml_exception $e) {
+            return false;
+        }
+    }
+
+    public function approve(string $requestid, string $status, string $lec_comment=""){
+        global $DB;
+        $this->changeStatus($requestid, $status);
+        $sql = 'update {request} set lecturercomment = :lec_comment where requestid= :requestid';
+        $params = [
+            'lec_comment'=>$lec_comment,
+            'requestid'=>$requestid,
+        ];
+        try{
+            return $DB->execute($sql, $params);
+        } catch (dml_exception $e) {
+            return false;
+        }
+    }
+
+    public function createRequest(
+        $request,
+        $workflowid,
+        $studentid,
+        $type,
+        $isbatchrequest,
+        $timecreated,
+        $files,
+        $instructorcomment = "",
+        $lecturercomment = ""
+    ) {
+
+        global $DB;
+        $record = new stdClass();
+        $record->request = $request;
+        $record->workflowid = $workflowid;
+        $record->studentid = $studentid;
+        $record->type = $type;
+        $record->status = 'pending';
+        $record->isbatchrequest = $isbatchrequest;
+        $record->timecreated = $timecreated;
+        $record->files = $files;
+        $record->instructorcomment = $instructorcomment;
+        $record->lecturercomment = $lecturercomment;
+
+        try{
+            return $DB->insert_record('request',$record,false);
+        }catch (dml_exception $e){
+            return false;
+        }
+    }
+    public function getAllRequests()
+    {
+        global $DB;
+        try {
+            return $DB->get_records('request');
+        } catch (dml_exception $e) {
+            return [];
+        }
+    }
+
+    public function filterRequests(string $type)
+    {
+        global $DB;
+        return $DB->get_records_select('request', 'type = :type', [
+            'type' => $type
+        ]);
+    }
+
+    public function getStatus($requestid)
+    {
+        global $DB;
+        $sql = 'requestid = :requestid;';
+        $params = [
+            'requestid' => $requestid,
+        ];
+
+        return $DB->get_field_select('request', 'status', $sql, $params);
+    }
+
+    public function getRequest($requestid)
+    {
+        global $DB;
+        return $DB->get_record(
+            'request',
+            [
+                'requestid' => $requestid
+            ]
+        );
+    }
+}
