@@ -32,7 +32,7 @@ class validate extends moodleform{
 
         $elem_file = $mform->addElement('filemanager', 'files', 'File submission', null,
         array('subdirs' => 0, 'maxbytes' => 50, 'areamaxbytes' => 10485760, 'maxfiles' => 50, 
-        'return_types'=> FILE_INTERNAL | FILE_EXTERNAL));
+        'return_types'=> 'FILE_INTERNAL' | 'FILE_EXTERNAL'));
 
         $elem_request->freeze();
         $elem_radio->freeze();

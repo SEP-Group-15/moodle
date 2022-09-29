@@ -9,7 +9,7 @@ $capabilities = [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
-            'lecturer' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
         ],
     ],
     
@@ -18,7 +18,7 @@ $capabilities = [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
-            'instructor' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW,
         ],
     ],    
 ];
