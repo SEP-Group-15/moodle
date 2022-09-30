@@ -24,7 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/course/moodleform_mod.php');
+require_once($CFG->dirroot . '/course/moodleform_mod.php');
+require_once($CFG->dirroot . '/mod/workflow/lib.php');
 
 /**
  * Module instance settings form.
@@ -33,40 +34,47 @@ require_once($CFG->dirroot.'/course/moodleform_mod.php');
  * @copyright   2022 SEP15
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mod_workflow_mod_form extends moodleform_mod {
+class mod_workflow_mod_form extends moodleform_mod
+{
 
     /**
      * Defines forms elements
      */
-    public function definition() {
+    public function definition()
+    {
         $mform = $this->_form;
 
         $mform->addElement('header', 'generalhdr', "General");
         $mform->setExpanded('generalhdr');
 
         $mform->addElement('text', 'name', "Workflow");
-        $mform->setDefault('request',"Enter workflow name");
+        $mform->setDefault('name', "");
+        $mform->setType('name', PARAM_TEXT);
 
         $types = array();
-        $types['0'] = "Activity 1";
-        $types['1'] =  "Activity 2";
-        $types['2'] =  "Activity 3";
+        $types['0'] = 1;
+        $types['1'] = 2;
+        $types['2'] = 3;
 
-        $mform->addElement('select','activity','Activity',$types);
-        $mform->setDefault('activity',0);
+        $mform->addElement('select', 'activityid', 'Activity', $types);
+        $mform->setDefault('activityid', 0);
+        // $mform->setType('request', PARAM_INT);
 
         $types = array();
-        $types['0'] = "Instructor 1";
-        $types['1'] =  "Instructor 2";
-        $types['2'] =  "Instructor 3";
+        $types['0'] = 1;
+        $types['1'] = 2;
+        $types['2'] = 3;
 
-        $mform->addElement('select','instructor','Instructor',$types);
-        $mform->setDefault('instructor',0);
+        $mform->addElement('select', 'instructorid', 'Instructor', $types);
+        $mform->setDefault('instructorid', 0);
+        // $mform->setType('request', PARAM_INT);
+
 
         $mform->addElement('header', 'availabilityhdr', "Availability");
         $mform->setExpanded('availabilityhdr');
 
         $mform->addElement('date_time_selector', 'startdate', "Start date", array('optional' => true));
+        // $mform->setType('request', PARAM_INT);
 
         if (!empty($CFG->enablecourserelativedates)) {
             $attributes = [
@@ -77,14 +85,23 @@ class mod_workflow_mod_form extends moodleform_mod {
                 1 => get_string('yes'),
             ];
             $relativedatesmodegroup = [];
-            $relativedatesmodegroup[] = $mform->createElement('select', 'start_relativedatesmode', get_string('relativedatesmode'),
-                $relativeoptions, $attributes);
-            $relativedatesmodegroup[] = $mform->createElement('html', html_writer::span(get_string('relativedatesmode_warning'),
-                '', ['id' => 'relativedatesmode_warning']));
+            $relativedatesmodegroup[] = $mform->createElement(
+                'select',
+                'start_relativedatesmode',
+                get_string('relativedatesmode'),
+                $relativeoptions,
+                $attributes
+            );
+            $relativedatesmodegroup[] = $mform->createElement('html', html_writer::span(
+                get_string('relativedatesmode_warning'),
+                '',
+                ['id' => 'relativedatesmode_warning']
+            ));
             $mform->addGroup($relativedatesmodegroup, 'relativedatesmodegroup', get_string('relativedatesmode'), null, false);
         }
 
         $mform->addElement('date_time_selector', 'enddate', "Due date", array('optional' => true));
+        // $mform->setType('request', PARAM_INT);
 
         if (!empty($CFG->enablecourserelativedates)) {
             $attributes = [
@@ -95,20 +112,36 @@ class mod_workflow_mod_form extends moodleform_mod {
                 1 => get_string('yes'),
             ];
             $relativedatesmodegroup = [];
-            $relativedatesmodegroup[] = $mform->createElement('select', 'end_relativedatesmode', get_string('relativedatesmode'),
-                $relativeoptions, $attributes);
-            $relativedatesmodegroup[] = $mform->createElement('html', html_writer::span(get_string('relativedatesmode_warning'),
-                '', ['id' => 'relativedatesmode_warning']));
+            $relativedatesmodegroup[] = $mform->createElement(
+                'select',
+                'end_relativedatesmode',
+                get_string('relativedatesmode'),
+                $relativeoptions,
+                $attributes
+            );
+            $relativedatesmodegroup[] = $mform->createElement('html', html_writer::span(
+                get_string('relativedatesmode_warning'),
+                '',
+                ['id' => 'relativedatesmode_warning']
+            ));
             $mform->addGroup($relativedatesmodegroup, 'relativedatesmodegroup', get_string('relativedatesmode'), null, false);
         }
 
         $mform->addElement('header', 'optionshdr', "Options");
         $mform->setExpanded('optionshdr');
 
-        $mform->addElement('advcheckbox', 'commentsallowed', "Comments",
-            "Allow");
-        $mform->addElement('advcheckbox', 'filesallowed', "File submission",
-        "Allow");
+        $mform->addElement(
+            'advcheckbox',
+            'commentsallowed',
+            "Comments",
+            "Allow"
+        );
+        $mform->addElement(
+            'advcheckbox',
+            'filesallowed',
+            "File submission",
+            "Allow"
+        );
 
         // Add standard elements.
         $this->standard_coursemodule_elements();

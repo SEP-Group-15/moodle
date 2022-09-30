@@ -23,6 +23,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
+
 use mod_workflow\workflow;
 
 /**
@@ -31,7 +32,8 @@ use mod_workflow\workflow;
  * @param string $feature Constant representing the feature.
  * @return true | null True if the feature is supported, null otherwise.
  */
-function workflow_supports($feature) {
+function workflow_supports($feature)
+{
     switch ($feature) {
         case FEATURE_MOD_INTRO:
             return true;
@@ -51,23 +53,28 @@ function workflow_supports($feature) {
  * @param mod_workflow_mod_form $mform The form.
  * @return int The id of the newly inserted record.
  */
-function workflow_add_instance($moduleinstance, $mform = null) {
-    $workflow = new workflow();
+function workflow_add_instance($workflow, $mform = null)
+{
+    // $workflow = new workflow();
+    global $DB;
 
-    $moduleinstance->timecreated = time();
-    
-    $id = $workflow->create(
-        $moduleinstance->name,
-        $moduleinstance->course,
-        'A_011',
-        'I_011',
-        $moduleinstance->startdate,
-        $moduleinstance->enddate,
-        $moduleinstance->commentsallowed,
-        $moduleinstance->filesallowed,
-    );
+    $workflow->timecreated = time();
 
-    return $id;
+    // $workflow->name;
+    // $workflow->course;
+    // // 'A_011',
+    // // 'I_011';
+    // $workflow->startdate;
+    // $workflow->enddate;
+    // $workflow->commentsallowed;
+    // $workflow->filesallowed;
+
+    $workflow->courseid = '2';
+    $workflow->instructorid = '2';
+
+    $workflow->id = $DB->insert_record('workflow', $workflow);
+
+    return $workflow->id;
 }
 
 /**
@@ -80,10 +87,11 @@ function workflow_add_instance($moduleinstance, $mform = null) {
  * @param mod_workflow_mod_form $mform The form.
  * @return bool True if successful, false otherwise.
  */
-function workflow_update_instance($moduleinstance, $mform = null) {
+function workflow_update_instance($moduleinstance, $mform = null)
+{
     global $DB;
 
-    $moduleinstance->timemodified = time();
+    // $moduleinstance->timemodified = time();
     $moduleinstance->id = $moduleinstance->instance;
 
     return $DB->update_record('workflow', $moduleinstance);
@@ -95,7 +103,8 @@ function workflow_update_instance($moduleinstance, $mform = null) {
  * @param int $id Id of the module instance.
  * @return bool True if successful, false on failure.
  */
-function workflow_delete_instance($id) {
+function workflow_delete_instance($id)
+{
     global $DB;
 
     $exists = $DB->get_record('workflow', array('id' => $id));
