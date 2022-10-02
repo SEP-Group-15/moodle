@@ -24,11 +24,14 @@
  */
 
 namespace mod_workflow;
+
 use stdClass;
 use dml_exception;
 
-class workflow{
-    public function create($name, $courseid, $activityid, $instructorid, $startdate, $enddate, $commentsallowed, $filesallowed){
+class workflow
+{
+    public function create($name, $courseid, $activityid, $instructorid, $startdate, $enddate, $commentsallowed, $filesallowed)
+    {
         global $DB;
         $record = new stdClass();
         $record->name = $name;
@@ -40,37 +43,43 @@ class workflow{
         $record->commentsallowed = $commentsallowed;
         $record->filesallowed = $filesallowed;
 
-        try{
-            return $DB->insert_record('workflow',$record,false);
-        }catch (dml_exception $e){
+        try {
+            return $DB->insert_record('workflow', $record, false);
+        } catch (dml_exception $e) {
             return false;
         }
     }
 
-    public function remove(string $workflowid){
+    public function remove(string $id)
+    {
         global $DB;
-        $DB->delete_records_select('workflow','workflowid = ?',[$workflowid]);
+        $DB->delete_records_select('workflow', 'id = ?', [$id]);
     }
 
-    public function getName(string $workflowid){
+    public function getName(string $id)
+    {
         global $DB;
-        $sql = 'workflowid = :workflowid;';
-        $params=[
-            'workflowid'=>$workflowid,
+        $sql = 'id = :id;';
+        $params = [
+            'id' => $id,
         ];
 
-        return $DB->get_field_select('workflow','name',$sql,$params);
+        return $DB->get_field_select('workflow', 'name', $sql, $params);
     }
 
-    public function getWorkflow(string $workflowid){
+    public function getWorkflow(string $id)
+    {
         global $DB;
-        return $DB->get_record('workflow',
-        [
-            'workflowid'=>$workflowid
-        ]);
+        return $DB->get_record(
+            'workflow',
+            [
+                'id' => $id
+            ]
+        );
     }
 
-    public function getAllWorkflows(){
+    public function getAllWorkflows()
+    {
         global $DB;
         try {
             return $DB->get_records('workflow');

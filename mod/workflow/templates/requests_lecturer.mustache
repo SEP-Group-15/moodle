@@ -1,0 +1,214 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_workflow/requests_lecturer
+
+    This template renders the search form within forums.
+
+    Example context (json):
+    {
+
+    }
+}}
+
+
+
+
+<div
+  id="core_user-participantsfilter-{{ uniqid }}"
+  class="filter-group my-2 p-2 bg-light border-radius border"
+  data-table-region="{{ tableregionid }}"
+  data-table-course-id="{{ courseid }}"
+  data-filterverb="1"
+>
+  <div data-filterregion="filtermatch" class="hidden">
+    <label
+      for="core_user-local-participantsfilter-jointype-{{ uniqid }}"
+      class="my-0"
+      aria-hidden="true"
+    >
+      {{#str}}match, core_user{{/str}}
+    </label>
+    <select
+      class="custom-select"
+      data-filterfield="join"
+      id="core_user-local-participantsfilter-jointype-{{ uniqid }}"
+      aria-label="{{#str}}filtersetmatchdescription, core_user{{/str}}"
+    >
+      <option value="0">{{#str}}none{{/str}}</option>
+      <option selected="selected" value="1">{{#str}}any{{/str}}</option>
+      <option value="2">{{#str}}all{{/str}}</option>
+    </select>
+    <span aria-hidden="true"
+      >{{#str}}matchofthefollowing, core_user{{/str}}</span
+    >
+  </div>
+
+  <div data-filterregion="filters">
+    {{> core_user/local/participantsfilter/filterrow }}
+  </div>
+
+  <div class="d-flex" data-filterregion="actions">
+    &nbsp;
+    <button
+      type="button"
+      class="btn btn-link text-reset"
+      data-filteraction="add"
+    >
+      <i class="fa fa-plus"></i
+      ><span class="pl-3">{{#str}}addcondition, core_user{{/str}}</span>
+    </button>
+    <button
+      data-filteraction="reset"
+      type="button"
+      class="btn btn-secondary ml-auto mr-2"
+    >
+      {{#str}}clearfilters, core_user{{/str}}
+    </button>
+    <button data-filteraction="apply" type="button" class="btn btn-primary">
+      {{#str}}applyfilters, core_user{{/str}}
+    </button>
+  </div>
+
+  {{> core_user/local/participantsfilter/filtertypes}}
+</div>
+
+<div>
+<table class="table discussion-list">
+    <thead>
+        <tr>
+            <th scope="col" class="p-l-0">
+                
+            </th>
+            <th scope="col" class="p-l-0">
+                <a href="" aria-label="">Request</a>
+            </th>
+            <th scope="col" class="p-l-0">
+                <a href="" aria-label="">Type</a>
+            </th>
+            <th scope="col" class="p-l-0">
+                <a href="" aria-label="">Student</a>
+            </th>
+            <th scope="col" class="p-l-0">
+                <a href="" aria-label="">Individual/Batch</a>
+            </th>
+            <th scope="col" class="p-l-0">
+                <a href="" aria-label="">Status</a>
+            </th>
+            <th scope="col" class="p-l-0">
+                <a href="" aria-label="">Time Created</a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="p-0 align-middle fit-content">
+                <input type="checkbox" id="{{id}}" name="request" value="selected">
+            </td>
+            <th scope="row" class="topic p-0 align-middle">
+                <div class="p-3 p-l-0">
+                    <a class="w-100 h-100 d-block" href="{{discussion.urls.view}}" title="Request 1" aria-label="Request 1">
+                        Request 1
+                    </a>
+                </div>
+            </th>
+            <td class="p-0 align-middle fit-content">
+                Deadline Extension
+            </td>
+            <td class="p-0 align-middle fit-content">
+                Student 1
+            </td>
+            <td class="p-0 align-middle fit-content">
+                Individual
+            </td>
+            <td class="p-0 align-middle fit-content">
+                New
+            </td>
+            <td class="p-0 align-middle fit-content">
+                22 Sep 2022
+            </td>
+        </tr>
+
+        <tr>
+            <td class="p-0 align-middle fit-content">
+                <input type="checkbox" id="{{id}}" name="request" value="selected">
+            </td>
+            <th scope="row" class="topic p-0 align-middle">
+                <div class="p-3 p-l-0">
+                    <a class="w-100 h-100 d-block" href="{{discussion.urls.view}}" title="Request 1" aria-label="Request 1">
+                        Request 2
+                    </a>
+                </div>
+            </th>
+            <td class="p-0 align-middle fit-content">
+                Deadline Extension
+            </td>
+            <td class="p-0 align-middle fit-content">
+                Student 2
+            </td>
+            <td class="p-0 align-middle fit-content">
+                Batch
+            </td>
+            <td class="p-0 align-middle fit-content">
+                New
+            </td>
+            <td class="p-0 align-middle fit-content">
+                22 Sep 2022
+            </td>
+        </tr>
+
+        <tr>
+            <td class="p-0 align-middle fit-content">
+                <input type="checkbox" id="{{id}}" name="request" value="selected">
+            </td>        
+            <th scope="row" class="topic p-0 align-middle">
+                <div class="p-3 p-l-0">
+                    <a class="w-100 h-100 d-block" href="{{discussion.urls.view}}" title="Request 1" aria-label="Request 1">
+                        Request 3
+                    </a>
+                </div>
+            </th>
+            <td class="p-0 align-middle fit-content">
+                Deadline Extension
+            </td>
+            <td class="p-0 align-middle fit-content">
+                Student 3
+            </td>
+            <td class="p-0 align-middle fit-content">
+                Individual
+            </td>
+            <td class="p-0 align-middle fit-content">
+                New
+            </td>
+            <td class="p-0 align-middle fit-content">
+                22 Sep 2022
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div>
+    <button type="button" class="btn btn-primary">
+      Approve
+    </button>
+        <button type="button" class="btn btn-secondary">
+      Reject
+    </button>
+        <button type="button" class="btn btn-secondary">
+      Cancel
+    </button>
+<div>
+<div>

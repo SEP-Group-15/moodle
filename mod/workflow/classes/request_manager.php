@@ -31,46 +31,48 @@ use dml_exception;
 class request_manager
 {
 
-    public function changeStatus(string $requestid, string $status)
+    public function changeStatus(string $id, string $status)
     {
         global $DB;
-        $sql = 'update {request} set status = :status where requestid= :requestid';
+        $sql = 'update {request} set status = :status where id= :id';
         $params = [
-            'status'=>$status,
-            'requestid'=>$requestid,
+            'status' => $status,
+            'id' => $id,
         ];
 
-        try{
+        try {
             return $DB->execute($sql, $params);
         } catch (dml_exception $e) {
             return false;
         }
     }
 
-    public function validate(string $requestid,string $status, string $ins_comment=""){
+    public function validate(string $id, string $status, string $ins_comment = "")
+    {
         global $DB;
-        $this->changeStatus($requestid, $status);
-        $sql = 'update {request} set instructorcomment = :ins_comment where requestid= :requestid';
+        $this->changeStatus($id, $status);
+        $sql = 'update {request} set instructorcomment = :ins_comment where id= :id';
         $params = [
-            'ins_comment'=>$ins_comment,
-            'requestid'=>$requestid,
+            'ins_comment' => $ins_comment,
+            'id' => $id,
         ];
-        try{
+        try {
             return $DB->execute($sql, $params);
         } catch (dml_exception $e) {
             return false;
         }
     }
 
-    public function approve(string $requestid, string $status, string $lec_comment=""){
+    public function approve(string $id, string $status, string $lec_comment = "")
+    {
         global $DB;
-        $this->changeStatus($requestid, $status);
-        $sql = 'update {request} set lecturercomment = :lec_comment where requestid= :requestid';
+        $this->changeStatus($id, $status);
+        $sql = 'update {request} set lecturercomment = :lec_comment where id= :id';
         $params = [
-            'lec_comment'=>$lec_comment,
-            'requestid'=>$requestid,
+            'lec_comment' => $lec_comment,
+            'id' => $id,
         ];
-        try{
+        try {
             return $DB->execute($sql, $params);
         } catch (dml_exception $e) {
             return false;
@@ -102,9 +104,9 @@ class request_manager
         $record->instructorcomment = $instructorcomment;
         $record->lecturercomment = $lecturercomment;
 
-        try{
-            return $DB->insert_record('request',$record,false);
-        }catch (dml_exception $e){
+        try {
+            return $DB->insert_record('request', $record, false);
+        } catch (dml_exception $e) {
             return false;
         }
     }
@@ -126,24 +128,24 @@ class request_manager
         ]);
     }
 
-    public function getStatus($requestid)
+    public function getStatus($id)
     {
         global $DB;
-        $sql = 'requestid = :requestid;';
+        $sql = 'id = :id;';
         $params = [
-            'requestid' => $requestid,
+            'id' => $id,
         ];
 
         return $DB->get_field_select('request', 'status', $sql, $params);
     }
 
-    public function getRequest($requestid)
+    public function getRequest($id)
     {
         global $DB;
         return $DB->get_record(
             'request',
             [
-                'requestid' => $requestid
+                'id' => $id
             ]
         );
     }
