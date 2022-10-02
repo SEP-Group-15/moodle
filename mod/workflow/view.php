@@ -44,15 +44,14 @@ $context = context_module::instance($id);
 // die();
 
 global $DB;
-global $USER;
 
-$sql = 'select shortname from role where id = (select roleid from mdl_role_assignments where contextid = :contextid and userid = :userid);';
+$sql = 'select shortname from role where id = (select roleid from mdl_role_assignments where contextid = :contextid and userid = :userid)';
 $params = [
-    'contextid'=>$context->id,
-    'userid'=>$USER->id,
+    'contextid' => $context->id,
+    'userid' => $USER->id,
 ];
 
-try{
+try {
     $role =  $DB->execute($sql, $params);
 } catch (dml_exception $e) {
     $role = false;
