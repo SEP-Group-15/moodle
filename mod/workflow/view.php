@@ -36,7 +36,7 @@ require_login();
 [$course, $cm] = get_course_and_cm_from_cmid($id, 'workflow');
 // $cm = get_coursemodule_from_id('workflow', $id, $course->id, false, MUST_EXIST);
 $instance = $DB->get_record('workflow', ['id' => $cm->instance], '*', MUST_EXIST);
-$context = context_module::instance($id);
+$context = context_course::instance($course->id);
 
 // echo '<pre>';
 // var_dump($cm->id);
@@ -47,11 +47,11 @@ global $DB;
 
 // $sql = 'select shortname from role where id = (select roleid from mdl_role_assignments where contextid = :contextid and userid = :userid)';
 // $params = [
-    // 'contextid' => $context->id,
-    // 'userid' => $USER->id,
+// 'contextid' => $context->id,
+// 'userid' => $USER->id,
 // ];
 
-$roleid = $DB->get_field_select('role_assignments','roleid', 'contextid = :contextid and userid=:userid', [
+$roleid = $DB->get_field_select('role_assignments', 'roleid', 'contextid = :contextid and userid=:userid', [
     'contextid' => $context->id,
     'userid' => $USER->id,
 ]);
