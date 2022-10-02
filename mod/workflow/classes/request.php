@@ -126,24 +126,32 @@ class request
         ]);
     }
 
-    public function getStatus($id)
+    public function getRequestsByStudentId($studentID)
+    {
+        global $DB;
+        return $DB->get_records_select('request', 'studentid = :studentid', [
+            'studentid' => $studentID
+        ]);
+    }
+
+    public function getStatus($requestid)
     {
         global $DB;
         $sql = 'id = :id;';
         $params = [
-            'id' => $id,
+            'id' => $requestid,
         ];
 
         return $DB->get_field_select('request', 'status', $sql, $params);
     }
 
-    public function getRequest($id)
+    public function getRequest($requestid)
     {
         global $DB;
         return $DB->get_record(
             'request',
             [
-                'id' => $id
+                'id' => $requestid
             ]
         );
     }

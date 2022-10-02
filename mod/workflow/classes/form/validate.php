@@ -35,8 +35,8 @@ class validate extends moodleform
     {
         $mform = $this->_form; // Don't forget the underscore!
 
-        $mform->addElement('hidden', 'requestid');
-        $mform->setType('requestid', PARAM_INT);
+        $mform->addElement('hidden', 'id');
+        $mform->setType('id', PARAM_INT);
 
         $elem_request = $mform->addElement('textarea', 'request', "Request", 'wrap="virtual" rows="5" cols="50"');
         $mform->setDefault('request', "Enter your request");

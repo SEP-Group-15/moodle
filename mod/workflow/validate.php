@@ -31,40 +31,41 @@ $context = context_system::instance();
 // require_capability('local/workflow:validaterequests',$context);
 
 global $DB;
-$PAGE->set_url(new moodle_url('/local/workflow/validate.php'));
+$PAGE->set_url(new moodle_url('/mod/workflow/validate.php'));
 $PAGE->set_context(\context_system::instance());
 $PAGE->set_title('Validate request');
 $PAGE->set_heading('Student Request');
 
-$requestid = optional_param('requestid', null, PARAM_INT);
+$id = optional_param('id', null, PARAM_INT);
 $edit = optional_param('edit', true, PARAM_BOOL);
 
 $mform = new validate();
 
 if ($mform->is_cancelled()) {
     //go back to manage page
-    redirect($CFG->wwwroot . '/local/workflow/validate.php', 'Validation is Cancelled');
+    redirect($CFG->wwwroot . '/mod/workflow/validate.php', 'Validation is Cancelled');
 } else if ($fromform = $mform->get_data()) {
+    var_dump($fromform);
+    die();
     $request_manager = new request();
     $validity['0'] = "valid";
     $validity['1'] = "rejected";
     $request_manager->validate(
-        $fromform->requestid,
+        $fromform->id,
         $validity[$fromform->validity],
         $fromform->instructor_comment,
     );
-
-    redirect($CFG->wwwroot . '/local/workflow/validate.php', 'Request is validated');
+    redirect($CFG->wwwroot . '/mod/course', 'Request is validated');
 }
 
-if ($requestid) {
+if ($id) {
     $types = [
         "Deadline extension" => '0',
         "Failure to attempt" => '1',
         "Late submission" => '2',
     ];
     $request_manager = new request();
-    $request = $request_manager->getRequest($requestid);
+    $request = $request_manager->getRequest($id);
     $request->type = $types[$request->type];
     if (!$request) {
         die("Request");

@@ -27,6 +27,8 @@
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/course/format/lib.php');
 
+use mod_workflow\request;
+
 global $USER;
 
 $id = required_param('id', PARAM_INT);
@@ -40,46 +42,51 @@ $context = context_course::instance($course->id);
 
 global $DB;
 
-
 $roleid = $DB->get_field_select('role_assignments', 'roleid', 'contextid = :contextid and userid=:userid', [
     'contextid' => $context->id,
     'userid' => $USER->id,
 ]);
 
-$role = $DB->get_field_select('role','shortname','id=:id',[
-    'id'=>$roleid
+$role = $DB->get_field_select('role', 'shortname', 'id=:id', [
+    'id' => $roleid
 ]);
 
-var_dump($role);
-die();
 
 // $PAGE->set_url(new moodle_url('/workflow/requests.php'));
 $PAGE->set_context(\context_system::instance());
 $PAGE->set_title('Student Requests');
 $PAGE->set_heading('Assignment 1 - Student Requests');
 
-// $context = context_course::instance($course->id);
-// $roles = get_user_roles($context, $USER->id, true);
-// $role = key($roles);
-// $rolename = $roles[$role]->shortname;
-
-// echo '<pre>';
-// var_dump($roles);
-// echo '</pre>';
-// die();
-
 echo $OUTPUT->header();
 
-// echo '<pre>';
-// var_dump($SESSION);
-// echo '</pre>';
-// die();
+$request_manager = new request();
+$requests = $request_manager->getAllRequests();
 
-
-if (has_capability('mod/workflow:createrequest', $context)) {
-    echo '<a class="btn btn-primary" href="create.php">Create Request</a>';
+if ($role == "student") {
+    $requests = $request_manager->getRequestsByStudentId($USER->id);
+    $templatecontext = (object)[
+        'requests' => array_values($requests),
+        'text' => 'text',
+        'url' => $CFG->wwwroot . '/mod/workflow/validate.php?id=',
+    ];
+    $createurl = $CFG->wwwroot . '/mod/workflow/create.php';
+    echo '<a class="btn btn-primary" href="' . $createurl . '">Create New Request</a>';
+    echo $OUTPUT->render_from_template('mod_workflow/requests_student', $templatecontext);
+} else if ($role == "teacher") {
+    $requests = $request_manager->getAllRequests();
+    $templatecontext = (object)[
+        'requests' => array_values($requests),
+        'text' => 'text',
+        'url' => $CFG->wwwroot . '/mod/workflow/validate.php?id=',
+    ];
+    echo $OUTPUT->render_from_template('mod_workflow/requests_instructor', $templatecontext);
+} else if ($role == "editingteacher" || $role = "manager") {
+    $requests = $request_manager->getAllRequests();
+    $templatecontext = (object)[
+        'requests' => array_values($requests),
+        'url' => $CFG->wwwroot . '/mod/workflow/approve.php?id='
+    ];
+    echo $OUTPUT->render_from_template('mod_workflow/requests_lecturer', $templatecontext);
 }
-
-echo $OUTPUT->render_from_template('workflow/requests_list', null);
 
 echo $OUTPUT->footer();
