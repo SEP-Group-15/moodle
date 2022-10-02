@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,7 +18,7 @@
  * Version details
  *
  * @package    mod_workflow
- * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
+ * @copyright  2022 SEP15
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -28,9 +27,8 @@ namespace mod_workflow;
 use stdClass;
 use dml_exception;
 
-class request_manager
+class request
 {
-
     public function changeStatus(string $id, string $status)
     {
         global $DB;
