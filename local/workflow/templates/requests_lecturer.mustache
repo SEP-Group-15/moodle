@@ -112,94 +112,53 @@
             <th scope="col" class="p-l-0">
                 <a href="" aria-label="">Time Created</a>
             </th>
+            <th scope="col" class="p-l-0">
+                <a href="" aria-label="">Extension</a>
+            </th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td class="p-0 align-middle fit-content">
-                <input type="checkbox" id="{{id}}" name="request" value="selected">
-            </td>
-            <th scope="row" class="topic p-0 align-middle">
-                <div class="p-3 p-l-0">
-                    <a class="w-100 h-100 d-block" href="{{discussion.urls.view}}" title="Request 1" aria-label="Request 1">
-                        Request 1
-                    </a>
-                </div>
-            </th>
-            <td class="p-0 align-middle fit-content">
-                Deadline Extension
-            </td>
-            <td class="p-0 align-middle fit-content">
-                Student 1
-            </td>
-            <td class="p-0 align-middle fit-content">
-                Individual
-            </td>
-            <td class="p-0 align-middle fit-content">
-                New
-            </td>
-            <td class="p-0 align-middle fit-content">
-                22 Sep 2022
-            </td>
-        </tr>
-
-        <tr>
-            <td class="p-0 align-middle fit-content">
-                <input type="checkbox" id="{{id}}" name="request" value="selected">
-            </td>
-            <th scope="row" class="topic p-0 align-middle">
-                <div class="p-3 p-l-0">
-                    <a class="w-100 h-100 d-block" href="{{discussion.urls.view}}" title="Request 1" aria-label="Request 1">
-                        Request 2
-                    </a>
-                </div>
-            </th>
-            <td class="p-0 align-middle fit-content">
-                Deadline Extension
-            </td>
-            <td class="p-0 align-middle fit-content">
-                Student 2
-            </td>
-            <td class="p-0 align-middle fit-content">
-                Batch
-            </td>
-            <td class="p-0 align-middle fit-content">
-                New
-            </td>
-            <td class="p-0 align-middle fit-content">
-                22 Sep 2022
-            </td>
-        </tr>
-
-        <tr>
-            <td class="p-0 align-middle fit-content">
-                <input type="checkbox" id="{{id}}" name="request" value="selected">
-            </td>        
-            <th scope="row" class="topic p-0 align-middle">
-                <div class="p-3 p-l-0">
-                    <a class="w-100 h-100 d-block" href="{{discussion.urls.view}}" title="Request 1" aria-label="Request 1">
-                        Request 3
-                    </a>
-                </div>
-            </th>
-            <td class="p-0 align-middle fit-content">
-                Deadline Extension
-            </td>
-            <td class="p-0 align-middle fit-content">
-                Student 3
-            </td>
-            <td class="p-0 align-middle fit-content">
-                Individual
-            </td>
-            <td class="p-0 align-middle fit-content">
-                New
-            </td>
-            <td class="p-0 align-middle fit-content">
-                22 Sep 2022
-            </td>
-        </tr>
+        {{#requests}}
+            <tr>
+                <td class="p-0 align-middle fit-content">
+                    <input type="checkbox" id="{{id}}" name="checkrequest" value="selected">
+                </td>
+                <th scope="row" class="topic p-0 align-middle">
+                    <div class="p-3 p-l-0">
+                        <a class="w-100 h-100 d-block" href="{{url}}{{requestid}}" title="Request" aria-label="Request">
+                            {{request}}
+                        </a>
+                    </div>
+                </th>
+                <td class="p-0 align-middle fit-content">
+                    {{type}}
+                </td>
+                <td class="p-0 align-middle fit-content">
+                    {{studentid}}
+                </td>
+                <td class="p-0 align-middle fit-content">
+                    {{#isbatchrequest}}
+                        Batch
+                    {{/isbatchrequest}}
+                    {{^isbatchrequest}}
+                        Individual
+                    {{/isbatchrequest}}
+                </td>
+                <td class="p-0 align-middle fit-content">
+                    {{status}}
+                </td>
+                <td class="p-0 align-middle fit-content">
+                    {{timecreated}}
+                </td>
+                <td class="p-0 align-middle fit-content">
+                    <input type="date" id="" name="deadline">
+                </td>
+            </tr>
+        {{/requests}}
     </tbody>
 </table>
+
+
 <div>
     <button type="button" class="btn btn-primary">
       Approve

@@ -11,6 +11,9 @@ class approve extends moodleform{
 
         $mform = $this->_form; // Don't forget the underscore!
 
+        $mform->addElement('hidden','requestid');
+        $mform->setType('requestid',PARAM_INT);
+
         $elem_request = $mform->addElement('textarea', 'request', "Request", 'wrap="virtual" rows="5" cols="50"');
         $mform->setDefault('request',"Enter your request");
 
@@ -31,8 +34,8 @@ class approve extends moodleform{
         array('subdirs' => 0, 'maxbytes' => 50, 'areamaxbytes' => 10485760, 'maxfiles' => 50, 
         'return_types'=> FILE_INTERNAL | FILE_EXTERNAL));      
 
-        $elem_instructor_comment = $mform->addElement('textarea', 'instructor_comment', "Comments by instructor", 'wrap="virtual" rows="5" cols="50"');
-        $mform->setDefault('instructor_comment',"Enter comments regarding request");
+        $elem_instructor_comment = $mform->addElement('textarea', 'instructorcomment', "Comments by instructor", 'wrap="virtual" rows="5" cols="50"');
+        $mform->setDefault('instructorcomment',"Enter comments regarding request");
 
         $validity = array();
         $validity['0'] = "Valid";
@@ -49,7 +52,7 @@ class approve extends moodleform{
         $elem_instructor_comment->freeze();
 
         $elem_lec_comment = $mform->addElement('textarea', 'lec_comment', "Feedback", 'wrap="virtual" rows="5" cols="50"');
-        $mform->setDefault('instructor_comment',"Enter feedback regarding request");
+        $mform->setDefault('lec_comment',"Enter feedback regarding request");
 
         $mform->addElement('date_time_selector','extended_date',"Extend due date to");
         
@@ -61,8 +64,8 @@ class approve extends moodleform{
         $validity['0'] = "Approve";
         $validity['1'] = "Reject";
 
-        $elem_validty = $mform->addElement('select','validity','',$validity);
-        $mform->setDefault('validity',0);
+        $elem_approval = $mform->addElement('select','approval','',$validity);
+        $mform->setDefault('approval',0);
         $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
     }
 
