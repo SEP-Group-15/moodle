@@ -35,8 +35,11 @@ class approve extends moodleform
     {
         $mform = $this->_form; // Don't forget the underscore!
 
-        $mform->addElement('hidden', 'requestid');
-        $mform->setType('requestid', PARAM_INT);
+        $mform->addElement('hidden', 'id');
+        $mform->setType('id', PARAM_INT);
+        
+        $mform->addElement('hidden', 'cmid');
+        $mform->setType('cmid', PARAM_INT);
 
         $elem_request = $mform->addElement('textarea', 'request', "Request", 'wrap="virtual" rows="5" cols="50"');
         $mform->setDefault('request', "Enter your request");
@@ -61,7 +64,7 @@ class approve extends moodleform
             null,
             array(
                 'subdirs' => 0, 'maxbytes' => 50, 'areamaxbytes' => 10485760, 'maxfiles' => 50,
-                'return_types' => FILE_INTERNAL | FILE_EXTERNAL
+                'return_types' => 'FILE_INTERNAL' | 'FILE_EXTERNAL'
             )
         );
 

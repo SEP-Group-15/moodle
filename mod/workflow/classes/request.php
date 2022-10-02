@@ -155,4 +155,19 @@ class request
             ]
         );
     }
+
+    public function getAllRequestsByWorkflow($cmid){
+        global $DB;
+        return $DB->get_records_select('request', 'workflowid = :workflowid', [
+            'workflowid' => $cmid
+        ]);
+    }
+
+    public function getRequestsByStudentId_cmid($userid,$cmid){
+        global $DB;
+        return $DB->get_records_select('request', 'workflowid = :workflowid and studentid=:userid', [
+            'workflowid' => $cmid,
+            'userid' => $userid
+        ]);
+    }
 }

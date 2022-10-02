@@ -35,17 +35,19 @@ $PAGE->set_context(\context_system::instance());
 $PAGE->set_title('Submit request');
 $PAGE->set_heading('Student Request');
 
+$cmid = optional_param('cmid', true, PARAM_INT);
+
 $mform = new create();
 
 if ($mform->is_cancelled()) {
     //go back to manage page
-    redirect($CFG->wwwroot . '/mod/workflow/create.php', 'Request is Cancelled');
+    redirect($CFG->wwwroot . '/mod/workflow/view.php?id='.$cmid, 'Request is Cancelled');
 } else if ($fromform = $mform->get_data()) {
     $types['0'] = "Deadline extension";
     $types['1'] = "Failure to attempt";
     $types['2'] = "Late submission";
     $request_manager = new request();
-    $workflowid = 1;
+    $workflowid = $cmid;
     $t = time();
     $timecreated = date("Y-m-d H:i:s", $t);
     $request_manager->createRequest(
@@ -59,9 +61,13 @@ if ($mform->is_cancelled()) {
         ""
     );
 
-    redirect($CFG->wwwroot . '/mod/workflow/create.php', 'Request is submitted');
+    redirect($CFG->wwwroot . '/mod/workflow/view.php?id='.$fromform->cmid, 'Request is submitted');
 }
 
 echo $OUTPUT->header();
+
+$temp = new stdClass();
+$temp->cmid = $cmid;
+$mform->set_data($temp);
 $mform->display();
 echo $OUTPUT->footer();

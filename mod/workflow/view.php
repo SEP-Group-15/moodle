@@ -63,28 +63,31 @@ $request_manager = new request();
 $requests = $request_manager->getAllRequests();
 
 if ($role == "student") {
-    $requests = $request_manager->getRequestsByStudentId($USER->id);
+    $requests = $request_manager->getRequestsByStudentId_cmid($USER->id,$cm->id);
     $templatecontext = (object)[
         'requests' => array_values($requests),
         'text' => 'text',
         'url' => $CFG->wwwroot . '/mod/workflow/validate.php?id=',
+        'cmid'=>$cm->id,
     ];
-    $createurl = $CFG->wwwroot . '/mod/workflow/create.php';
+    $createurl = $CFG->wwwroot . '/mod/workflow/create.php?cmid='.$cm->id;
     echo '<a class="btn btn-primary" href="' . $createurl . '">Create New Request</a>';
     echo $OUTPUT->render_from_template('mod_workflow/requests_student', $templatecontext);
 } else if ($role == "teacher") {
-    $requests = $request_manager->getAllRequests();
+    $requests = $request_manager->getAllRequestsByWorkflow($cm->id);
     $templatecontext = (object)[
         'requests' => array_values($requests),
         'text' => 'text',
         'url' => $CFG->wwwroot . '/mod/workflow/validate.php?id=',
+        'cmid'=>$cm->id,
     ];
     echo $OUTPUT->render_from_template('mod_workflow/requests_instructor', $templatecontext);
 } else if ($role == "editingteacher" || $role = "manager") {
-    $requests = $request_manager->getAllRequests();
+    $requests = $request_manager->getAllRequestsByWorkflow($cm->id);
     $templatecontext = (object)[
         'requests' => array_values($requests),
-        'url' => $CFG->wwwroot . '/mod/workflow/approve.php?id='
+        'url' => $CFG->wwwroot . '/mod/workflow/approve.php?id=',
+        'cmid'=>$cm->id,
     ];
     echo $OUTPUT->render_from_template('mod_workflow/requests_lecturer', $templatecontext);
 }

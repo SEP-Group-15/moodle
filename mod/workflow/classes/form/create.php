@@ -35,6 +35,9 @@ class create extends moodleform
     {
         $mform = $this->_form; // Don't forget the underscore!
 
+        $mform->addElement('hidden', 'cmid');
+        $mform->setType('cmid', PARAM_INT);
+
         $mform->addElement('textarea', 'request', "Request", 'wrap="virtual" rows="5" cols="50"');
         $mform->setDefault('request', "Enter your request");
 

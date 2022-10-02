@@ -38,15 +38,14 @@ $PAGE->set_heading('Student Request');
 
 $id = optional_param('id', null, PARAM_INT);
 $edit = optional_param('edit', true, PARAM_BOOL);
+$cmid = optional_param('cmid', true, PARAM_INT);
 
 $mform = new validate();
 
 if ($mform->is_cancelled()) {
     //go back to manage page
-    redirect($CFG->wwwroot . '/mod/workflow/validate.php', 'Validation is Cancelled');
+    redirect($CFG->wwwroot . '/mod/workflow/view.php?id='.$cmid, 'Validation is Cancelled');
 } else if ($fromform = $mform->get_data()) {
-    var_dump($fromform);
-    die();
     $request_manager = new request();
     $validity['0'] = "valid";
     $validity['1'] = "rejected";
@@ -55,7 +54,7 @@ if ($mform->is_cancelled()) {
         $validity[$fromform->validity],
         $fromform->instructor_comment,
     );
-    redirect($CFG->wwwroot . '/mod/course', 'Request is validated');
+    redirect($CFG->wwwroot . '/mod/workflow/view.php?id='.$fromform->cmid, 'Request is validated');
 }
 
 if ($id) {
@@ -67,6 +66,7 @@ if ($id) {
     $request_manager = new request();
     $request = $request_manager->getRequest($id);
     $request->type = $types[$request->type];
+    $request->cmid = $cmid;
     if (!$request) {
         die("Request");
         \core\notification::add('Request not found', \core\output\notification::NOTIFY_WARNING);
