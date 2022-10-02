@@ -145,7 +145,6 @@ class mod_workflow_request_manager_test extends advanced_testcase{
         }
 
         $this->assertEquals(4,count($request->filterRequests('Deadline extension')));
-        
         $this->assertEquals(6,count($request->filterRequests('Late submission')));
     }
 
