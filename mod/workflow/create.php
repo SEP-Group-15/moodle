@@ -59,7 +59,7 @@ if ($mform->is_cancelled()) {
         ""
     );
 
-    redirect($CFG->wwwroot . '/mod/workflow/request.php', 'Request is submitted');
+    redirect($CFG->wwwroot . '/mod/workflow/create.php', 'Request is submitted');
 }
 
 echo $OUTPUT->header();

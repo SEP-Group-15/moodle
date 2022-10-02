@@ -43,13 +43,13 @@ $PAGE->set_heading('Assignment 1 - Student Requests');
 
 echo $OUTPUT->header();
 
-echo '<pre>';
-var_dump($SESSION);
-echo '</pre>';
-die();
+// echo '<pre>';
+// var_dump($SESSION);
+// echo '</pre>';
+// die();
 
 if (has_capability('mod/workflow:createrequest', $context)) {
-    echo '<button class="btn btn-primary">Create Request</button>';
+    echo '<a class="btn btn-primary" href="create.php">Create Request</a>';
 }
 
 echo $OUTPUT->render_from_template('workflow/requests_list', null);
