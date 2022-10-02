@@ -23,17 +23,18 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-use mod_workflow\request_manager;
+use mod_workflow\request;
 
 global $CFG;
 require_once($CFG->dirroot . '/mod/workflow/lib.php');
 
-class mod_workflow_request_manager_test extends advanced_testcase{
-
-    public function test_createRequest(){
+class mod_workflow_request_test extends advanced_testcase
+{
+    public function test_createRequest()
+    {
         $this->resetAfterTest();
         $this->setUser(2);
-        $request = new request_manager();
+        $request = new request();
         $requests = $request->getAllRequests();
         $this->assertEmpty($requests);
 
@@ -67,13 +68,14 @@ class mod_workflow_request_manager_test extends advanced_testcase{
 
         $this->assertEquals("Test Request", $record->request);
         $test_request_status = $request->getStatus($record->id);
-        $this->assertEquals("pending",$test_request_status);
+        $this->assertEquals("pending", $test_request_status);
     }
 
-    public function test_changeStatus(){
+    public function test_changeStatus()
+    {
         $this->resetAfterTest();
         $this->setUser(2);
-        $request = new request_manager();
+        $request = new request();
         $requests = $request->getAllRequests();
         $this->assertEmpty($requests);
 
@@ -102,15 +104,16 @@ class mod_workflow_request_manager_test extends advanced_testcase{
         $requests = $request->getAllRequests();
         $record = array_pop($requests);
 
-        $request->changeStatus($record->id,'valid');
+        $request->changeStatus($record->id, 'valid');
         $test_request_status = $request->getRequest($record->id)->status;
-        $this->assertEquals("valid",$test_request_status);
+        $this->assertEquals("valid", $test_request_status);
     }
 
-    public function test_filterRequests(){
+    public function test_filterRequests()
+    {
         $this->resetAfterTest();
         $this->setUser(2);
-        $request = new request_manager();
+        $request = new request();
         $requests = $request->getAllRequests();
         $this->assertEmpty($requests);
 
@@ -123,12 +126,12 @@ class mod_workflow_request_manager_test extends advanced_testcase{
         $instructorcomment = "Test comments";
         $lecturercomment = "Test feedback";
 
-        for ($i=0; $i < 10; $i++) { 
-            $temp = $requestText.$i ;
+        for ($i = 0; $i < 10; $i++) {
+            $temp = $requestText . $i;
 
-            if ($i< 4){
+            if ($i < 4) {
                 $temp_type = 'Deadline extension';
-            }else{
+            } else {
                 $temp_type = 'Late submission';
             }
             $request->createRequest(
@@ -144,8 +147,7 @@ class mod_workflow_request_manager_test extends advanced_testcase{
             );
         }
 
-        $this->assertEquals(4,count($request->filterRequests('Deadline extension')));
-        $this->assertEquals(6,count($request->filterRequests('Late submission')));
+        $this->assertEquals(4, count($request->filterRequests('Deadline extension')));
+        $this->assertEquals(6, count($request->filterRequests('Late submission')));
     }
-
 }

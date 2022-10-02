@@ -30,7 +30,6 @@ require_once($CFG->dirroot . '/mod/workflow/lib.php');
 
 class mod_workflow_workflow_test extends advanced_testcase
 {
-
     public function test_create()
     {
         $this->resetAfterTest();
@@ -67,10 +66,11 @@ class mod_workflow_workflow_test extends advanced_testcase
 
         $this->assertEquals("Test workflow", $record->name);
         $test_workflow_name = $workflow->getName($record->id);
-        $this->assertEquals("Test workflow",$test_workflow_name);
+        $this->assertEquals("Test workflow", $test_workflow_name);
     }
 
-    public function test_remove(){
+    public function test_remove()
+    {
         $this->resetAfterTest();
         $this->setUser(2);
         $workflow = new workflow();
