@@ -27,6 +27,8 @@
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/course/format/lib.php');
 
+global $USER;
+
 $id = required_param('id', PARAM_INT);
 
 require_login();
@@ -44,9 +46,20 @@ $context = context_module::instance($id);
 global $DB;
 global $USER;
 
-select shortname from role where id = (select roleid from mdl_role_assignments where contextid = :contextid);
-$sql = 'update {request} set instructorcomment = :ins_comment where id= :id';
+$sql = 'select shortname from role where id = (select roleid from mdl_role_assignments where contextid = :contextid and userid = :userid);';
+$params = [
+    'contextid'=>$context->id,
+    'userid'=>$USER->id,
+];
 
+try{
+    $role =  $DB->execute($sql, $params);
+} catch (dml_exception $e) {
+    $role = false;
+}
+
+var_dump($role);
+die();
 
 // $PAGE->set_url(new moodle_url('/workflow/requests.php'));
 $PAGE->set_context(\context_system::instance());
