@@ -23,69 +23,35 @@
  */
 
 
-
 require('../../config.php');
 
 $id = required_param('id', PARAM_INT);
 
 require_login();
-$context = context_system::instance();
 
 [$course, $cm] = get_course_and_cm_from_cmid($id, 'workflow');
+// $cm = get_coursemodule_from_id('workflow', $id, $course->id, false, MUST_EXIST);
 $instance = $DB->get_record('workflow', ['id' => $cm->instance], '*', MUST_EXIST);
+$context = context_module::instance($cm->id);
 
 global $DB;
 
-// $PAGE->set_url(new moodle_url('/workflow/requests_lecturer.php'));
+// $PAGE->set_url(new moodle_url('/workflow/requests.php'));
 $PAGE->set_context(\context_system::instance());
 $PAGE->set_title('Student Requests');
 $PAGE->set_heading('Assignment 1 - Student Requests');
 
-$templatecontext = (object)[];
-
 echo $OUTPUT->header();
 
-echo $OUTPUT->render_from_template('workflow/requests_lecturer', $templatecontext);
+echo '<pre>';
+var_dump($SESSION);
+echo '</pre>';
+die();
+
+if (has_capability('mod/workflow:createrequest', $context)) {
+    echo '<button class="btn btn-primary">Create Request</button>';
+}
+
+echo $OUTPUT->render_from_template('workflow/requests_list', null);
 
 echo $OUTPUT->footer();
-
-
-// require(__DIR__.'/../../config.php');
-// require_once(__DIR__.'/lib.php');
-
-// // Course module id.
-// $id = optional_param('id', 0, PARAM_INT);
-
-// // Activity instance id.
-// $w = optional_param('w', 0, PARAM_INT);
-
-// if ($id) {
-//     $cm = get_coursemodule_from_id('workflow', $id, 0, false, MUST_EXIST);
-//     $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-//     $moduleinstance = $DB->get_record('workflow', array('id' => $cm->instance), '*', MUST_EXIST);
-// } else {
-//     $moduleinstance = $DB->get_record('workflow', array('id' => $w), '*', MUST_EXIST);
-//     $course = $DB->get_record('course', array('id' => $moduleinstance->course), '*', MUST_EXIST);
-//     $cm = get_coursemodule_from_instance('workflow', $moduleinstance->id, $course->id, false, MUST_EXIST);
-// }
-
-// require_login($course, true, $cm);
-
-// $modulecontext = context_module::instance($cm->id);
-
-// $event = \mod_workflow\event\course_module_viewed::create(array(
-//     'objectid' => $moduleinstance->id,
-//     'context' => $modulecontext
-// ));
-// $event->add_record_snapshot('course', $course);
-// $event->add_record_snapshot('workflow', $moduleinstance);
-// $event->trigger();
-
-// $PAGE->set_url('/mod/workflow/view.php', array('id' => $cm->id));
-// $PAGE->set_title(format_string($moduleinstance->name));
-// $PAGE->set_heading(format_string($course->fullname));
-// $PAGE->set_context($modulecontext);
-
-// echo $OUTPUT->header();
-
-// echo $OUTPUT->footer();

@@ -21,4 +21,12 @@ $capabilities = [
             'manager' => CAP_ALLOW,
         ],
     ],
+    'mod/workflow:createrequest' => [
+        'riskbitmask' => RISK_SPAM,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => [
+            'student' => CAP_ALLOW,
+        ],
+    ],
 ];
