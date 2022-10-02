@@ -23,7 +23,9 @@
  */
 
 
-require('../../config.php');
+// require('../../config.php');
+require_once(__DIR__ . '/../../config.php');
+require_once($CFG->dirroot . '/course/format/lib.php');
 
 $id = required_param('id', PARAM_INT);
 
@@ -32,14 +34,34 @@ require_login();
 [$course, $cm] = get_course_and_cm_from_cmid($id, 'workflow');
 // $cm = get_coursemodule_from_id('workflow', $id, $course->id, false, MUST_EXIST);
 $instance = $DB->get_record('workflow', ['id' => $cm->instance], '*', MUST_EXIST);
-$context = context_module::instance($cm->id);
+$context = context_module::instance($id);
+
+// echo '<pre>';
+// var_dump($cm->id);
+// echo '</pre>';
+// die();
 
 global $DB;
+global $USER;
+
+select shortname from role where id = (select roleid from mdl_role_assignments where contextid = :contextid);
+$sql = 'update {request} set instructorcomment = :ins_comment where id= :id';
+
 
 // $PAGE->set_url(new moodle_url('/workflow/requests.php'));
 $PAGE->set_context(\context_system::instance());
 $PAGE->set_title('Student Requests');
 $PAGE->set_heading('Assignment 1 - Student Requests');
+
+// $context = context_course::instance($course->id);
+// $roles = get_user_roles($context, $USER->id, true);
+// $role = key($roles);
+// $rolename = $roles[$role]->shortname;
+
+// echo '<pre>';
+// var_dump($roles);
+// echo '</pre>';
+// die();
 
 echo $OUTPUT->header();
 
@@ -47,6 +69,7 @@ echo $OUTPUT->header();
 // var_dump($SESSION);
 // echo '</pre>';
 // die();
+
 
 if (has_capability('mod/workflow:createrequest', $context)) {
     echo '<a class="btn btn-primary" href="create.php">Create Request</a>';
