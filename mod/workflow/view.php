@@ -45,19 +45,24 @@ $context = context_module::instance($id);
 
 global $DB;
 
-$sql = 'select shortname from role where id = (select roleid from mdl_role_assignments where contextid = :contextid and userid = :userid)';
-$params = [
+// $sql = 'select shortname from role where id = (select roleid from mdl_role_assignments where contextid = :contextid and userid = :userid)';
+// $params = [
+    // 'contextid' => $context->id,
+    // 'userid' => $USER->id,
+// ];
+
+$roleid = $DB->get_field_select('role_assignments','roleid', 'contextid = :contextid and userid=:userid', [
     'contextid' => $context->id,
     'userid' => $USER->id,
-];
+]);
 
-try {
-    $role =  $DB->execute($sql, $params);
-} catch (dml_exception $e) {
-    $role = false;
-}
+// try {
+//     $role =  $DB->execute($sql, $params);
+// } catch (dml_exception $e) {
+//     $role = false;
+// }
 
-var_dump($role);
+var_dump($roleid);
 die();
 
 // $PAGE->set_url(new moodle_url('/workflow/requests.php'));
