@@ -2,9 +2,7 @@ name: Core
 
 on:
   push:
-    branches-ignore:
-      - master
-      - MOODLE_[0-9]+_STABLE
+    branches: [ Mod_workflow_branch ]
     tags-ignore:
       - v[0-9]+.[0-9]+.[0-9]+*
 
@@ -26,9 +24,6 @@ jobs:
 
       - name: Installing node stuff
         run: npm install
-
-      - name: Running grunt
-        run: npx grunt
 
       - name: Looking for uncommitted changes
         # Add all files to the git index and then run diff --cached to see all changes.
@@ -57,9 +52,6 @@ jobs:
           - os: ubuntu-18.04
             php: 7.2
             db: mysqli
-          - os: ubuntu-18.04
-            php: 7.4
-            db: pgsql
 
     steps:
       - name: Setting up DB mysql
@@ -72,15 +64,6 @@ jobs:
           mysql user: test
           mysql password: test
           use tmpfs: true
-
-      - name: Setting up DB pgsql
-        if: ${{ matrix.db == 'pgsql' }}
-        uses: m4nu56/postgresql-action@v1
-        with:
-          postgresql version: 9.6
-          postgresql db: test
-          postgresql user: test
-          postgresql password: test
 
       - name: Configuring git vars
         uses: rlespinasse/github-slug-action@v3.x
@@ -107,4 +90,4 @@ jobs:
       - name: Running PHPUnit tests
         env:
           dbtype: ${{ matrix.db }}
-        run: vendor/bin/phpunit -v
+        run: vendor/bin/phpunit --testsuite=mod_workflow_testsuite
