@@ -44,6 +44,7 @@ class mod_workflow_workflow_test extends advanced_testcase
         $instructorid = "200";
         $startdate = "20220919";
         $enddate = "20230203";
+        $representativeid = '9';
         $commentsallowed = 1;
         $filesallowed = 0;
 
@@ -55,7 +56,8 @@ class mod_workflow_workflow_test extends advanced_testcase
             $startdate,
             $enddate,
             $commentsallowed,
-            $filesallowed
+            $filesallowed,
+            $representativeid
         );
 
         $this->assertTrue($result);
@@ -85,6 +87,7 @@ class mod_workflow_workflow_test extends advanced_testcase
         $enddate = "20230203";
         $commentsallowed = 1;
         $filesallowed = 0;
+        $representativeid = '9';
 
         $result = $workflow->create(
             $name,
@@ -94,7 +97,8 @@ class mod_workflow_workflow_test extends advanced_testcase
             $startdate,
             $enddate,
             $commentsallowed,
-            $filesallowed
+            $filesallowed,
+            $representativeid,
         );
 
         $this->assertTrue($result);
