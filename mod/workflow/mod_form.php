@@ -36,45 +36,84 @@ require_once($CFG->dirroot . '/mod/workflow/lib.php');
  */
 class mod_workflow_mod_form extends moodleform_mod
 {
-
-    /**
-     * Defines forms elements
-     */
     public function definition()
     {
+        global $DB;
+        global $CFG;
+
+        $courseid = optional_param('course', true, PARAM_INT);
+        $context = context_course::instance($courseid);
+
         $mform = $this->_form;
 
         $mform->addElement('header', 'generalhdr', "General");
         $mform->setExpanded('generalhdr');
 
-        $mform->addElement('text', 'name', "Workflow");
+        $mform->addElement('text', 'name', "Name");
         $mform->setDefault('name', "");
         $mform->setType('name', PARAM_TEXT);
+        $mform->addRule('name', null, 'required', null, 'client');
+        $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-        $types = array();
-        $types['0'] = 1;
-        $types['1'] = 2;
-        $types['2'] = 3;
+        $mform->addElement('hidden', 'courseid');
+        $mform->setType('courseid', PARAM_INT);
+        $mform->setDefault('courseid', $courseid);
 
-        $mform->addElement('select', 'activityid', 'Activity', $types);
+        $quizzes = $DB->get_records_select('quiz', 'course = ' . $courseid);
+
+        $assignments = $DB->get_records_select('assign', 'course = ' . $courseid);
+
+        $activities = [];
+
+        foreach ($quizzes as $quiz) {
+            $activities['q' . $quiz->id] = $quiz->name;
+        }
+
+        foreach ($assignments as $assignment) {
+            $activities['a' . $assignment->id] = $assignment->name;
+        }
+
+        $mform->addElement('select', 'activityid', 'Activity', $activities);
         $mform->setDefault('activityid', 0);
-        // $mform->setType('request', PARAM_INT);
 
-        $types = array();
-        $types['0'] = 1;
-        $types['1'] = 2;
-        $types['2'] = 3;
+        $instructorids = $DB->get_fieldset_select('role_assignments', 'userid', 'contextid = :contextid and roleid=:roleid', [
+            'contextid' => $context->id,
+            'roleid' => '4',
+        ]);
 
-        $mform->addElement('select', 'instructorid', 'Instructor', $types);
+        $instructors = [];
+
+        foreach ($instructorids as $instructorid) {
+            $instructor = $DB->get_record('user', ['id' => $instructorid]);
+            $instructors[$instructor->id] = $instructor->firstname . ' ' . $instructor->lastname;
+        }
+
+        $mform->addElement('select', 'instructorid', 'Instructor', $instructors);
         $mform->setDefault('instructorid', 0);
-        // $mform->setType('request', PARAM_INT);
 
+        $studentids = $DB->get_records_select('role_assignments', 'contextid = ' . $context->id . ' and roleid = 5');
+
+        $students = [null];
+
+        foreach ($studentids as $studentid) {
+            $student = $DB->get_record('user', ['id' => $studentid->userid]);
+            $students[$student->id] = $student->idnumber . ' - ' . $student->firstname . ' ' . $student->lastname;
+        }
+
+        $mform->addElement('select', 'representativeid', 'Representative', $students);
+        $mform->setDefault('representative', 0);
+
+        // $mform->addElement('header', 'optionshdr', "Options");
+        // $mform->setExpanded('optionshdr');
+
+        $mform->addElement('advcheckbox', 'filesallowed', "File submissions", "Allow");
+
+        // $mform->addElement('advcheckbox', 'commentsallowed', "Comments", "Allow");
 
         $mform->addElement('header', 'availabilityhdr', "Availability");
         $mform->setExpanded('availabilityhdr');
 
         $mform->addElement('date_time_selector', 'startdate', "Start date", array('optional' => true));
-        // $mform->setType('request', PARAM_INT);
 
         if (!empty($CFG->enablecourserelativedates)) {
             $attributes = [
@@ -101,7 +140,6 @@ class mod_workflow_mod_form extends moodleform_mod
         }
 
         $mform->addElement('date_time_selector', 'enddate', "Due date", array('optional' => true));
-        // $mform->setType('request', PARAM_INT);
 
         if (!empty($CFG->enablecourserelativedates)) {
             $attributes = [
@@ -126,22 +164,6 @@ class mod_workflow_mod_form extends moodleform_mod
             ));
             $mform->addGroup($relativedatesmodegroup, 'relativedatesmodegroup', get_string('relativedatesmode'), null, false);
         }
-
-        $mform->addElement('header', 'optionshdr', "Options");
-        $mform->setExpanded('optionshdr');
-
-        $mform->addElement(
-            'advcheckbox',
-            'commentsallowed',
-            "Comments",
-            "Allow"
-        );
-        $mform->addElement(
-            'advcheckbox',
-            'filesallowed',
-            "File submission",
-            "Allow"
-        );
 
         // Add standard elements.
         $this->standard_coursemodule_elements();

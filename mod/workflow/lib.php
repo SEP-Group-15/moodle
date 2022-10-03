@@ -55,26 +55,11 @@ function workflow_supports($feature)
  */
 function workflow_add_instance($workflow, $mform = null)
 {
-    // $workflow = new workflow();
     global $DB;
 
     $workflow->timecreated = time();
 
-    // $workflow->name;
-    // $workflow->course;
-    // // 'A_011',
-    // // 'I_011';
-    // $workflow->startdate;
-    // $workflow->enddate;
-    // $workflow->commentsallowed;
-    // $workflow->filesallowed;
-
-    $workflow->courseid = '2';
-    $workflow->instructorid = '2';
-
-    $workflow->id = $DB->insert_record('workflow', $workflow);
-
-    return $workflow->id;
+    return $DB->insert_record('workflow', $workflow);
 }
 
 /**

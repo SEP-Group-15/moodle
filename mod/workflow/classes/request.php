@@ -126,14 +126,6 @@ class request
         ]);
     }
 
-    public function getRequestsByStudentId($studentID)
-    {
-        global $DB;
-        return $DB->get_records_select('request', 'studentid = :studentid', [
-            'studentid' => $studentID
-        ]);
-    }
-
     public function getStatus($requestid)
     {
         global $DB;
@@ -156,14 +148,16 @@ class request
         );
     }
 
-    public function getAllRequestsByWorkflow($cmid){
+    public function getRequestsByWorkflow($cmid)
+    {
         global $DB;
         return $DB->get_records_select('request', 'workflowid = :workflowid', [
             'workflowid' => $cmid
         ]);
     }
 
-    public function getRequestsByStudentId_cmid($userid,$cmid){
+    public function getRequestsByWorkflow_Student($userid, $cmid)
+    {
         global $DB;
         return $DB->get_records_select('request', 'workflowid = :workflowid and studentid=:userid', [
             'workflowid' => $cmid,

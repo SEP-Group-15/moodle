@@ -57,9 +57,9 @@ $PAGE->set_context(\context_system::instance());
 $PAGE->set_title('Student Requests');
 $PAGE->set_heading('Assignment 1 - Student Requests');
 
-$cap_create = has_capability('mod/workflow:createrequest',$context);
-$cap_validate = has_capability('mod/workflow:validaterequest',$context);
-$cap_approve = has_capability('mod/workflow:approverequest',$context);
+$cap_create = has_capability('mod/workflow:createrequest', $context);
+$cap_validate = has_capability('mod/workflow:validaterequest', $context);
+$cap_approve = has_capability('mod/workflow:approverequest', $context);
 
 echo $OUTPUT->header();
 
@@ -67,31 +67,31 @@ $request_manager = new request();
 $requests = $request_manager->getAllRequests();
 
 if ($cap_create) {
-    $requests = $request_manager->getRequestsByStudentId_cmid($USER->id,$cm->id);
+    $requests = $request_manager->getRequestsByWorkflow_Student($USER->id, $cm->id);
     $templatecontext = (object)[
         'requests' => array_values($requests),
         'text' => 'text',
         'url' => $CFG->wwwroot . '/mod/workflow/validate.php?id=',
-        'cmid'=>$cm->id,
+        'cmid' => $cm->id,
     ];
-    $createurl = $CFG->wwwroot . '/mod/workflow/create.php?cmid='.$cm->id;
+    $createurl = $CFG->wwwroot . '/mod/workflow/create.php?cmid=' . $cm->id;
     echo '<a class="btn btn-primary" href="' . $createurl . '">Create New Request</a>';
     echo $OUTPUT->render_from_template('mod_workflow/requests_student', $templatecontext);
 } else if ($cap_validate) {
-    $requests = $request_manager->getAllRequestsByWorkflow($cm->id);
+    $requests = $request_manager->getRequestsByWorkflow($cm->id);
     $templatecontext = (object)[
         'requests' => array_values($requests),
         'text' => 'text',
         'url' => $CFG->wwwroot . '/mod/workflow/validate.php?id=',
-        'cmid'=>$cm->id,
+        'cmid' => $cm->id,
     ];
     echo $OUTPUT->render_from_template('mod_workflow/requests_instructor', $templatecontext);
-} else if ($cap_approve ) {
-    $requests = $request_manager->getAllRequestsByWorkflow($cm->id);
+} else if ($cap_approve) {
+    $requests = $request_manager->getRequestsByWorkflow($cm->id);
     $templatecontext = (object)[
         'requests' => array_values($requests),
         'url' => $CFG->wwwroot . '/mod/workflow/approve.php?id=',
-        'cmid'=>$cm->id,
+        'cmid' => $cm->id,
     ];
     echo $OUTPUT->render_from_template('mod_workflow/requests_lecturer', $templatecontext);
 }
