@@ -38,6 +38,9 @@ class validate extends moodleform
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
 
+        $mform->addElement('hidden', 'studentid');
+        $mform->setType('studentid', PARAM_INT);
+
         $mform->addElement('hidden', 'cmid');
         $mform->setType('cmid', PARAM_INT);
 

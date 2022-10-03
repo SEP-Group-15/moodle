@@ -24,6 +24,7 @@
 
 use mod_workflow\form\approve;
 use mod_workflow\request;
+use mod_workflow\message_handler;
 
 require_once(__DIR__ . '/../../config.php'); // setup moodle
 require_login();
@@ -40,6 +41,7 @@ $edit = optional_param('edit', true, PARAM_BOOL);
 $cmid = optional_param('cmid', true, PARAM_INT);
 
 $mform = new approve();
+$msg_handler = new message_handler();
 
 if ($requestid) {
 
@@ -72,6 +74,7 @@ if ($mform->is_cancelled()) {
         $status[$fromform->approval],
         $fromform->lec_comment
     );
+    $msg_handler->send($fromform->studentid,'Your request '.$fromform->id.' is '.ucwords($status[$fromform->approval]),$cmid);
 
     redirect($CFG->wwwroot . '/mod/workflow/view.php?id='.$fromform->cmid, 'Request is approved');
 }

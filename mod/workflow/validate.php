@@ -24,6 +24,7 @@
 
 use mod_workflow\form\validate;
 use mod_workflow\request;
+use mod_workflow\message_handler;
 
 require_once(__DIR__ . '/../../config.php'); // setup moodle
 require_login();
@@ -41,6 +42,7 @@ $edit = optional_param('edit', true, PARAM_BOOL);
 $cmid = optional_param('cmid', true, PARAM_INT);
 
 $mform = new validate();
+$msg_handler = new message_handler();
 
 if ($mform->is_cancelled()) {
     //go back to manage page
@@ -54,6 +56,7 @@ if ($mform->is_cancelled()) {
         $validity[$fromform->validity],
         $fromform->instructor_comment,
     );
+    $msg_handler->send($fromform->studentid,'Your request '.$fromform->id.' is validated as '. ucwords($validity[$fromform->validity]), $cmid);
     redirect($CFG->wwwroot . '/mod/workflow/view.php?id='.$fromform->cmid, 'Request is validated');
 }
 
