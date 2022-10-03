@@ -10,23 +10,30 @@ $capabilities = [
         ],
         'clonepermissionsfrom' => 'moodle/course:manageactivities',
     ],
-    // 'mod/workflow:view' => array(
-    //     'captype' => 'read',
-    //     'contextlevel' => CONTEXT_MODULE,
-    //     'archetypes' => array(
-    //         'guest' => CAP_ALLOW,
-    //         'student' => CAP_ALLOW,
-    //         'teacher' => CAP_ALLOW,
-    //         'editingteacher' => CAP_ALLOW,
-    //         'manager' => CAP_ALLOW,
-    //     ),
-    // ),
+
     'mod/workflow:createrequest' => array(
-        // 'riskbitmask' => RISK_SPAM,
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => array(
             'student' => CAP_ALLOW,
+            'manager' => CAP_PROHIBIT,
+        ),
+    ),
+
+    'mod/workflow:validaterequest' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => array(
+            'teacher' => CAP_ALLOW,
+        ),
+    ),
+
+    'mod/workflow:approverequest' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => array(
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
         ),
     ),
 ];

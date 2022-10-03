@@ -27,4 +27,4 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Student Requests Workflow';
 $string['modulenameplural'] = 'Workflows';
-$string['modulename'] = 'Student Requests Workflow';
+$string['modulename'] = 'Requests';

@@ -57,12 +57,16 @@ $PAGE->set_context(\context_system::instance());
 $PAGE->set_title('Student Requests');
 $PAGE->set_heading('Assignment 1 - Student Requests');
 
+$cap_create = has_capability('mod/workflow:createrequest',$context);
+$cap_validate = has_capability('mod/workflow:validaterequest',$context);
+$cap_approve = has_capability('mod/workflow:approverequest',$context);
+
 echo $OUTPUT->header();
 
 $request_manager = new request();
 $requests = $request_manager->getAllRequests();
 
-if ($role == "student") {
+if ($cap_create) {
     $requests = $request_manager->getRequestsByStudentId_cmid($USER->id,$cm->id);
     $templatecontext = (object)[
         'requests' => array_values($requests),
@@ -73,7 +77,7 @@ if ($role == "student") {
     $createurl = $CFG->wwwroot . '/mod/workflow/create.php?cmid='.$cm->id;
     echo '<a class="btn btn-primary" href="' . $createurl . '">Create New Request</a>';
     echo $OUTPUT->render_from_template('mod_workflow/requests_student', $templatecontext);
-} else if ($role == "teacher") {
+} else if ($cap_validate) {
     $requests = $request_manager->getAllRequestsByWorkflow($cm->id);
     $templatecontext = (object)[
         'requests' => array_values($requests),
@@ -82,7 +86,7 @@ if ($role == "student") {
         'cmid'=>$cm->id,
     ];
     echo $OUTPUT->render_from_template('mod_workflow/requests_instructor', $templatecontext);
-} else if ($role == "editingteacher" || $role = "manager") {
+} else if ($cap_approve ) {
     $requests = $request_manager->getAllRequestsByWorkflow($cm->id);
     $templatecontext = (object)[
         'requests' => array_values($requests),
