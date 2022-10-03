@@ -172,4 +172,12 @@ class request
             'userid' => $userid
         ]);
     }
+
+    public function processRequests($requests){
+        foreach ($requests as $request) {
+            $request->status = ucwords($request->status);
+            $request->timecreated = date("Y-m-d H:i:s", $request->timecreated);
+        }
+        return $requests;
+    }
 }

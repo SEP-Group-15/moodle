@@ -48,6 +48,7 @@ if ($mform->is_cancelled()) {
     //go back to manage page
     redirect($CFG->wwwroot . '/mod/workflow/view.php?id='.$cmid, 'Request is Cancelled');
 } else if ($fromform = $mform->get_data()) {
+    $SESSION->workflowid = $fromform->workflowid;
     $workflow = new workflow();
     $types['0'] = "Deadline extension";
     $types['1'] = "Failure to attempt";
@@ -56,13 +57,13 @@ if ($mform->is_cancelled()) {
     $wm = $workflow->getWorkflowbyCMID($cmid)->id;
     $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
     $t = time();
-    $timecreated = date("Y-m-d H:i:s", $t);
     $request_manager->createRequest(
         $fromform->request,
         $workflowid,
         $USER->id,
         $types[$fromform->type],
         $fromform->isbatchrequest,
+        $t,
         $fromform->files,
         "",
         ""

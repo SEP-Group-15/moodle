@@ -40,9 +40,14 @@ class create extends moodleform
 
         $workflow = new workflow();
         $representativeid = $workflow->getRepresentativeId($SESSION->workflowid);
+        $temp_workflow = $workflow->getWorkflow($SESSION->workflowid);
 
         $mform->addElement('hidden', 'cmid');
         $mform->setType('cmid', PARAM_INT);
+
+        $mform->addElement('hidden', 'workflowid');
+        $mform->setType('workflowid', PARAM_INT);
+        $mform->setDefault('workflowid',$SESSION->workflowid);
 
         $mform->addElement('textarea', 'request', "Request", 'wrap="virtual" rows="5" cols="50"');
         $mform->setDefault('request', "Enter your request");
@@ -67,13 +72,21 @@ class create extends moodleform
         $mform->addElement('select', 'type', 'Select type', $types);
         $mform->setDefault('type', 0);
 
-        $mform->addElement(
-            'filemanager',
-            'files',
-            'File submission',
-            null,
-            array('subdirs' => 1, 'maxfiles' => 50, 'accepted_types' => '*')
-        );
+        if ($temp_workflow->filesallowed){
+            $mform->addElement(
+                'filemanager',
+                'files',
+                'File submission',
+                null,
+                array('subdirs' => 1, 'maxfiles' => 50, 'accepted_types' => '*')
+            );
+        }else {
+            $mform->addElement('hidden', 'files');
+            $mform->setType('files', PARAM_INT);
+            $mform->setDefault('files','0');
+
+        }
+
         $this->add_action_buttons();
     }
 }

@@ -73,6 +73,7 @@ $cmid = $cm->id;
 if ($cap_create) {
     $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
     $requests = $request_manager->getRequestsByWorkflow_Student($USER->id, $workflowid);
+    $requests = $request_manager->processRequests($requests);
     $templatecontext = (object)[
         'requests' => array_values($requests),
         'text' => 'text',
@@ -85,6 +86,7 @@ if ($cap_create) {
 } else if ($cap_validate) {
     $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
     $requests = $request_manager->getRequestsByWorkflow($workflowid);
+    $requests = $request_manager->processRequests($requests);
     $templatecontext = (object)[
         'requests' => array_values($requests),
         'text' => 'text',
@@ -95,6 +97,7 @@ if ($cap_create) {
 } else if ($cap_approve) {
     $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
     $requests = $request_manager->getValidRequestsByWorkflow($workflowid);
+    $requests = $request_manager->processRequests($requests);
     $templatecontext = (object)[
         'requests' => array_values($requests),
         'url' => $CFG->wwwroot . '/mod/workflow/approve.php?id=',
