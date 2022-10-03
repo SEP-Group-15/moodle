@@ -87,4 +87,25 @@ class workflow
             return [];
         }
     }
+
+    public function getWorkflowbyCMID($cmid){
+        global $DB;
+        $sql = 'id=:cmid';
+        $params = [
+            'cmid'=>$cmid
+        ];
+        $workflowid = $DB->get_field_select('course_modules', 'instance', $sql, $params);
+        $workflow = $this->getWorkflow($workflowid);
+        return $workflow;
+    }
+
+    public function getRepresentativeId($workflowid){
+        global $DB;
+
+        $sql = 'id=:id';
+        $params = [
+            'id'=>$workflowid
+        ];
+        return $DB->get_field_select('workflow', 'representativeid', $sql, $params);
+    }
 }

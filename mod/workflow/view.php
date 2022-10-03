@@ -28,6 +28,7 @@ require_once(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/course/format/lib.php');
 
 use mod_workflow\request;
+use mod_workflow\workflow;
 
 global $USER;
 
@@ -64,21 +65,26 @@ $cap_approve = has_capability('mod/workflow:approverequest', $context);
 echo $OUTPUT->header();
 
 $request_manager = new request();
+$workflow = new workflow();
 $requests = $request_manager->getAllRequests();
 
+$cmid = $cm->id;
+
 if ($cap_create) {
-    $requests = $request_manager->getRequestsByWorkflow_Student($USER->id, $cm->id);
+    $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
+    $requests = $request_manager->getRequestsByWorkflow_Student($USER->id, $workflowid);
     $templatecontext = (object)[
         'requests' => array_values($requests),
         'text' => 'text',
         'url' => $CFG->wwwroot . '/mod/workflow/validate.php?id=',
         'cmid' => $cm->id,
     ];
-    $createurl = $CFG->wwwroot . '/mod/workflow/create.php?cmid=' . $cm->id;
+    $createurl = $CFG->wwwroot . '/mod/workflow/create.php?cmid=' . $cm->id.'&workflowid='.$workflowid;
     echo '<a class="btn btn-primary" href="' . $createurl . '">Create New Request</a>';
     echo $OUTPUT->render_from_template('mod_workflow/requests_student', $templatecontext);
 } else if ($cap_validate) {
-    $requests = $request_manager->getRequestsByWorkflow($cm->id);
+    $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
+    $requests = $request_manager->getRequestsByWorkflow($workflowid);
     $templatecontext = (object)[
         'requests' => array_values($requests),
         'text' => 'text',
@@ -87,7 +93,8 @@ if ($cap_create) {
     ];
     echo $OUTPUT->render_from_template('mod_workflow/requests_instructor', $templatecontext);
 } else if ($cap_approve) {
-    $requests = $request_manager->getRequestsByWorkflow($cm->id);
+    $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
+    $requests = $request_manager->getRequestsByWorkflow($workflowid);
     $templatecontext = (object)[
         'requests' => array_values($requests),
         'url' => $CFG->wwwroot . '/mod/workflow/approve.php?id=',

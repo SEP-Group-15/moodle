@@ -28,12 +28,18 @@ use moodleform;
 
 //moodleform is defined in formslib.php
 require_once("$CFG->libdir/formslib.php");
+use mod_workflow\workflow;
 
 class create extends moodleform
 {
     public function definition()
     {
+        global $SESSION,$USER;
+
         $mform = $this->_form; // Don't forget the underscore!
+
+        $workflow = new workflow();
+        $representativeid = $workflow->getRepresentativeId($SESSION->workflowid);
 
         $mform->addElement('hidden', 'cmid');
         $mform->setType('cmid', PARAM_INT);
@@ -41,10 +47,17 @@ class create extends moodleform
         $mform->addElement('textarea', 'request', "Request", 'wrap="virtual" rows="5" cols="50"');
         $mform->setDefault('request', "Enter your request");
 
-        $radioarray = array();
-        $radioarray[] = $mform->createElement('radio', 'isbatchrequest', '', 'Individual', 0);
-        $radioarray[] = $mform->createElement('radio', 'isbatchrequest', '', 'Batch', 1);
-        $mform->addGroup($radioarray, 'isbatchrequest', 'Batch/ Individual request', array(' '), false);
+        if ($USER->id === $representativeid){
+            $radioarray = array();
+            $radioarray[] = $mform->createElement('radio', 'isbatchrequest', '', 'Individual', 0);
+            $radioarray[] = $mform->createElement('radio', 'isbatchrequest', '', 'Batch', 1);
+            $mform->addGroup($radioarray, 'isbatchrequest', 'Batch/ Individual request', array(' '), false);    
+        }else {
+            $mform->addElement('hidden', 'isbatchrequest');
+            $mform->setType('isbatchrequest', PARAM_INT);
+            $mform->setDefault('isbatchrequest','0');
+    
+        }
 
         $types = array();
         $types['0'] = "Deadline extension";

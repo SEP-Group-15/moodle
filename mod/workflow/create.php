@@ -24,18 +24,23 @@
 
 use mod_workflow\form\create;
 use mod_workflow\request;
+use mod_workflow\workflow;
 
 require_once(__DIR__ . '/../../config.php'); // setup moodle
 require_login();
 $context = context_system::instance();
 
-global $DB;
+global $DB, $SESSION;
 $PAGE->set_url(new moodle_url('/mod/workflow/create.php'));
 $PAGE->set_context(\context_system::instance());
 $PAGE->set_title('Submit request');
 $PAGE->set_heading('Student Request');
 
 $cmid = optional_param('cmid', true, PARAM_INT);
+$courseid = optional_param('course', true, PARAM_INT);
+$workflowid = optional_param('workflowid',null,PARAM_INT);
+
+$SESSION->workflowid = $workflowid;
 
 $mform = new create();
 
@@ -43,11 +48,13 @@ if ($mform->is_cancelled()) {
     //go back to manage page
     redirect($CFG->wwwroot . '/mod/workflow/view.php?id='.$cmid, 'Request is Cancelled');
 } else if ($fromform = $mform->get_data()) {
+    $workflow = new workflow();
     $types['0'] = "Deadline extension";
     $types['1'] = "Failure to attempt";
     $types['2'] = "Late submission";
     $request_manager = new request();
-    $workflowid = $cmid;
+    $wm = $workflow->getWorkflowbyCMID($cmid)->id;
+    $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
     $t = time();
     $timecreated = date("Y-m-d H:i:s", $t);
     $request_manager->createRequest(
