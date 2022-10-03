@@ -35,18 +35,25 @@ global $DB;
 $PAGE->set_url(new moodle_url('/mod/workflow/validate.php'));
 $PAGE->set_context(\context_system::instance());
 $PAGE->set_title('Validate request');
-$PAGE->set_heading('Student Request');
+$PAGE->set_heading('Validate Request');
 
 $id = optional_param('id', null, PARAM_INT);
 $edit = optional_param('edit', true, PARAM_BOOL);
 $cmid = optional_param('cmid', true, PARAM_INT);
+
+[$course, $cm] = get_course_and_cm_from_cmid($cmid, 'workflow');
+
+// $workflow = $DB->get_record('workflow', ['id' => $cm->instance]);
+// $PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', array('id' => $course->id)));
+// $PAGE->navbar->add($workflow->name, new moodle_url('/mod/workflow/view.php', array('id' => $cmid)));
+// $PAGE->navbar->add('Validate Request');
 
 $mform = new validate();
 $msg_handler = new message_handler();
 
 if ($mform->is_cancelled()) {
     //go back to manage page
-    redirect($CFG->wwwroot . '/mod/workflow/view.php?id='.$cmid, 'Validation is Cancelled');
+    redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $cmid, 'Validation is Cancelled');
 } else if ($fromform = $mform->get_data()) {
     $request_manager = new request();
     $validity['0'] = "valid";
@@ -56,8 +63,8 @@ if ($mform->is_cancelled()) {
         $validity[$fromform->validity],
         $fromform->instructor_comment,
     );
-    $msg_handler->send($fromform->studentid,'Your request '.$fromform->id.' is validated as '. ucwords($validity[$fromform->validity]), $cmid);
-    redirect($CFG->wwwroot . '/mod/workflow/view.php?id='.$fromform->cmid, 'Request is validated');
+    $msg_handler->send($fromform->studentid, 'Your request ' . $fromform->id . ' is validated as ' . ucwords($validity[$fromform->validity]), $cmid);
+    redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $fromform->cmid, 'Request is validated');
 }
 
 if ($id) {

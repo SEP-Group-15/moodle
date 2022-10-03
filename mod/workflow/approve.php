@@ -33,12 +33,19 @@ $context = context_system::instance();
 global $DB;
 $PAGE->set_url(new moodle_url('/mod/workflow/approve.php'));
 $PAGE->set_context(\context_system::instance());
-$PAGE->set_title('Validate request');
-$PAGE->set_heading('Student Request');
+$PAGE->set_title('Approve request');
+$PAGE->set_heading('Approve Request');
 
 $requestid = optional_param('id', null, PARAM_INT);
 $edit = optional_param('edit', true, PARAM_BOOL);
 $cmid = optional_param('cmid', true, PARAM_INT);
+$workflowid = optional_param('workflowid', null, PARAM_INT);
+[$course, $cm] = get_course_and_cm_from_cmid($cmid, 'workflow');
+
+// $PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', array('id' => $course->id)));
+// $workflow = $DB->get_record('workflow', ['id' => $workflowid]);
+// $PAGE->navbar->add($workflow->name, new moodle_url('/mod/workflow/view.php', array('id' => $cmid)));
+// $PAGE->navbar->add('Create Request');
 
 $mform = new approve();
 $msg_handler = new message_handler();
@@ -64,7 +71,7 @@ if ($requestid) {
 
 if ($mform->is_cancelled()) {
     //go back to manage page
-    redirect($CFG->wwwroot . '/mod/workflow/view.php?id='.$cmid, 'Approving is Cancelled');
+    redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $cmid, 'Approving is Cancelled');
 } else if ($fromform = $mform->get_data()) {
     $request_manager = new request();
     $status['0'] = "approved";
@@ -74,9 +81,9 @@ if ($mform->is_cancelled()) {
         $status[$fromform->approval],
         $fromform->lec_comment
     );
-    $msg_handler->send($fromform->studentid,'Your request '.$fromform->id.' is '.ucwords($status[$fromform->approval]),$cmid);
+    $msg_handler->send($fromform->studentid, 'Your request ' . $fromform->id . ' is ' . ucwords($status[$fromform->approval]), $cmid);
 
-    redirect($CFG->wwwroot . '/mod/workflow/view.php?id='.$fromform->cmid, 'Request is approved');
+    redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $fromform->cmid, 'Request is approved');
 }
 
 echo $OUTPUT->header();

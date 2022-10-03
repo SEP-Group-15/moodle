@@ -31,14 +31,21 @@ require_login();
 $context = context_system::instance();
 
 global $DB, $SESSION;
+
+$workflowid = optional_param('workflowid', null, PARAM_INT);
+// $workflow = $DB->get_record('workflow', ['id' => $workflowid]);
+
 $PAGE->set_url(new moodle_url('/mod/workflow/create.php'));
 $PAGE->set_context(\context_system::instance());
-$PAGE->set_title('Submit request');
-$PAGE->set_heading('Student Request');
+$PAGE->set_title('Create Request');
+$PAGE->set_heading('Create Request');
 
 $cmid = optional_param('cmid', true, PARAM_INT);
-$courseid = optional_param('course', true, PARAM_INT);
-$workflowid = optional_param('workflowid',null,PARAM_INT);
+[$course, $cm] = get_course_and_cm_from_cmid($cmid, 'workflow');
+
+// $PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', array('id' => $course->id)));
+// $PAGE->navbar->add($workflow->name, new moodle_url('/mod/workflow/view.php', array('id' => $cmid)));
+// $PAGE->navbar->add('Create Request');
 
 $SESSION->workflowid = $workflowid;
 
@@ -46,7 +53,7 @@ $mform = new create();
 
 if ($mform->is_cancelled()) {
     //go back to manage page
-    redirect($CFG->wwwroot . '/mod/workflow/view.php?id='.$cmid, 'Request is Cancelled');
+    redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $cmid, 'Request is Cancelled');
 } else if ($fromform = $mform->get_data()) {
     $SESSION->workflowid = $fromform->workflowid;
     $workflow = new workflow();
@@ -69,11 +76,10 @@ if ($mform->is_cancelled()) {
         ""
     );
 
-    redirect($CFG->wwwroot . '/mod/workflow/view.php?id='.$fromform->cmid, 'Request is submitted');
+    redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $fromform->cmid, 'Request is submitted');
 }
 
 echo $OUTPUT->header();
-
 $temp = new stdClass();
 $temp->cmid = $cmid;
 $mform->set_data($temp);
