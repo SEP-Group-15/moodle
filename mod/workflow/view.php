@@ -94,7 +94,7 @@ if ($cap_create) {
     echo $OUTPUT->render_from_template('mod_workflow/requests_instructor', $templatecontext);
 } else if ($cap_approve) {
     $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
-    $requests = $request_manager->getRequestsByWorkflow($workflowid);
+    $requests = $request_manager->getValidRequestsByWorkflow($workflowid);
     $templatecontext = (object)[
         'requests' => array_values($requests),
         'url' => $CFG->wwwroot . '/mod/workflow/approve.php?id=',

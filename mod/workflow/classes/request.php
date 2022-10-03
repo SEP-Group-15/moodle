@@ -156,6 +156,14 @@ class request
         ]);
     }
 
+    public function getValidRequestsByWorkflow($workflowid){
+        global $DB;
+        return $DB->get_records_select('request', 'workflowid = :workflowid and status=:status', [
+            'workflowid' => $workflowid,
+            'status' => 'valid',
+        ]);
+    }
+
     public function getRequestsByWorkflow_Student($userid, $cmid)
     {
         global $DB;
