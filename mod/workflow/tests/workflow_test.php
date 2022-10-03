@@ -98,7 +98,7 @@ class mod_workflow_workflow_test extends advanced_testcase
             $enddate,
             $commentsallowed,
             $filesallowed,
-            $representativeid,
+            $representativeid
         );
 
         $this->assertTrue($result);
