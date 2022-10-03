@@ -28,3 +28,5 @@ defined('MOODLE_INTERNAL') || die();
 $string['pluginname'] = 'Student Requests Workflow';
 $string['modulenameplural'] = 'Workflows';
 $string['modulename'] = 'Requests';
+
+$string['messageprovider:mynotification'] = 'Worklow Notification';
