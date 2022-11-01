@@ -62,7 +62,7 @@ if ($requestid) {
     $request->type = $types[$request->type];
     $request->cmid = $cmid;
     if (!$request) {
-        die("Request");
+        // die("Request");
         \core\notification::add('Request not found', \core\output\notification::NOTIFY_WARNING);
     }
     $mform->set_data($request);

@@ -108,4 +108,24 @@ class workflow
         ];
         return $DB->get_field_select('workflow', 'representativeid', $sql, $params);
     }
+
+    public function getActivityid($workflowid){
+        global $DB;
+        $sql = 'id=:id';
+        $params = [
+            'id'=>$workflowid
+        ];
+        $activityid = $DB->get_field_select('workflow', 'activityid', $sql, $params);
+        $type = $activityid[0];
+        $id = substr($activityid,1);
+        $params = [
+            'id'=>$id
+        ];
+        if ($type == 'a'){
+            $activity_name = $DB->get_field_select('assign', 'name', $sql,$params);
+        }else{
+            $activity_name = $DB->get_field_select('quiz', 'name', $sql,$params);
+        }
+        return array($activityid,$activity_name);
+    }
 }
