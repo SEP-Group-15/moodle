@@ -79,6 +79,9 @@ class create extends moodleform
             }
             $mform->addElement('select', 'activityid', 'Activity', $activities);
             $mform->setDefault('activityid', null);
+        } else {
+            $mform->addElement('hidden', 'activityid');
+            $mform->setDefault('activityid', $temp_workflow->activityid);
         }
 
         $types = array();
@@ -87,7 +90,7 @@ class create extends moodleform
         $types['2'] = "Late submission";
 
         $mform->addElement('select', 'type', 'Select type', $types);
-        $mform->setDefault('type', 0);
+        $mform->setDefault('type', null);
         $mform->hideIf('type', 'activityid', 'eq', null);
 
         if ($temp_workflow->filesallowed) {
