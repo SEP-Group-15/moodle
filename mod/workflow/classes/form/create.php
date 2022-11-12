@@ -28,13 +28,14 @@ use moodleform;
 
 //moodleform is defined in formslib.php
 require_once("$CFG->libdir/formslib.php");
+
 use mod_workflow\workflow;
 
 class create extends moodleform
 {
     public function definition()
     {
-        global $SESSION,$USER;
+        global $SESSION, $USER, $DB;
 
         $mform = $this->_form; // Don't forget the underscore!
 
@@ -42,26 +43,42 @@ class create extends moodleform
         $representativeid = $workflow->getRepresentativeId($SESSION->workflowid);
         $temp_workflow = $workflow->getWorkflow($SESSION->workflowid);
 
+        [$course, $cm] = get_course_and_cm_from_cmid(optional_param('cmid', true, PARAM_INT), 'workflow');
+
         $mform->addElement('hidden', 'cmid');
         $mform->setType('cmid', PARAM_INT);
 
         $mform->addElement('hidden', 'workflowid');
         $mform->setType('workflowid', PARAM_INT);
-        $mform->setDefault('workflowid',$SESSION->workflowid);
+        $mform->setDefault('workflowid', $SESSION->workflowid);
 
         $mform->addElement('textarea', 'request', "Request", 'wrap="virtual" rows="5" cols="50"');
-        $mform->setDefault('request', "Enter your request");
+        $mform->setDefault('request', '');
+        $mform->addRule('request', null, 'required', null, 'client');
 
-        if ($USER->id === $representativeid){
+        if ($USER->id === $representativeid) {
             $radioarray = array();
             $radioarray[] = $mform->createElement('radio', 'isbatchrequest', '', 'Individual', 0);
             $radioarray[] = $mform->createElement('radio', 'isbatchrequest', '', 'Batch', 1);
-            $mform->addGroup($radioarray, 'isbatchrequest', 'Batch/ Individual request', array(' '), false);    
-        }else {
+            $mform->addGroup($radioarray, 'isbatchrequest', 'Batch/ Individual request', array(' '), false);
+        } else {
             $mform->addElement('hidden', 'isbatchrequest');
             $mform->setType('isbatchrequest', PARAM_INT);
-            $mform->setDefault('isbatchrequest','0');
-    
+            $mform->setDefault('isbatchrequest', '0');
+        }
+
+        if ($temp_workflow->type == 'general') {
+            $quizzes = $DB->get_records_select('quiz', 'course = ' . $course->id);
+            $assignments = $DB->get_records_select('assign', 'course = ' . $course->id);
+            $activities[null] = 'None';
+            foreach ($quizzes as $quiz) {
+                $activities['q' . $quiz->id] = $quiz->name;
+            }
+            foreach ($assignments as $assignment) {
+                $activities['a' . $assignment->id] = $assignment->name;
+            }
+            $mform->addElement('select', 'activityid', 'Activity', $activities);
+            $mform->setDefault('activityid', null);
         }
 
         $types = array();
@@ -71,8 +88,9 @@ class create extends moodleform
 
         $mform->addElement('select', 'type', 'Select type', $types);
         $mform->setDefault('type', 0);
+        $mform->hideIf('type', 'activityid', 'eq', null);
 
-        if ($temp_workflow->filesallowed){
+        if ($temp_workflow->filesallowed) {
             $mform->addElement(
                 'filemanager',
                 'files',
@@ -80,11 +98,10 @@ class create extends moodleform
                 null,
                 array('subdirs' => 1, 'maxfiles' => 50, 'accepted_types' => '*')
             );
-        }else {
+        } else {
             $mform->addElement('hidden', 'files');
             $mform->setType('files', PARAM_INT);
-            $mform->setDefault('files','0');
-
+            $mform->setDefault('files', '0');
         }
 
         $this->add_action_buttons();
