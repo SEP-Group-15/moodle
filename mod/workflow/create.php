@@ -60,6 +60,7 @@ if ($mform->is_cancelled()) {
     $types['0'] = "Deadline extension";
     $types['1'] = "Failure to attempt";
     $types['2'] = "Late submission";
+    $type = $fromform->type == null ? '' : $types[$fromform->type];
     $request_manager = new request();
     $wm = $workflow->getWorkflowbyCMID($cmid)->id;
     $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
@@ -68,7 +69,8 @@ if ($mform->is_cancelled()) {
         $fromform->request,
         $workflowid,
         $USER->id,
-        $types[$fromform->type],
+        $fromform->activityid,
+        $type,
         $fromform->isbatchrequest,
         $t,
         $fromform->files,

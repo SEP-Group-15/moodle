@@ -39,18 +39,18 @@ class mod_workflow_mod_form extends moodleform_mod
     public function definition()
     {
         global $DB;
-        global $CFG;
+        // global $CFG;
 
         $courseid = optional_param('course', true, PARAM_INT);
         $context = context_course::instance($courseid);
 
         $mform = $this->_form;
 
-        $mform->addElement('header', 'generalhdr', "General");
+        $mform->addElement('header', 'generalhdr', 'General');
         $mform->setExpanded('generalhdr');
 
-        $mform->addElement('text', 'name', "Name");
-        $mform->setDefault('name', "");
+        $mform->addElement('text', 'name', 'Name');
+        $mform->setDefault('name', '');
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
@@ -59,111 +59,108 @@ class mod_workflow_mod_form extends moodleform_mod
         $mform->setType('courseid', PARAM_INT);
         $mform->setDefault('courseid', $courseid);
 
+        $typearray = array();
+        $typearray[] = $mform->createElement('radio', 'type', 'General', null, 'general');
+        $typearray[] = $mform->createElement('radio', 'type', 'Activity-related (Assignments, Quizzes)', null, 'activity-related');
+        $mform->setDefault('type', 'general');
+        $mform->addGroup($typearray, null, 'Type');
+        // $mform->addElement('advcheckbox', 'type', 'General', 'Yes');
+
         $quizzes = $DB->get_records_select('quiz', 'course = ' . $courseid);
-
         $assignments = $DB->get_records_select('assign', 'course = ' . $courseid);
-
         $activities = [];
-
         foreach ($quizzes as $quiz) {
             $activities['q' . $quiz->id] = $quiz->name;
         }
-
         foreach ($assignments as $assignment) {
             $activities['a' . $assignment->id] = $assignment->name;
         }
-
         $mform->addElement('select', 'activityid', 'Activity', $activities);
-        $mform->setDefault('activityid', 0);
+        $mform->setDefault('activityid', null);
+        $mform->hideIf('activityid', 'type', 'eq', 'general');
 
         $instructorids = $DB->get_fieldset_select('role_assignments', 'userid', 'contextid = :contextid and roleid=:roleid', [
             'contextid' => $context->id,
             'roleid' => '4',
         ]);
-
-        $instructors = [];
-
+        $instructors[null] = 'None';
         foreach ($instructorids as $instructorid) {
             $instructor = $DB->get_record('user', ['id' => $instructorid]);
             $instructors[$instructor->id] = $instructor->firstname . ' ' . $instructor->lastname;
         }
-
         $mform->addElement('select', 'instructorid', 'Instructor', $instructors);
-        $mform->setDefault('instructorid', 0);
+        $mform->setDefault('instructorid', null);
 
         $studentids = $DB->get_records_select('role_assignments', 'contextid = ' . $context->id . ' and roleid = 5');
-
-        $students = [null];
-
+        $students[null] = 'None';
         foreach ($studentids as $studentid) {
             $student = $DB->get_record('user', ['id' => $studentid->userid]);
             $students[$student->id] = $student->idnumber . ' - ' . $student->firstname . ' ' . $student->lastname;
         }
-
         $mform->addElement('select', 'representativeid', 'Representative', $students);
-        $mform->setDefault('representative', 0);
+        $mform->setDefault('representative', null);
 
-        // $mform->addElement('header', 'optionshdr', "Options");
+        // $mform->addElement('header', 'optionshdr', 'Options');
         // $mform->setExpanded('optionshdr');
 
-        $mform->addElement('advcheckbox', 'filesallowed', "File submissions", "Allow");
+        $mform->addElement('advcheckbox', 'filesallowed', 'File submissions', 'Allow');
 
-        // $mform->addElement('advcheckbox', 'commentsallowed', "Comments", "Allow");
+        // $mform->addElement('advcheckbox', 'commentsallowed', 'Comments', 'Allow');
 
-        $mform->addElement('header', 'availabilityhdr', "Availability");
+        $mform->addElement('header', 'availabilityhdr', 'Availability');
         $mform->setExpanded('availabilityhdr');
 
-        $mform->addElement('date_time_selector', 'startdate', "Start date", array('optional' => true));
+        $mform->addElement('date_time_selector', 'startdate', 'Start date', array('optional' => true));
 
-        if (!empty($CFG->enablecourserelativedates)) {
-            $attributes = [
-                'aria-describedby' => 'relativedatesmode_warning'
-            ];
-            $relativeoptions = [
-                0 => get_string('no'),
-                1 => get_string('yes'),
-            ];
-            $relativedatesmodegroup = [];
-            $relativedatesmodegroup[] = $mform->createElement(
-                'select',
-                'start_relativedatesmode',
-                get_string('relativedatesmode'),
-                $relativeoptions,
-                $attributes
-            );
-            $relativedatesmodegroup[] = $mform->createElement('html', html_writer::span(
-                get_string('relativedatesmode_warning'),
-                '',
-                ['id' => 'relativedatesmode_warning']
-            ));
-            $mform->addGroup($relativedatesmodegroup, 'relativedatesmodegroup', get_string('relativedatesmode'), null, false);
-        }
+        // if (!empty($CFG->enablecourserelativedates)) {
+        //     $attributes = [
+        //         'aria-describedby' => 'relativedatesmode_warning'
+        //     ];
+        //     $relativeoptions = [
+        //         0 => get_string('no'),
+        //         1 => get_string('yes'),
+        //     ];
+        //     $relativedatesmodegroup = [];
+        //     $relativedatesmodegroup[] = $mform->createElement(
+        //         'select',
+        //         'start_relativedatesmode',
+        //         get_string('relativedatesmode'),
+        //         $relativeoptions,
+        //         $attributes
+        //     );
+        //     $relativedatesmodegroup[] = $mform->createElement('html', html_writer::span(
+        //         get_string('relativedatesmode_warning'),
+        //         '',
+        //         ['id' => 'relativedatesmode_warning']
+        //     ));
+        //     $mform->addGroup($relativedatesmodegroup, 'relativedatesmodegroup', get_string('relativedatesmode'), null, false);
+        // }
 
-        $mform->addElement('date_time_selector', 'enddate', "Due date", array('optional' => true));
+        $mform->addElement('date_time_selector', 'enddate', 'Due date', array('optional' => true));
 
-        if (!empty($CFG->enablecourserelativedates)) {
-            $attributes = [
-                'aria-describedby' => 'relativedatesmode_warning'
-            ];
-            $relativeoptions = [
-                0 => get_string('no'),
-                1 => get_string('yes'),
-            ];
-            $relativedatesmodegroup = [];
-            $relativedatesmodegroup[] = $mform->createElement(
-                'select',
-                'end_relativedatesmode',
-                get_string('relativedatesmode'),
-                $relativeoptions,
-                $attributes
-            );
-            $relativedatesmodegroup[] = $mform->createElement('html', html_writer::span(
-                get_string('relativedatesmode_warning'),
-                '',
-                ['id' => 'relativedatesmode_warning']
-            ));
-            $mform->addGroup($relativedatesmodegroup, 'relativedatesmodegroup', get_string('relativedatesmode'), null, false);
-        }
+        // if (!empty($CFG->enablecourserelativedates)) {
+        //     $attributes = [
+        //         'aria-describedby' => 'relativedatesmode_warning'
+        //     ];
+        //     $relativeoptions = [
+        //         0 => get_string('no'),
+        //         1 => get_string('yes'),
+        //     ];
+        //     $relativedatesmodegroup = [];
+        //     $relativedatesmodegroup[] = $mform->createElement(
+        //         'select',
+        //         'end_relativedatesmode',
+        //         get_string('relativedatesmode'),
+        //         $relativeoptions,
+        //         $attributes
+        //     );
+        //     $relativedatesmodegroup[] = $mform->createElement('html', html_writer::span(
+        //         get_string('relativedatesmode_warning'),
+        //         '',
+        //         ['id' => 'relativedatesmode_warning']
+        //     ));
+        //     $mform->addGroup($relativedatesmodegroup, 'relativedatesmodegroup', get_string('relativedatesmode'), null, false);
+        // }
 
         // Add standard elements.
         $this->standard_coursemodule_elements();

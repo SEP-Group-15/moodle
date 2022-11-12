@@ -39,8 +39,9 @@ class mod_workflow_request_test extends advanced_testcase
         $this->assertEmpty($requests);
 
         $requestText = "Test Request";
-        $worflowid = '100';
+        $worflowid = "100";
         $studentid = "100";
+        $activityid = "q100";
         $type = "deadline extension";
         $isbatchrequest = 0;
         $timecreated = 1;
@@ -52,6 +53,7 @@ class mod_workflow_request_test extends advanced_testcase
             $requestText,
             $worflowid,
             $studentid,
+            $activityid,
             $type,
             $isbatchrequest,
             $timecreated,
@@ -80,8 +82,9 @@ class mod_workflow_request_test extends advanced_testcase
         $this->assertEmpty($requests);
 
         $requestText = "Test Request";
-        $worflowid = '100';
+        $worflowid = "100";
         $studentid = "100";
+        $activityid = "q100";
         $type = "deadline extension";
         $isbatchrequest = 0;
         $timecreated = 1;
@@ -93,6 +96,7 @@ class mod_workflow_request_test extends advanced_testcase
             $requestText,
             $worflowid,
             $studentid,
+            $activityid,
             $type,
             $isbatchrequest,
             $timecreated,
@@ -118,8 +122,9 @@ class mod_workflow_request_test extends advanced_testcase
         $this->assertEmpty($requests);
 
         $requestText = "Test Request";
-        $worflowid = '100';
+        $worflowid = "100";
         $studentid = "100";
+        $activityid = "q100";
         $isbatchrequest = 0;
         $timecreated = 1;
         $files = 3;
@@ -138,6 +143,7 @@ class mod_workflow_request_test extends advanced_testcase
                 $temp,
                 $worflowid,
                 $studentid,
+                $activityid,
                 $temp_type,
                 $isbatchrequest,
                 $timecreated,

@@ -81,6 +81,7 @@ class request
         $request,
         $workflowid,
         $studentid,
+        $activityid,
         $type,
         $isbatchrequest,
         $timecreated,
@@ -94,6 +95,7 @@ class request
         $record->request = $request;
         $record->workflowid = $workflowid;
         $record->studentid = $studentid;
+        $record->activityid = $activityid;
         $record->type = $type;
         $record->status = 'pending';
         $record->isbatchrequest = $isbatchrequest;
@@ -156,7 +158,8 @@ class request
         ]);
     }
 
-    public function getValidRequestsByWorkflow($workflowid){
+    public function getValidRequestsByWorkflow($workflowid)
+    {
         global $DB;
         return $DB->get_records_select('request', 'workflowid = :workflowid and status=:status', [
             'workflowid' => $workflowid,
@@ -173,7 +176,8 @@ class request
         ]);
     }
 
-    public function processRequests($requests){
+    public function processRequests($requests)
+    {
         foreach ($requests as $request) {
             $request->status = ucwords($request->status);
             $request->timecreated = date("Y-m-d H:i:s", $request->timecreated);
