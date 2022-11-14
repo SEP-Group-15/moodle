@@ -109,6 +109,15 @@ class workflow
         return $DB->get_field_select('workflow', 'representativeid', $sql, $params);
     }
 
+    public function getInstructor($workflowid){
+        global $DB;
+        $sql = 'id=:id';
+        $params = [
+            'id'=>$workflowid
+        ];
+        return $DB->get_field_select('workflow', 'instructorid', $sql, $params);
+    }
+
     public function getActivityid($workflowid){
         global $DB;
         $sql = 'id=:id';

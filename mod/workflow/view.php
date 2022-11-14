@@ -67,15 +67,20 @@ if ($cap_approve) {
     echo $OUTPUT->render_from_template('mod_workflow/requests_lecturer', $templatecontext);
 } else if ($cap_validate) {
     $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
-    $requests = $request_manager->getRequestsByWorkflow($workflowid);
-    $requests = $request_manager->processRequests($requests);
-    $templatecontext = (object)[
-        'requests' => array_values($requests),
-        'text' => 'text',
-        'url' => $CFG->wwwroot . '/mod/workflow/validate.php?id=',
-        'cmid' => $cmid,
-    ];
-    echo $OUTPUT->render_from_template('mod_workflow/requests_instructor', $templatecontext);
+    $instructor = $workflow->getInstructor($workflowid);
+    if ($USER->id === $instructor) {
+        $requests = $request_manager->getRequestsByWorkflow($workflowid);
+        $requests = $request_manager->processRequests($requests);
+        $templatecontext = (object)[
+            'requests' => array_values($requests),
+            'text' => 'text',
+            'url' => $CFG->wwwroot . '/mod/workflow/validate.php?id=',
+            'cmid' => $cm->id,
+        ];
+        echo $OUTPUT->render_from_template('mod_workflow/requests_instructor', $templatecontext);
+    } else {
+        redirect($CFG->wwwroot . '/course/view.php?id=' . $course->id, 'You are not assigned to this workflow', null, \core\output\notification::NOTIFY_ERROR);
+    }
 } else if ($cap_create) {
     $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
     $requests = $request_manager->getRequestsByWorkflow_Student($USER->id, $workflowid);
@@ -86,7 +91,7 @@ if ($cap_approve) {
         'url' => $CFG->wwwroot . '/mod/workflow/validate.php?id=',
         'cmid' => $cmid,
     ];
-    $createurl = $CFG->wwwroot . '/mod/workflow/create.php?cmid=' . $cmid . '&workflowid=' . $workflowid;
+    $createurl = $CFG->wwwroot . '/mod/workflow/create.php?cmid=' . $cm->id . '&workflowid=' . $workflowid;
     echo '<a class="btn btn-primary" href="' . $createurl . '">Create New Request</a>';
     echo $OUTPUT->render_from_template('mod_workflow/requests_student', $templatecontext);
 }
