@@ -28,24 +28,20 @@ use mod_workflow\workflow;
 
 require_once(__DIR__ . '/../../config.php'); // setup moodle
 require_login();
-$context = context_system::instance();
 
 global $DB, $SESSION;
 
 $workflowid = optional_param('workflowid', null, PARAM_INT);
-// $workflow = $DB->get_record('workflow', ['id' => $workflowid]);
-
-$PAGE->set_url(new moodle_url('/mod/workflow/create.php'));
-$PAGE->set_context(\context_system::instance());
-$PAGE->set_title('Create Request');
-$PAGE->set_heading('Create Request');
-
 $cmid = optional_param('cmid', true, PARAM_INT);
 [$course, $cm] = get_course_and_cm_from_cmid($cmid, 'workflow');
+$context = context_module::instance($cm->id);
 
-// $PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', array('id' => $course->id)));
-// $PAGE->navbar->add($workflow->name, new moodle_url('/mod/workflow/view.php', array('id' => $cmid)));
-// $PAGE->navbar->add('Create Request');
+$PAGE->set_url(new moodle_url('/mod/workflow/create.php'));
+$PAGE->set_context($context);
+$PAGE->set_title('Create Request');
+$PAGE->set_heading('Create Request');
+$PAGE->navbar->add('Create Request');
+$PAGE->set_cm($cm, $course);
 
 $SESSION->workflowid = $workflowid;
 
@@ -60,7 +56,11 @@ if ($mform->is_cancelled()) {
     $types['0'] = "Deadline extension";
     $types['1'] = "Failure to attempt";
     $types['2'] = "Late submission";
-    $type = $fromform->type == null ? '' : $types[$fromform->type];
+    if (isset($fromform->type)) {
+        $type = $types[$fromform->type];
+    } else {
+        $type = null;
+    }
     $request_manager = new request();
     $wm = $workflow->getWorkflowbyCMID($cmid)->id;
     $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
@@ -77,7 +77,6 @@ if ($mform->is_cancelled()) {
         "",
         ""
     );
-
     redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $fromform->cmid, 'Request is submitted');
 }
 

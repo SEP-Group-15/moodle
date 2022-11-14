@@ -22,71 +22,49 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_workflow\request;
+use mod_workflow\workflow;
 
 // require('../../config.php');
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/course/format/lib.php');
-
-use mod_workflow\request;
-use mod_workflow\workflow;
-
-global $USER;
-
-$id = required_param('id', PARAM_INT);
-
 require_login();
 
+global $USER, $DB;
+
+$id = required_param('id', PARAM_INT);
 [$course, $cm] = get_course_and_cm_from_cmid($id, 'workflow');
-// $cm = get_coursemodule_from_id('workflow', $id, $course->id, false, MUST_EXIST);
 $instance = $DB->get_record('workflow', ['id' => $cm->instance], '*', MUST_EXIST);
-$context = context_course::instance($course->id);
-
-global $DB;
-
-$roleid = $DB->get_field_select('role_assignments', 'roleid', 'contextid = :contextid and userid=:userid', [
-    'contextid' => $context->id,
-    'userid' => $USER->id,
-]);
-
-$role = $DB->get_field_select('role', 'shortname', 'id=:id', [
-    'id' => $roleid
-]);
-
+$context = context_module::instance($cm->id);
 $workflow = $DB->get_record('workflow', ['id' => $cm->instance]);
 
-// $PAGE->set_url(new moodle_url('/workflow/requests.php'));
-$PAGE->set_context(\context_system::instance());
+$PAGE->set_url(new moodle_url('/mod/workflow/view.php'));
+$PAGE->set_context($context);
 $PAGE->set_title($course->shortname . ': ' . $workflow->name);
 $PAGE->set_heading($workflow->name);
+$PAGE->set_cm($cm, $course);
 
-$cap_create = has_capability('mod/workflow:createrequest', $context);
-$cap_validate = has_capability('mod/workflow:validaterequest', $context);
 $cap_approve = has_capability('mod/workflow:approverequest', $context);
-
-// $PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', array('id' => $course->id)));
-// $PAGE->navbar->add($workflow->name);
+$cap_validate = has_capability('mod/workflow:validaterequest', $context);
+$cap_create = has_capability('mod/workflow:createrequest', $context);
 
 echo $OUTPUT->header();
 
 $request_manager = new request();
 $workflow = new workflow();
 $requests = $request_manager->getAllRequests();
-
 $cmid = $cm->id;
 
-if ($cap_create) {
+if ($cap_approve) {
     $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
-    $requests = $request_manager->getRequestsByWorkflow_Student($USER->id, $workflowid);
+    $requests = $request_manager->getValidRequestsByWorkflow($workflowid);
     $requests = $request_manager->processRequests($requests);
     $templatecontext = (object)[
         'requests' => array_values($requests),
-        'text' => 'text',
-        'url' => $CFG->wwwroot . '/mod/workflow/validate.php?id=',
-        'cmid' => $cm->id,
+        'url' => $CFG->wwwroot . '/mod/workflow/approve.php?id=',
+        'cmid' => $cmid,
     ];
-    $createurl = $CFG->wwwroot . '/mod/workflow/create.php?cmid=' . $cm->id . '&workflowid=' . $workflowid;
-    echo '<a class="btn btn-primary" href="' . $createurl . '">Create New Request</a>';
-    echo $OUTPUT->render_from_template('mod_workflow/requests_student', $templatecontext);
+    echo $OUTPUT->render_from_template('mod_workflow/requests_lecturer', $templatecontext);
 } else if ($cap_validate) {
     $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
     $requests = $request_manager->getRequestsByWorkflow($workflowid);
@@ -95,19 +73,22 @@ if ($cap_create) {
         'requests' => array_values($requests),
         'text' => 'text',
         'url' => $CFG->wwwroot . '/mod/workflow/validate.php?id=',
-        'cmid' => $cm->id,
+        'cmid' => $cmid,
     ];
     echo $OUTPUT->render_from_template('mod_workflow/requests_instructor', $templatecontext);
-} else if ($cap_approve) {
+} else if ($cap_create) {
     $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
-    $requests = $request_manager->getValidRequestsByWorkflow($workflowid);
+    $requests = $request_manager->getRequestsByWorkflow_Student($USER->id, $workflowid);
     $requests = $request_manager->processRequests($requests);
     $templatecontext = (object)[
         'requests' => array_values($requests),
-        'url' => $CFG->wwwroot . '/mod/workflow/approve.php?id=',
-        'cmid' => $cm->id,
+        'text' => 'text',
+        'url' => $CFG->wwwroot . '/mod/workflow/validate.php?id=',
+        'cmid' => $cmid,
     ];
-    echo $OUTPUT->render_from_template('mod_workflow/requests_lecturer', $templatecontext);
+    $createurl = $CFG->wwwroot . '/mod/workflow/create.php?cmid=' . $cmid . '&workflowid=' . $workflowid;
+    echo '<a class="btn btn-primary" href="' . $createurl . '">Create New Request</a>';
+    echo $OUTPUT->render_from_template('mod_workflow/requests_student', $templatecontext);
 }
 
 echo $OUTPUT->footer();
