@@ -77,19 +77,21 @@ class request
         }
     }
 
-    public function processExtensions(string $assignid, strring $studentid, string $extended_date, string $type)
+    public function processExtensions($activityid, $studentid, $extended_date, $type)
     {
         global $DB;
         $record = new stdClass();
-        if(strpos($assignid, 'a')){
+        $pure_id = substr($activityid,1);
+        if(strpos($activityid, 'a') === 0){
             $table = 'assign_overrides';
-            $record->assignid = $assignid;
+            $record->assignid = $pure_id;
             $record->duedate = $extended_date;
 
-        } else if (strpos($assignid, 'q')){
+        } else if (strpos($activityid, 'q') === 0){
             $table = 'quiz_overrides';
-            $record->quiz = $assignid;
+            $record->quiz = $pure_id;
             $record->timeclose = $extended_date;
+
         }
         $record->userid = $studentid;
 
@@ -206,6 +208,16 @@ class request
             $request->timecreated = date("Y-m-d H:i:s", $request->timecreated);
         }
         return $requests;
+    }
+
+    public function getActivityId($requestid)
+    {
+        global $DB;
+        $sql = 'id=:id';
+        $params = [
+            'id'=>$requestid
+        ];
+        return $DB->get_field_select('request', 'activityid', $sql, $params);
     }
 
 }

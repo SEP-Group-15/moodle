@@ -79,8 +79,10 @@ if ($mform->is_cancelled()) {
         $fromform->lec_comment
     );
     if($status[$fromform->approval] === "approved"){
+
+        $activityid = $request_manager->getActivityId($requestid);
         $request_manager->processExtensions(
-            $fromform->activityid,
+            $activityid,
             $fromform->studentid,
             $fromform->extended_date,
             $fromform->type
