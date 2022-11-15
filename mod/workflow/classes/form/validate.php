@@ -60,6 +60,11 @@ class validate extends moodleform
         $elem_type = $mform->addElement('select', 'type', 'Select type', $types);
         $mform->setDefault('type', 0);
 
+        // $link = 'C:/xampp/moodledata/workflow_files/test.pdf';
+        // $link = "/moodle/test 1.pdf";
+        // $html = '<a class="btn btn-primary" href="' . $link . '" download = "'.$link.'">File name</a>';
+        // $mform->addElement('html', $html);
+
         $elem_file = $mform->addElement(
             'filemanager',
             'files',

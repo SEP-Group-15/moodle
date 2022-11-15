@@ -65,6 +65,11 @@ if ($mform->is_cancelled()) {
     $wm = $workflow->getWorkflowbyCMID($cmid)->id;
     $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
     $t = time();
+    // echo var_dump($fromform);
+    // die();
+    // $name = $mform->get_new_filename('files');
+
+    // $success = $mform->save_file('files', 'C:\\xampp\\moodledata\\workflow_files\\'.$name);
     $request_manager->createRequest(
         $fromform->request,
         $workflowid,

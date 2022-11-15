@@ -99,8 +99,11 @@ class create extends moodleform
                 'files',
                 'File submission',
                 null,
-                array('subdirs' => 1, 'maxfiles' => 50, 'accepted_types' => '*')
+                array('subdirs' => 1, 'maxfiles' => 1, 'accepted_types' => '*')
             );
+
+            // $mform->addElement('filepicker', 'files', 'File submission', null,
+            // array('subdirs' => 1, 'maxfiles' => 1, 'accepted_types' => '*'));
         } else {
             $mform->addElement('hidden', 'files');
             $mform->setType('files', PARAM_INT);
