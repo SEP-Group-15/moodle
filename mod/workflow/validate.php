@@ -28,25 +28,22 @@ use mod_workflow\message_handler;
 
 require_once(__DIR__ . '/../../config.php'); // setup moodle
 require_login();
-$context = context_system::instance();
 // require_capability('local/workflow:validaterequests',$context);
 
 global $DB;
-$PAGE->set_url(new moodle_url('/mod/workflow/validate.php'));
-$PAGE->set_context(\context_system::instance());
-$PAGE->set_title('Validate request');
-$PAGE->set_heading('Validate Request');
 
 $id = optional_param('id', null, PARAM_INT);
 $edit = optional_param('edit', true, PARAM_BOOL);
 $cmid = optional_param('cmid', true, PARAM_INT);
-
 [$course, $cm] = get_course_and_cm_from_cmid($cmid, 'workflow');
+$context = context_module::instance($cm->id);
 
-// $workflow = $DB->get_record('workflow', ['id' => $cm->instance]);
-// $PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', array('id' => $course->id)));
-// $PAGE->navbar->add($workflow->name, new moodle_url('/mod/workflow/view.php', array('id' => $cmid)));
-// $PAGE->navbar->add('Validate Request');
+$PAGE->set_url(new moodle_url('/mod/workflow/validate.php'));
+$PAGE->set_context($context);
+$PAGE->set_title('Validate request');
+$PAGE->set_heading('Validate Request');
+$PAGE->navbar->add('Validate Request');
+$PAGE->set_cm($cm, $course);
 
 $mform = new validate();
 $msg_handler = new message_handler();
