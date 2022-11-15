@@ -91,8 +91,30 @@ if ($cap_approve) {
         'url' => $CFG->wwwroot . '/mod/workflow/validate.php?id=',
         'cmid' => $cmid,
     ];
-    $createurl = $CFG->wwwroot . '/mod/workflow/create.php?cmid=' . $cm->id . '&workflowid=' . $workflowid;
-    echo '<a class="btn btn-primary" href="' . $createurl . '">Create New Request</a>';
+    $workflow_curr = $workflow->getWorkflow($workflowid);
+    $now = time();
+    $startdate = (int)$workflow_curr->startdate;
+    $enddate = (int)$workflow_curr->enddate;
+    if (($startdate == 0 and $enddate == 0) or
+        ($startdate <= $now  and $now <= $enddate) or
+        ($startdate == 0 and $enddate >= $now) or
+        ($startdate <= $now and $enddate == 0)
+    ) {
+        $createurl = $CFG->wwwroot . '/mod/workflow/create.php?cmid=' . $cm->id . '&workflowid=' . $workflowid;
+        echo '<a class="btn btn-primary" href="' . $createurl . '">Create New Request</a>';
+    }
+    $period = '';
+    if ($startdate != 0 and $enddate != 0){
+        $period = 'from '.date("Y-m-d,H:i:s", $startdate).' until '.date("Y-m-d,H:i:s", $enddate);
+    }else if ($startdate == 0 and $enddate != 0){
+        $period = ' until '.date("Y-m-d,H:i:s", $enddate);
+    }else if ($startdate != 0 and $enddate == 0){
+        $period = 'from '.date("Y-m-d,H:i:s", $startdate);
+    }
+    $html = ' Requests are accepted '.$period.' to this workflow.';
+    if (!($startdate == 0 and $enddate == 0)){
+        echo $html;
+    }
     echo $OUTPUT->render_from_template('mod_workflow/requests_student', $templatecontext);
 }
 
