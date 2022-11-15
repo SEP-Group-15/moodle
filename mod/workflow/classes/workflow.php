@@ -29,7 +29,7 @@ use dml_exception;
 
 class workflow
 {
-    public function create($name, $courseid, $activityid, $instructorid, $startdate, $enddate, $commentsallowed, $filesallowed,$representativeid)
+    public function create($name, $courseid, $activityid, $instructorid, $startdate, $enddate, $commentsallowed, $filesallowed,$representativeid,$lecturerid)
     {
         global $DB;
         $record = new stdClass();
@@ -42,6 +42,7 @@ class workflow
         $record->commentsallowed = $commentsallowed;
         $record->filesallowed = $filesallowed;
         $record->representativeid = $representativeid;
+        $record->lecturerid = $lecturerid;
 
         try {
             return $DB->insert_record('workflow', $record, false);

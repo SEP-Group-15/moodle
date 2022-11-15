@@ -32,6 +32,7 @@ class mod_workflow_workflow_test extends advanced_testcase
 {
     public function test_create()
     {
+        global $USER;
         $this->resetAfterTest();
         $this->setUser(2);
         $workflow = new workflow();
@@ -48,6 +49,7 @@ class mod_workflow_workflow_test extends advanced_testcase
         $commentsallowed = 1;
         $filesallowed = 0;
 
+
         $result = $workflow->create(
             $name,
             $courseid,
@@ -57,7 +59,8 @@ class mod_workflow_workflow_test extends advanced_testcase
             $enddate,
             $commentsallowed,
             $filesallowed,
-            $representativeid
+            $representativeid,
+            $USER->id
         );
 
         $this->assertTrue($result);
@@ -73,6 +76,7 @@ class mod_workflow_workflow_test extends advanced_testcase
 
     public function test_remove()
     {
+        global $USER;
         $this->resetAfterTest();
         $this->setUser(2);
         $workflow = new workflow();
@@ -98,7 +102,8 @@ class mod_workflow_workflow_test extends advanced_testcase
             $enddate,
             $commentsallowed,
             $filesallowed,
-            $representativeid
+            $representativeid,
+            $USER->id
         );
 
         $this->assertTrue($result);

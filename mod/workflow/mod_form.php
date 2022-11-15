@@ -38,9 +38,7 @@ class mod_workflow_mod_form extends moodleform_mod
 {
     public function definition()
     {
-        global $DB;
-        // global $CFG;
-
+        global $DB, $USER;
         $courseid = optional_param('course', true, PARAM_INT);
         $context = context_course::instance($courseid);
 
@@ -58,6 +56,10 @@ class mod_workflow_mod_form extends moodleform_mod
         $mform->addElement('hidden', 'courseid');
         $mform->setType('courseid', PARAM_INT);
         $mform->setDefault('courseid', $courseid);
+
+        $mform->addElement('hidden', 'lecturerid');
+        $mform->setType('lecturerid', PARAM_INT);
+        $mform->setDefault('lecturerid', $USER->id);
 
         $typearray = array();
         $typearray[] = $mform->createElement('radio', 'type', 'General', null, 'general');
