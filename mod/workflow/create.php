@@ -59,7 +59,7 @@ if ($mform->is_cancelled()) {
     if (isset($fromform->type)) {
         $type = $types[$fromform->type];
     } else {
-        $type = null;
+        $type = '';
     }
     $request_manager = new request();
     $wm = $workflow->getWorkflowbyCMID($cmid)->id;
