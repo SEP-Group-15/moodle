@@ -57,7 +57,12 @@ $cmid = $cm->id;
 
 if ($cap_approve) {
     $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
-    $requests = $request_manager->getValidRequestsByWorkflow($workflowid);
+    $workflow_cur = $workflow->getWorkflow($workflowid);
+    if ($workflow_cur->instructorid == '0'){
+        $requests = $request_manager->getRequestsByWorkflow($workflowid);
+    }else{
+        $requests = $request_manager->getValidRequestsByWorkflow($workflowid);
+    }
     $requests = $request_manager->processRequests($requests);
     $templatecontext = (object)[
         'requests' => array_values($requests),

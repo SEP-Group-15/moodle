@@ -24,6 +24,7 @@
 
 use mod_workflow\form\validate;
 use mod_workflow\request;
+use mod_workflow\workflow;
 use mod_workflow\message_handler;
 
 require_once(__DIR__ . '/../../config.php'); // setup moodle
@@ -53,6 +54,7 @@ if ($mform->is_cancelled()) {
     redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $cmid, 'Validation is Cancelled');
 } else if ($fromform = $mform->get_data()) {
     $request_manager = new request();
+    $workflow = new workflow();
     $validity['0'] = "valid";
     $validity['1'] = "rejected";
     $request_manager->validate(
@@ -60,7 +62,13 @@ if ($mform->is_cancelled()) {
         $validity[$fromform->validity],
         $fromform->instructor_comment,
     );
-    $msg_handler->send($fromform->studentid, 'Your request ' . $fromform->id . ' is validated as ' . ucwords($validity[$fromform->validity]), $cmid);
+    $workflowid = $request_manager->getRequest($fromform->id)->workflowid;
+    $workflow_curr = $workflow->getWorkflow($workflowid);
+    $lec_msg = $USER->firstname.' '.$USER->lastname. ' has validated a request of ID: '.$fromform->id.' as '.$validity[$fromform->validity].'.';
+    $msg_handler->send($fromform->studentid, 'Your request of ID:' . $fromform->id . ' is validated as ' . ucwords($validity[$fromform->validity]), $cmid);
+    if ($validity[$fromform->validity] == "valid"){
+        $msg_handler->send($workflow_curr->lecturerid, $lec_msg, $cmid);
+    }
     redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $fromform->cmid, 'Request is validated');
 }
 

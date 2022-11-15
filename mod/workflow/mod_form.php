@@ -113,56 +113,8 @@ class mod_workflow_mod_form extends moodleform_mod
         $mform->setExpanded('availabilityhdr');
 
         $mform->addElement('date_time_selector', 'startdate', 'Start date', array('optional' => true));
-
-        // if (!empty($CFG->enablecourserelativedates)) {
-        //     $attributes = [
-        //         'aria-describedby' => 'relativedatesmode_warning'
-        //     ];
-        //     $relativeoptions = [
-        //         0 => get_string('no'),
-        //         1 => get_string('yes'),
-        //     ];
-        //     $relativedatesmodegroup = [];
-        //     $relativedatesmodegroup[] = $mform->createElement(
-        //         'select',
-        //         'start_relativedatesmode',
-        //         get_string('relativedatesmode'),
-        //         $relativeoptions,
-        //         $attributes
-        //     );
-        //     $relativedatesmodegroup[] = $mform->createElement('html', html_writer::span(
-        //         get_string('relativedatesmode_warning'),
-        //         '',
-        //         ['id' => 'relativedatesmode_warning']
-        //     ));
-        //     $mform->addGroup($relativedatesmodegroup, 'relativedatesmodegroup', get_string('relativedatesmode'), null, false);
-        // }
-
+        
         $mform->addElement('date_time_selector', 'enddate', 'Due date', array('optional' => true));
-
-        // if (!empty($CFG->enablecourserelativedates)) {
-        //     $attributes = [
-        //         'aria-describedby' => 'relativedatesmode_warning'
-        //     ];
-        //     $relativeoptions = [
-        //         0 => get_string('no'),
-        //         1 => get_string('yes'),
-        //     ];
-        //     $relativedatesmodegroup = [];
-        //     $relativedatesmodegroup[] = $mform->createElement(
-        //         'select',
-        //         'end_relativedatesmode',
-        //         get_string('relativedatesmode'),
-        //         $relativeoptions,
-        //         $attributes
-        //     );
-        //     $relativedatesmodegroup[] = $mform->createElement('html', html_writer::span(
-        //         get_string('relativedatesmode_warning'),
-        //         '',
-        //         ['id' => 'relativedatesmode_warning']
-        //     ));
-        //     $mform->addGroup($relativedatesmodegroup, 'relativedatesmodegroup', get_string('relativedatesmode'), null, false);
-        // }
 
         // Add standard elements.
         $this->standard_coursemodule_elements();
