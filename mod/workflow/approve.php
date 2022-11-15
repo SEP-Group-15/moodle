@@ -78,6 +78,14 @@ if ($mform->is_cancelled()) {
         $status[$fromform->approval],
         $fromform->lec_comment
     );
+    if($status[$fromform->approval] === "approved"){
+        $request_manager->processExtensions(
+            $fromform->activityid,
+            $fromform->studentid,
+            $fromform->extended_date,
+            $fromform->type
+        );
+    }
     $msg_handler->send($fromform->studentid, 'Your request ' . $fromform->id . ' is ' . ucwords($status[$fromform->approval]), $cmid);
 
     redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $fromform->cmid, 'Request is approved');

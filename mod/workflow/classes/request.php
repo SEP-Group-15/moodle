@@ -77,6 +77,29 @@ class request
         }
     }
 
+    public function processExtensions(string $assignid, strring $studentid, string $extended_date, string $type)
+    {
+        global $DB;
+        $record = new stdClass();
+        if(strpos($assignid, 'a')){
+            $table = 'assign_overrides';
+            $record->assignid = $assignid;
+            $record->duedate = $extended_date;
+
+        } else if (strpos($assignid, 'q')){
+            $table = 'quiz_overrides';
+            $record->quiz = $assignid;
+            $record->timeclose = $extended_date;
+        }
+        $record->userid = $studentid;
+
+        try {
+            return $DB->insert_record($table, $record, false);
+        } catch (dml_exception $e) {
+            return false;
+        }
+    }
+
     public function createRequest(
         $request,
         $workflowid,
@@ -184,4 +207,5 @@ class request
         }
         return $requests;
     }
+
 }

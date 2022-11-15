@@ -41,8 +41,11 @@ class approve extends moodleform
         $mform->addElement('hidden', 'cmid');
         $mform->setType('cmid', PARAM_INT);
 
-        $mform->addElement('hidden', 'studentid');
-        $mform->setType('studentid', PARAM_INT);
+//        $mform->addElement('hidden', 'studentid');
+//        $mform->setType('studentid', PARAM_INT);
+
+        $elem_request1 = $mform->addElement('textarea', 'studentid', "Student ID", 'wrap="virtual" rows="1" cols="50"');
+        $mform->setDefault('studentid', "Enter your request");
 
         $elem_request = $mform->addElement('textarea', 'request', "Request", 'wrap="virtual" rows="5" cols="50"');
         $mform->setDefault('request', "Enter your request");
@@ -81,6 +84,7 @@ class approve extends moodleform
         $elem_validty = $mform->addElement('select', 'validity', 'Validity', $validity);
         $mform->setDefault('validity', 0);
 
+        $elem_request1->freeze();
         $elem_request->freeze();
         $elem_radio->freeze();
         $elem_type->freeze();

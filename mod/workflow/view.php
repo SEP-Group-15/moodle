@@ -24,6 +24,8 @@
 
 use mod_workflow\request;
 use mod_workflow\workflow;
+use mod_workflow\table\requests;
+
 
 // require('../../config.php');
 require_once(__DIR__ . '/../../config.php');
@@ -55,6 +57,7 @@ $workflow = new workflow();
 $requests = $request_manager->getAllRequests();
 $cmid = $cm->id;
 
+
 if ($cap_approve) {
     $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
     $workflow_cur = $workflow->getWorkflow($workflowid);
@@ -70,6 +73,9 @@ if ($cap_approve) {
         'cmid' => $cmid,
     ];
     echo $OUTPUT->render_from_template('mod_workflow/requests_lecturer', $templatecontext);
+//    $table_requests = new requests($cmid);
+//    $table_requests->out(10, true, '');
+
 } else if ($cap_validate) {
     $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
     $instructor = $workflow->getInstructor($workflowid);
