@@ -41,7 +41,7 @@ $context = context_module::instance($cm->id);
 $PAGE->set_url(new moodle_url('/mod/workflow/approve.php'));
 $PAGE->set_context($context);
 $PAGE->set_title('Approve request');
-$PAGE->set_heading('Approve Request');
+
 $PAGE->navbar->add('Approve Request');
 $PAGE->set_cm($cm, $course);
 
@@ -64,6 +64,9 @@ if ($requestid) {
         \core\notification::add('Request not found', \core\output\notification::NOTIFY_WARNING);
     }
     $mform->set_data($request);
+
+    $activityname = $request_manager->getActivityName($requestid);
+    $PAGE->set_heading('Approve Request - '.$activityname);
 }
 
 if ($mform->is_cancelled()) {
@@ -79,8 +82,10 @@ if ($mform->is_cancelled()) {
         $fromform->lec_comment
     );
     if($status[$fromform->approval] === "approved"){
+
+        $activityid = $request_manager->getActivityId($requestid);
         $request_manager->processExtensions(
-            $fromform->activityid,
+            $activityid,
             $fromform->studentid,
             $fromform->extended_date,
             $fromform->type

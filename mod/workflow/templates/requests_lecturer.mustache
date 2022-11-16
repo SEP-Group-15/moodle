@@ -81,87 +81,78 @@
   {{> core_user/local/participantsfilter/filtertypes}}
 </div>
 
-<div>
-<table class="table discussion-list">
-    <thead>
-        <tr>
-            <th scope="col" class="p-l-0">
-                
-            </th>
-            <th scope="col" class="p-l-0">
-                <a href="" aria-label="">Request</a>
-            </th>
-            <th scope="col" class="p-l-0">
-                <a href="" aria-label="">Type</a>
-            </th>
-            <th scope="col" class="p-l-0">
-                <a href="" aria-label="">Student</a>
-            </th>
-            <th scope="col" class="p-l-0">
-                <a href="" aria-label="">Individual/Batch</a>
-            </th>
-            <th scope="col" class="p-l-0">
-                <a href="" aria-label="">Status</a>
-            </th>
-            <th scope="col" class="p-l-0">
-                <a href="" aria-label="">Time Created</a>
-            </th>
-            <th scope="col" class="p-l-0">
-                <a href="" aria-label="">Extension</a>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        {{#requests}}
-            <tr>
-                <td class="p-0 align-middle fit-content">
-                    <input type="checkbox" id="{{id}}" name="checkrequest" value="selected">
-                </td>
-                <th scope="row" class="topic p-0 align-middle">
-                    <div class="p-3 p-l-0">
-                        <a class="w-100 h-100 d-block" href="{{url}}{{id}}&cmid={{cmid}}" title="Request" aria-label="Request">
-                            {{request}}
-                        </a>
-                    </div>
-                </th>
-                <td class="p-0 align-middle fit-content">
-                    {{type}}
-                </td>
-                <td class="p-0 align-middle fit-content">
-                    {{studentid}}
-                </td>
-                <td class="p-0 align-middle fit-content">
-                    {{#isbatchrequest}}
-                        Batch
-                    {{/isbatchrequest}}
-                    {{^isbatchrequest}}
-                        Individual
-                    {{/isbatchrequest}}
-                </td>
-                <td class="p-0 align-middle fit-content">
-                    {{status}}
-                </td>
-                <td class="p-0 align-middle fit-content">
-                    {{timecreated}}
-                </td>
-                <td class="p-0 align-middle fit-content">
-                    <input type="date" id="" name="deadline">
-                </td>
-            </tr>
-        {{/requests}}
-    </tbody>
-</table>
-
 
 <div>
-    <button type="button" class="btn btn-primary">
-      Approve
-    </button>
-        <button type="button" class="btn btn-secondary">
-      Reject
-    </button>
-        <button type="button" class="btn btn-secondary">
-      Cancel
-    </button>
-<div>
-<div>
+    <form name='bulk-request-handling' action="{{url_bulk}}{{cmid}}" method='POST'>
+        <div>
+            <table class="table discussion-list">
+                <thead>
+                    <tr>
+                        <th scope="col" class="p-l-0">
+
+                        </th>
+                        <th scope="col" class="p-l-0">
+                            <a href="" aria-label="">Request</a>
+                        </th>
+                        <th scope="col" class="p-l-0">
+                            <a href="" aria-label="">Type</a>
+                        </th>
+                        <th scope="col" class="p-l-0">
+                            <a href="" aria-label="">Student</a>
+                        </th>
+                        <th scope="col" class="p-l-0">
+                            <a href="" aria-label="">Individual/Batch</a>
+                        </th>
+                        <th scope="col" class="p-l-0">
+                            <a href="" aria-label="">Status</a>
+                        </th>
+                        <th scope="col" class="p-l-0">
+                            <a href="" aria-label="">Time Created</a>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#requests}}
+                        <tr>
+                            <td class="p-0 align-middle fit-content">
+                                <input type="checkbox" id="{{id}}" name="req-id-{{id}}" value="selected">
+                            </td>
+                            <th scope="row" class="topic p-0 align-middle">
+                                <div class="p-3 p-l-0">
+                                    <a class="w-100 h-100 d-block" href="{{url}}{{id}}&cmid={{cmid}}" title="Request" aria-label="Request">
+                                        {{request}}
+                                    </a>
+                                </div>
+                            </th>
+                            <td class="p-0 align-middle fit-content">
+                                {{type}}
+                            </td>
+                            <td class="p-0 align-middle fit-content">
+                                {{studentid}}
+                            </td>
+                            <td class="p-0 align-middle fit-content">
+                                {{#isbatchrequest}}
+                                    Batch
+                                {{/isbatchrequest}}
+                                {{^isbatchrequest}}
+                                    Individual
+                                {{/isbatchrequest}}
+                            </td>
+                            <td class="p-0 align-middle fit-content">
+                                {{status}}
+                            </td>
+                            <td class="p-0 align-middle fit-content">
+                                {{timecreated}}
+                            </td>
+                        </tr>
+                    {{/requests}}
+                </tbody>
+            </table>
+        <div>
+        <div>
+            <button type='Submit' class="btn btn-primary" value='Submit'>
+                Bulk Edit
+            </button>
+        </div>
+    </form>
+</div>
+
