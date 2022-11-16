@@ -115,40 +115,42 @@
                         <tr>
                             <td class="p-0 align-middle fit-content">
                                 <input type="checkbox" id="{{id}}" name="req-id-{{id}}" value="selected">
-                            </td>
-                            <th scope="row" class="topic p-0 align-middle">
+                              </td>
+                              <th scope="row" class="topic p-0 align-middle">
                                 <div class="p-3 p-l-0">
-                                    <a class="w-100 h-100 d-block" href="{{url}}{{id}}&cmid={{cmid}}" title="Request" aria-label="Request">
-                                        {{request}}
-                                    </a>
+                                  <a class="w-100 h-100 d-block" href="{{url}}{{id}}&cmid={{cmid}}" title="Request" aria-label="Request">
+                                    {{request}}
+                                  </a>
                                 </div>
-                            </th>
-                            <td class="p-0 align-middle fit-content">
+                              </th>
+                              <td class="p-0 align-middle fit-content">
                                 {{type}}
-                            </td>
-                            <td class="p-0 align-middle fit-content">
+                              </td>
+                              <td class="p-0 align-middle fit-content">
                                 {{studentid}}
-                            </td>
-                            <td class="p-0 align-middle fit-content">
+                              </td>
+                              <td class="p-0 align-middle fit-content">
                                 {{#isbatchrequest}}
-                                    Batch
+                                Batch
                                 {{/isbatchrequest}}
                                 {{^isbatchrequest}}
-                                    Individual
+                                Individual
                                 {{/isbatchrequest}}
-                            </td>
-                            <td class="p-0 align-middle fit-content">
+                              </td>
+                              <td class="p-0 align-middle fit-content">
                                 {{status}}
-                            </td>
-                            <td class="p-0 align-middle fit-content">
+                              </td>
+                              <td class="p-0 align-middle fit-content">
                                 {{timecreated}}
-                            </td>
-                        </tr>
-                    {{/requests}}
-                </tbody>
-            </table>
+                              </td>
+                            </tr>
+                            {{/requests}}
+                          </tbody>
+                        </table>
+                        <div>
         <div>
-        <div>
+          <input type="datetime-local" id="date" name="date">
+
             <button type='Submit' class="btn btn-primary" value='Submit'>
                 Bulk Edit
             </button>

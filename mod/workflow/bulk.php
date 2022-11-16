@@ -47,14 +47,26 @@ $PAGE->set_cm($cm, $course);
 
 $mform = new bulk_approve();
 
+if ($fromform = $mform->get_data()) {
+
+    print_r($fromform);
+    die;
+}
+
 $request_ids = array();
 if (isset($_POST)) {
+    $timestamp = strtotime( $_POST['date']);
     foreach ($_POST as $elem => $sel) {
+        if ($elem == 'date'){
+            continue;
+        }
 //        $elem format : req-id-<requestid>
         $request_ids[] = substr($elem, 7);
     }
 }
-
+var_dump($request_ids);
+var_dump($timestamp);
+die();
 if ($mform->is_cancelled()) {
     //go back to manage page
     redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $cmid, 'Approving is Cancelled');
