@@ -70,6 +70,7 @@ if ($cap_approve) {
     $templatecontext = (object)[
         'requests' => array_values($requests),
         'url' => $CFG->wwwroot . '/mod/workflow/approve.php?id=',
+        'url_bulk' => $CFG->wwwroot . '/mod/workflow/bulk.php?cmid=',
         'cmid' => $cmid,
     ];
     echo $OUTPUT->render_from_template('mod_workflow/requests_lecturer', $templatecontext);

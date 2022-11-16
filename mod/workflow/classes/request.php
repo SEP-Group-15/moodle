@@ -220,4 +220,26 @@ class request
         return $DB->get_field_select('request', 'activityid', $sql, $params);
     }
 
+    public function getActivityName($requestid)
+    {
+        global $DB;
+
+        $activityid = $this->getActivityId($requestid);
+        $pure_activityid = substr($activityid, 1);
+
+        $sql = 'id=:id';
+        $params = [
+            'id'=>$pure_activityid
+        ];
+        if(substr($activityid,0, 1) === 'a') {
+            $table = 'assign';
+            $name = 'name';
+        }else if (substr($activityid,0, 1) === 'q') {
+            $table = 'quiz';
+            $name = 'name';
+        }
+
+        return $DB->get_field_select($table, $name, $sql, $params);
+    }
+
 }

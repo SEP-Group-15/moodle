@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use mod_workflow\form\approve;
+use mod_workflow\form\bulk_approve;
 use mod_workflow\request;
 use mod_workflow\message_handler;
 
@@ -31,68 +31,62 @@ require_login();
 
 global $DB;
 
-$requestid = optional_param('id', null, PARAM_INT);
 $edit = optional_param('edit', true, PARAM_BOOL);
 $cmid = optional_param('cmid', true, PARAM_INT);
 $workflowid = optional_param('workflowid', null, PARAM_INT);
 [$course, $cm] = get_course_and_cm_from_cmid($cmid, 'workflow');
 $context = context_module::instance($cm->id);
 
-$PAGE->set_url(new moodle_url('/mod/workflow/approve.php'));
-$PAGE->set_context($context);
-$PAGE->set_title('Approve request');
 
-$PAGE->navbar->add('Approve Request');
+
+$PAGE->set_url(new moodle_url('/mod/workflow/bulk.php'));
+$PAGE->set_context($context);
+$PAGE->set_title('Approve bulk request');
+$PAGE->set_heading('Approve Bulk Requests');
+$PAGE->navbar->add('Approve Bulk Request');
 $PAGE->set_cm($cm, $course);
 
-$mform = new approve();
-$msg_handler = new message_handler();
+$mform = new bulk_approve();
 
-if ($requestid) {
-
-    $types = [
-        "Deadline extension" => '0',
-        "Failure to attempt" => '1',
-        "Late submission" => '2',
-    ];
-    $request_manager = new request();
-    $request = $request_manager->getRequest($requestid);
-    $request->type = $types[$request->type];
-    $request->cmid = $cmid;
-    if (!$request) {
-        // die("Request");
-        \core\notification::add('Request not found', \core\output\notification::NOTIFY_WARNING);
+$request_ids = array();
+if (isset($_POST)) {
+    foreach($_POST as $elem=>$sel){
+//        $elem format : req-id-<requestid>
+        $request_ids[] = substr($elem, 7);
     }
-    $mform->set_data($request);
-
-    $activityname = $request_manager->getActivityName($requestid);
-    $PAGE->set_heading('Approve Request - '.$activityname);
 }
+
+print_r($mform->is_submitted());
+die;
 
 if ($mform->is_cancelled()) {
     //go back to manage page
     redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $cmid, 'Approving is Cancelled');
-} else if ($fromform = $mform->get_data()) {
+} else if ($mform->is_submitted()) {
     $request_manager = new request();
     $status['0'] = "approved";
     $status['1'] = "rejected";
-    $request_manager->approve(
-        $fromform->id,
-        $status[$fromform->approval],
-        $fromform->lec_comment
-    );
-    if($status[$fromform->approval] === "approved"){
 
-        $activityid = $request_manager->getActivityId($requestid);
-        $request_manager->processExtensions(
-            $activityid,
-            $fromform->studentid,
-            $fromform->extended_date,
-            $fromform->type
+    foreach($request_ids as $id) {
+
+        $request_manager->approve(
+            $id,
+            $status[$fromform->approval],
+            $fromform->lec_comment
         );
-    }
-    $msg_handler->send($fromform->studentid, 'Your request ' . $fromform->id . ' is ' . ucwords($status[$fromform->approval]), $cmid);
 
+        if ($status[$fromform->approval] === "approved") {
+
+            $activityid = $request_manager->getActivityId($id);
+            $request_manager->processExtensions(
+                $activityid,
+                $fromform->studentid,
+                $fromform->extended_date,
+                $fromform->type
+            );
+        }
+//        $msg_handler->send($fromform->studentid, 'Your request ' . $fromform->id . ' is ' . ucwords($status[$fromform->approval]), $cmid);
+    }
     redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $fromform->cmid, 'Request is approved');
 }
 
