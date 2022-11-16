@@ -33,6 +33,10 @@ class validate extends moodleform
 {
     public function definition()
     {
+        global $DB;
+        $requestid = required_param('id', PARAM_INT);
+        $request = $DB->get_record('request', ['id' => $requestid]);
+
         $mform = $this->_form; // Don't forget the underscore!
 
         $mform->addElement('hidden', 'id');
@@ -60,29 +64,35 @@ class validate extends moodleform
         $elem_type = $mform->addElement('select', 'type', 'Select type', $types);
         $mform->setDefault('type', 0);
 
-        // $link = 'C:/xampp/moodledata/workflow_files/test.pdf';
-        // $link = "/moodle/test 1.pdf";
-        // $html = '<a class="btn btn-primary" href="' . $link . '" download = "'.$link.'">File name</a>';
-        // $mform->addElement('html', $html);
+        // $link = '/moodle/workflow_files/' . $request->files . '/' . $request->filename;
+        // $html = '<a class="" href="' . $link . '" download = "' . $link . '">' . $request->filename . '</a>';
 
-        $elem_file = $mform->addElement(
-            'filemanager',
-            'files',
-            'File submission',
-            null,
-            array(
-                'subdirs' => 0, 'maxbytes' => 50, 'areamaxbytes' => 10485760, 'maxfiles' => 50,
-                'return_types' => 'FILE_INTERNAL' | 'FILE_EXTERNAL'
-            )
-        );
+        if ($request->filename != '') {
+            $link = '/moodle/workflow_files/' . $request->files . '/' . $request->filename;
+            $html = '<a class="" href="' . $link . '" download = "' . $link . '">' . $request->filename . '</a>';
+        } else {
+            $html = 'None';
+        }
+        $mform->addElement('static', 'File submission', 'File submission', $html);
+
+        // $elem_file = $mform->addElement(
+        //     'filemanager',
+        //     'files',
+        //     'File submission',
+        //     null,
+        //     array(
+        //         'subdirs' => 0, 'maxbytes' => 50, 'areamaxbytes' => 10485760, 'maxfiles' => 50,
+        //         'return_types' => 'FILE_INTERNAL' | 'FILE_EXTERNAL'
+        //     )
+        // );
 
         $elem_request->freeze();
         $elem_radio->freeze();
         $elem_type->freeze();
-        $elem_file->freeze();
+        // $elem_file->freeze();
 
         $mform->addElement('textarea', 'instructor_comment', "Comments", 'wrap="virtual" rows="5" cols="50"');
-        $mform->setDefault('instructor_comment', "Enter comments regarding request");
+        $mform->setDefault('instructor_comment', "");
 
         $validity = array();
         $validity['0'] = "Valid";

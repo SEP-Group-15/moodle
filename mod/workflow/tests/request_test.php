@@ -46,6 +46,7 @@ class mod_workflow_request_test extends advanced_testcase
         $isbatchrequest = 0;
         $timecreated = 1;
         $files = 3;
+        $filename = "filename.pdf";
         $instructorcomment = "Test comments";
         $lecturercomment = "Test feedback";
 
@@ -58,6 +59,7 @@ class mod_workflow_request_test extends advanced_testcase
             $isbatchrequest,
             $timecreated,
             $files,
+            $filename,
             $instructorcomment,
             $lecturercomment
         );
@@ -89,6 +91,7 @@ class mod_workflow_request_test extends advanced_testcase
         $isbatchrequest = 0;
         $timecreated = 1;
         $files = 3;
+        $filename = "filename.pdf";
         $instructorcomment = "Test comments";
         $lecturercomment = "Test feedback";
 
@@ -101,6 +104,7 @@ class mod_workflow_request_test extends advanced_testcase
             $isbatchrequest,
             $timecreated,
             $files,
+            $filename,
             $instructorcomment,
             $lecturercomment
         );
@@ -128,6 +132,7 @@ class mod_workflow_request_test extends advanced_testcase
         $isbatchrequest = 0;
         $timecreated = 1;
         $files = 3;
+        $filename = "filename.pdf";
         $instructorcomment = "Test comments";
         $lecturercomment = "Test feedback";
 
@@ -148,6 +153,7 @@ class mod_workflow_request_test extends advanced_testcase
                 $isbatchrequest,
                 $timecreated,
                 $files,
+                $filename,
                 $instructorcomment,
                 $lecturercomment
             );

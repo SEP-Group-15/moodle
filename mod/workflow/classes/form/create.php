@@ -94,16 +94,21 @@ class create extends moodleform
         $mform->hideIf('type', 'activityid', 'eq', null);
 
         if ($temp_workflow->filesallowed) {
+            // $mform->addElement(
+            //     'filemanager',
+            //     'files',
+            //     'File submission',
+            //     null,
+            //     array('subdirs' => 1, 'maxfiles' => 1, 'accepted_types' => '*')
+            // );
+
             $mform->addElement(
-                'filemanager',
+                'filepicker',
                 'files',
                 'File submission',
                 null,
                 array('subdirs' => 1, 'maxfiles' => 1, 'accepted_types' => '*')
             );
-
-            // $mform->addElement('filepicker', 'files', 'File submission', null,
-            // array('subdirs' => 1, 'maxfiles' => 1, 'accepted_types' => '*'));
         } else {
             $mform->addElement('hidden', 'files');
             $mform->setType('files', PARAM_INT);
