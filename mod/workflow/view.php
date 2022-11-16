@@ -53,17 +53,17 @@ $cap_create = has_capability('mod/workflow:createrequest', $context);
 echo $OUTPUT->header();
 
 $request_manager = new request();
-$workflow = new workflow();
+$workflow_manager = new workflow();
 $requests = $request_manager->getAllRequests();
 $cmid = $cm->id;
 
 
 if ($cap_approve) {
-    $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
-    $workflow_cur = $workflow->getWorkflow($workflowid);
-    if ($workflow_cur->instructorid == '0'){
+    $workflowid = $workflow_manager->getWorkflowbyCMID($cmid)->id;
+    $workflow_cur = $workflow_manager->getWorkflow($workflowid);
+    if ($workflow_cur->instructorid == '0') {
         $requests = $request_manager->getRequestsByWorkflow($workflowid);
-    }else{
+    } else {
         $requests = $request_manager->getValidRequestsByWorkflow($workflowid);
     }
     $requests = $request_manager->processRequests($requests);
@@ -72,14 +72,15 @@ if ($cap_approve) {
         'url' => $CFG->wwwroot . '/mod/workflow/approve.php?id=',
         'url_bulk' => $CFG->wwwroot . '/mod/workflow/bulk.php?cmid=',
         'cmid' => $cmid,
+        'workflow' => $workflow->name,
     ];
     echo $OUTPUT->render_from_template('mod_workflow/requests_lecturer', $templatecontext);
-//    $table_requests = new requests($cmid);
-//    $table_requests->out(10, true, '');
+    //    $table_requests = new requests($cmid);
+    //    $table_requests->out(10, true, '');
 
 } else if ($cap_validate) {
-    $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
-    $instructor = $workflow->getInstructor($workflowid);
+    $workflowid = $workflow_manager->getWorkflowbyCMID($cmid)->id;
+    $instructor = $workflow_manager->getInstructor($workflowid);
     if ($USER->id === $instructor) {
         $requests = $request_manager->getRequestsByWorkflow($workflowid);
         $requests = $request_manager->processRequests($requests);
@@ -88,13 +89,14 @@ if ($cap_approve) {
             'text' => 'text',
             'url' => $CFG->wwwroot . '/mod/workflow/validate.php?id=',
             'cmid' => $cm->id,
+            'workflow' => $workflow->name,
         ];
         echo $OUTPUT->render_from_template('mod_workflow/requests_instructor', $templatecontext);
     } else {
         redirect($CFG->wwwroot . '/course/view.php?id=' . $course->id, 'You are not assigned to this workflow', null, \core\output\notification::NOTIFY_ERROR);
     }
 } else if ($cap_create) {
-    $workflowid = $workflow->getWorkflowbyCMID($cmid)->id;
+    $workflowid = $workflow_manager->getWorkflowbyCMID($cmid)->id;
     $requests = $request_manager->getRequestsByWorkflow_Student($USER->id, $workflowid);
     $requests = $request_manager->processRequests($requests);
     $templatecontext = (object)[
@@ -102,8 +104,9 @@ if ($cap_approve) {
         'text' => 'text',
         'url' => $CFG->wwwroot . '/mod/workflow/validate.php?id=',
         'cmid' => $cmid,
+        'workflow' => $workflow->name,
     ];
-    $workflow_curr = $workflow->getWorkflow($workflowid);
+    $workflow_curr = $workflow_manager->getWorkflow($workflowid);
     $now = time();
     $startdate = (int)$workflow_curr->startdate;
     $enddate = (int)$workflow_curr->enddate;
@@ -116,15 +119,15 @@ if ($cap_approve) {
         echo '<a class="btn btn-primary" href="' . $createurl . '">Create New Request</a>';
     }
     $period = '';
-    if ($startdate != 0 and $enddate != 0){
-        $period = 'from '.date("Y-m-d,H:i:s", $startdate).' until '.date("Y-m-d,H:i:s", $enddate);
-    }else if ($startdate == 0 and $enddate != 0){
-        $period = ' until '.date("Y-m-d,H:i:s", $enddate);
-    }else if ($startdate != 0 and $enddate == 0){
-        $period = 'from '.date("Y-m-d,H:i:s", $startdate);
+    if ($startdate != 0 and $enddate != 0) {
+        $period = 'from ' . date("Y-m-d, H:i:s", $startdate) . ' until ' . date("Y-m-d, H:i:s", $enddate);
+    } else if ($startdate == 0 and $enddate != 0) {
+        $period = ' until ' . date("Y-m-d, H:i:s", $enddate);
+    } else if ($startdate != 0 and $enddate == 0) {
+        $period = 'from ' . date("Y-m-d, H:i:s", $startdate);
     }
-    $html = ' Requests are accepted '.$period.' to this workflow.';
-    if (!($startdate == 0 and $enddate == 0)){
+    $html = '<br><br>Requests are accepted ' . $period . '<br><br>';
+    if (!($startdate == 0 and $enddate == 0)) {
         echo $html;
     }
     echo $OUTPUT->render_from_template('mod_workflow/requests_student', $templatecontext);
