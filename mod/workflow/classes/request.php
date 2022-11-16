@@ -242,4 +242,14 @@ class request
         return $DB->get_field_select($table, $name, $sql, $params);
     }
 
+    public function getStudentID($id)
+    {
+        global $DB;
+        $sql = 'id=:id';
+        $params = [
+            'id'=>$id
+        ];
+        return $DB->get_field_select('request', 'studentid', $sql, $params);
+    }
+
 }

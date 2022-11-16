@@ -38,7 +38,6 @@ $workflowid = optional_param('workflowid', null, PARAM_INT);
 $context = context_module::instance($cm->id);
 
 
-
 $PAGE->set_url(new moodle_url('/mod/workflow/bulk.php'));
 $PAGE->set_context($context);
 $PAGE->set_title('Approve bulk request');
@@ -50,24 +49,50 @@ $mform = new bulk_approve();
 
 $request_ids = array();
 if (isset($_POST)) {
-    foreach($_POST as $elem=>$sel){
+    foreach ($_POST as $elem => $sel) {
 //        $elem format : req-id-<requestid>
         $request_ids[] = substr($elem, 7);
     }
 }
 
-print_r($mform->is_submitted());
-die;
-
 if ($mform->is_cancelled()) {
     //go back to manage page
     redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $cmid, 'Approving is Cancelled');
-} else if ($mform->is_submitted()) {
+//} else if(!($mform->is_submitted())) {
+//    $request_manager = new request();
+//    $status['0'] = "approved";
+//    $status['1'] = "rejected";
+//    foreach ($request_ids as $id) {
+//        $request_manager->approve(
+//            $id,
+//            $status[0],
+//            ''
+//        );
+//
+//        if (1) {
+//
+//            $activityid = $request_manager->getActivityId($id);
+//            $request_manager->processExtensions(
+//                $activityid,
+//                $request_manager->getStudentID($id),
+//                1668981900,
+//                ''
+//            );
+//        }
+////        $msg_handler->send($fromform->studentid, 'Your request ' . $fromform->id . ' is ' . ucwords($status[$fromform->approval]), $cmid);
+//    }
+//    redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $fromform->cmid, 'Request is approved');
+//}
+}else if ($fromform = $mform->get_data()) {
+
+    print_r($fromform);
+    die;
+
     $request_manager = new request();
     $status['0'] = "approved";
     $status['1'] = "rejected";
 
-    foreach($request_ids as $id) {
+    foreach ($request_ids as $id) {
 
         $request_manager->approve(
             $id,
