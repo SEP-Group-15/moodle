@@ -65,8 +65,8 @@ if ($requestid) {
     }
     $mform->set_data($request);
 
-    $activityname = $request_manager->getActivityName($requestid);
-    $PAGE->set_heading('Approve Request - '.$activityname);
+    // $activityname = $request_manager->getActivityName($requestid);
+    $PAGE->set_heading('Approve Request');
 }
 
 if ($mform->is_cancelled()) {
