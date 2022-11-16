@@ -36,8 +36,10 @@ class bulk_approve extends moodleform
         $mform = $this->_form;
 
         $mform->addElement('textarea', 'lec_comment', "Feedback", 'wrap="virtual" rows="5" cols="50"');
+//        $mform->setDefault('lec_comment', "Enter feedback regarding request");
 
         $mform->addElement('date_time_selector', 'extended_date', "Extend due date to");
+
 
 
         $validity = array();
@@ -47,10 +49,11 @@ class bulk_approve extends moodleform
         $elem_approval = $mform->addElement('select', 'approval', '', $validity);
         $mform->setDefault('approval', 0);
 
+        $this->add_action_buttons();
 
-        $buttonarray1 = array();
-        $buttonarray1[] = $mform->createElement('submit', 'submitbutton', "Approve");
-        $buttonarray1[] = $mform->createElement('cancel');
-        $mform->addGroup($buttonarray1, 'buttonar', '', ' ', false);
+//        $buttonarray1 = array();
+//        $buttonarray1[] = $mform->createElement('submit', 'submitbutton', "Approve");
+//        $buttonarray1[] = $mform->createElement('cancel');
+//        $mform->addGroup($buttonarray1, 'buttonar', '', ' ', false);
     }
 }

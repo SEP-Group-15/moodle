@@ -70,11 +70,13 @@ $status['0'] = "approved";
 $status['1'] = "rejected";
 
 foreach ($request_ids as $id) {
-
+//    echo var_dump($id);
+//    echo var_dump($status[$validity]);
+//    echo var_dump($id);
     $request_manager->approve(
         $id,
         $status[$validity],
-        $fromform->lec_comment
+        ''
     );
 
     $request = $request_manager->getRequest($id);
@@ -90,7 +92,7 @@ foreach ($request_ids as $id) {
     }
     //        $msg_handler->send($fromform->studentid, 'Your request ' . $fromform->id . ' is ' . ucwords($status[$fromform->approval]), $cmid);
 }
-redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $fromform->cmid, 'Requests are approved');
+redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $cmid, 'Requests are approved');
 
 
 
