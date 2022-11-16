@@ -33,16 +33,20 @@ class approve extends moodleform
 {
     public function definition()
     {
+        global $DB;
+        $requestid = required_param('id', PARAM_INT);
+        $request = $DB->get_record('request', ['id' => $requestid]);
+
         $mform = $this->_form; // Don't forget the underscore!
 
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
-        
+
         $mform->addElement('hidden', 'cmid');
         $mform->setType('cmid', PARAM_INT);
 
-//        $mform->addElement('hidden', 'studentid');
-//        $mform->setType('studentid', PARAM_INT);
+        //        $mform->addElement('hidden', 'studentid');
+        //        $mform->setType('studentid', PARAM_INT);
 
         $elem_request1 = $mform->addElement('textarea', 'studentid', "Student ID", 'wrap="virtual" rows="1" cols="50"');
         $mform->setDefault('studentid', "Enter your request");
@@ -63,16 +67,24 @@ class approve extends moodleform
         $elem_type = $mform->addElement('select', 'type', 'Select type', $types);
         $mform->setDefault('type', 0);
 
-        $elem_file = $mform->addElement(
-            'filemanager',
-            'files',
-            'File submission',
-            null,
-            array(
-                'subdirs' => 0, 'maxbytes' => 50, 'areamaxbytes' => 10485760, 'maxfiles' => 50,
-                'return_types' => 'FILE_INTERNAL' | 'FILE_EXTERNAL'
-            )
-        );
+        if ($request->filename != '') {
+            $link = '/moodle/workflow_files/' . $request->files . '/' . $request->filename;
+            $html = '<a class="" href="' . $link . '" download = "' . $link . '">' . $request->filename . '</a>';
+        } else {
+            $html = 'None';
+        }
+        $mform->addElement('static', 'File submission', 'File submission', $html);
+
+        // $elem_file = $mform->addElement(
+        //     'filemanager',
+        //     'files',
+        //     'File submission',
+        //     null,
+        //     array(
+        //         'subdirs' => 0, 'maxbytes' => 50, 'areamaxbytes' => 10485760, 'maxfiles' => 50,
+        //         'return_types' => 'FILE_INTERNAL' | 'FILE_EXTERNAL'
+        //     )
+        // );
 
         $elem_instructor_comment = $mform->addElement('textarea', 'instructorcomment', "Comments by instructor", 'wrap="virtual" rows="5" cols="50"');
         $mform->setDefault('instructorcomment', "Enter comments regarding request");
@@ -88,17 +100,17 @@ class approve extends moodleform
         $elem_request->freeze();
         $elem_radio->freeze();
         $elem_type->freeze();
-        $elem_file->freeze();
+        // $elem_file->freeze();
         $elem_validty->freeze();
         $elem_instructor_comment->freeze();
 
         $elem_lec_comment = $mform->addElement('textarea', 'lec_comment', "Feedback", 'wrap="virtual" rows="5" cols="50"');
-        $mform->setDefault('lec_comment', "Enter feedback regarding request");
+        $mform->setDefault('lec_comment', "");
 
         $mform->addElement('date_time_selector', 'extended_date', "Extend due date to");
 
         $buttonarray = array();
-        $buttonarray[] = $mform->createElement('submit', 'submitbutton', "Approve");
+        $buttonarray[] = $mform->createElement('submit', 'submitbutton', "Submit");
         $buttonarray[] = $mform->createElement('cancel');
 
         $validity = array();
