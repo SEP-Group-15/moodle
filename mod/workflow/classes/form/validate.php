@@ -68,7 +68,7 @@ class validate extends moodleform
         // $html = '<a class="" href="' . $link . '" download = "' . $link . '">' . $request->filename . '</a>';
 
         if ($request->filename != '') {
-            $link = '/moodle/workflow_files/' . $request->files . '/' . $request->filename;
+            $link = '/moodle/mod/workflow/uploads/' . $request->files . '/' . $request->filename;
             $html = '<a class="" href="' . $link . '" download = "' . $link . '">' . $request->filename . '</a>';
         } else {
             $html = 'None';

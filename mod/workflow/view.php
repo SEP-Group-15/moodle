@@ -60,6 +60,7 @@ $cmid = $cm->id;
 
 if ($cap_approve) {
     $workflowid = $workflow_manager->getWorkflowbyCMID($cmid)->id;
+    $activityname = $workflow_manager->getActivityName($workflowid);
     $workflow_cur = $workflow_manager->getWorkflow($workflowid);
     if ($workflow_cur->instructorid == '0') {
         $requests = $request_manager->getRequestsByWorkflow($workflowid);
@@ -73,6 +74,7 @@ if ($cap_approve) {
         'url_bulk' => $CFG->wwwroot . '/mod/workflow/bulk.php?cmid=',
         'cmid' => $cmid,
         'workflow' => $workflow->name,
+        'activity' => $activityname,
     ];
     echo $OUTPUT->render_from_template('mod_workflow/requests_lecturer', $templatecontext);
     //    $table_requests = new requests($cmid);
@@ -80,6 +82,7 @@ if ($cap_approve) {
 
 } else if ($cap_validate) {
     $workflowid = $workflow_manager->getWorkflowbyCMID($cmid)->id;
+    $activityname = $workflow_manager->getActivityName($workflowid);
     $instructor = $workflow_manager->getInstructor($workflowid);
     if ($USER->id === $instructor) {
         $requests = $request_manager->getRequestsByWorkflow($workflowid);
@@ -90,6 +93,7 @@ if ($cap_approve) {
             'url' => $CFG->wwwroot . '/mod/workflow/validate.php?id=',
             'cmid' => $cm->id,
             'workflow' => $workflow->name,
+            'activity' => $activityname,
         ];
         echo $OUTPUT->render_from_template('mod_workflow/requests_instructor', $templatecontext);
     } else {
@@ -97,6 +101,7 @@ if ($cap_approve) {
     }
 } else if ($cap_create) {
     $workflowid = $workflow_manager->getWorkflowbyCMID($cmid)->id;
+    $activityname = $workflow_manager->getActivityName($workflowid);
     $requests = $request_manager->getRequestsByWorkflow_Student($USER->id, $workflowid);
     $requests = $request_manager->processRequests($requests);
     $templatecontext = (object)[
@@ -105,6 +110,7 @@ if ($cap_approve) {
         'url' => $CFG->wwwroot . '/mod/workflow/validate.php?id=',
         'cmid' => $cmid,
         'workflow' => $workflow->name,
+        'activity' => $activityname,
     ];
     $workflow_curr = $workflow_manager->getWorkflow($workflowid);
     $now = time();

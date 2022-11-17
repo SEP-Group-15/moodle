@@ -41,8 +41,10 @@ $context = context_module::instance($cm->id);
 
 $PAGE->set_url(new moodle_url('/mod/workflow/validate.php'));
 $PAGE->set_context($context);
+$request_manager = new request();
+$activityname = $request_manager->getActivityName($id);
+$PAGE->set_heading('Validate Request - '.$activityname);
 $PAGE->set_title('Validate request');
-$PAGE->set_heading('Validate Request');
 $PAGE->navbar->add('Validate Request');
 $PAGE->set_cm($cm, $course);
 

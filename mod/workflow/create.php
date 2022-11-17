@@ -72,8 +72,10 @@ if ($mform->is_cancelled()) {
         $filename = '';
     }
     // $filename = $name != 0 ? $name : '';
-    mkdir('C:\\xampp\\htdocs\\moodle\\workflow_files\\' . $fromform->files, 0777, true);
-    $success = $mform->save_file('files', 'C:\\xampp\\htdocs\\moodle\\workflow_files\\' . $fromform->files . '\\' . $name);
+    // mkdir('C:\\xampp\\htdocs\\moodle\\workflow_files\\' . $fromform->files, 0777, true);
+    $uploadFolder = __DIR__.'\\uploads\\';
+    mkdir($uploadFolder.$fromform->files, 0777, true);
+    $success = $mform->save_file('files', $uploadFolder . $fromform->files . '\\' . $name);
     $request_manager->createRequest(
         $fromform->request,
         $workflowid,

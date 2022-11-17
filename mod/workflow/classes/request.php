@@ -111,6 +111,7 @@ class request
         $isbatchrequest,
         $timecreated,
         $files,
+        $filename,
         $instructorcomment = "",
         $lecturercomment = ""
     ) {
@@ -128,6 +129,7 @@ class request
         $record->files = $files;
         $record->instructorcomment = $instructorcomment;
         $record->lecturercomment = $lecturercomment;
+        $record->filename = $filename;
 
         try {
             return $DB->insert_record('request', $record, false);

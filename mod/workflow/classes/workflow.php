@@ -57,6 +57,32 @@ class workflow
         $DB->delete_records_select('workflow', 'id = ?', [$id]);
     }
 
+    public function getActivityName($workflowid){
+        global $DB;
+        $workflow = $this->getWorkflow($workflowid);
+
+        if ($workflow->type == 'general'){
+            return 'General';
+        }else{
+            $activityid = $workflow->activityid;
+            $pure_activityid = substr($activityid, 1);
+
+            $sql = 'id=:id';
+            $params = [
+                'id'=>$pure_activityid
+            ];
+            if(substr($activityid,0, 1) === 'a') {
+                $table = 'assign';
+                $name = 'name';
+            }else if (substr($activityid,0, 1) === 'q') {
+                $table = 'quiz';
+                $name = 'name';
+            }
+
+            return $DB->get_field_select($table, $name, $sql, $params);
+        }
+    }
+
     public function getName(string $id)
     {
         global $DB;
