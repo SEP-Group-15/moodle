@@ -91,8 +91,9 @@ class request
             } else if (strpos($activityid, 'q') === 0) {
                 $table = 'quiz_overrides';
                 $record->quiz = $pure_id;
-                $record->timeclose = $extended_date;
-
+                $timegap = $this->getTimeGap($pure_id, 'timeopen', 'timeclose', 'quiz');
+                $record->timeopen = $extended_date;
+                $record->timeclose = $extended_date + $timegap;
             }
         } else if ($isbatchreq === '1') {
             if (strpos($activityid, 'a') === 0) {
@@ -102,7 +103,7 @@ class request
 
             } else if (strpos($activityid, 'q') === 0) {
                 $table = 'quiz';
-                $timegap = $this->getTimeGap($pure_id, 'timeopen', 'timeclose', $table);
+                $timegap = $this->getTimeGap($pure_id, 'timeopen', 'timeclose', 'quiz');
                 $record->id = $pure_id;
                 $record->timeopen = $extended_date;
                 $record->timeclose = $extended_date + $timegap;
