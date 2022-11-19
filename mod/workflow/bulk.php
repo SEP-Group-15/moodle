@@ -58,6 +58,10 @@ if (isset($_POST)) {
     }
 }
 
+if(empty($request_ids)) {
+    redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $cmid, 'Select requests', null, \core\output\notification::NOTIFY_ERROR);
+}
+
 $request_manager = new request();
 
 foreach ($request_ids as $id) {

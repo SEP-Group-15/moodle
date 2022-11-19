@@ -29,7 +29,7 @@ use mod_workflow\message_handler;
 require_once(__DIR__ . '/../../config.php'); // setup moodle
 require_login();
 
-global $DB;
+global $DB, $PAGE, $CFG, $OUTPUT;
 
 $requestid = optional_param('id', null, PARAM_INT);
 $edit = optional_param('edit', true, PARAM_BOOL);
@@ -73,8 +73,10 @@ if ($mform->is_cancelled()) {
     //go back to manage page
     redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $cmid, 'Approving is Cancelled');
 } else if ($fromform = $mform->get_data()) {
+    $status = array();
+    $status['0'] = "approved";
+    $status['1'] = "rejected";
     $request_manager->finalizeRequest($fromform->id, $fromform->approval, $fromform->extended_date, $fromform->lec_comment);
-
     $msg_handler->send($fromform->studentid, 'Your request ' . $fromform->id . ' is ' . ucwords($status[$fromform->approval]), $cmid);
 
     redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $fromform->cmid, 'Request is approved');
