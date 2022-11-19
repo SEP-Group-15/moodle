@@ -21,7 +21,19 @@
 
 <div>
 <h4>{{workflow}} - {{activity}}</h4>
+<br>
+<div class="w-25 row">
+<div class="col">
+  <select class="form-control" name="validity" id="validity" onchange="javascript:handleSelect(this)">
+    <option value="0">Select pending requests</option>
+    <option value="1">Select validated requests</option>
+    <option value="1">Select approved requests</option>
+  </select>
+</div>
+</div>
+<br>
     <form name='bulk-request-handling' action="{{url_bulk}}{{cmid}}" method='POST'>
+
         <div>
             <table class="table discussion-list">
                 <thead>
@@ -52,7 +64,7 @@
                     {{#requests}}
                         <tr>
                             <td class="p-0 align-middle fit-content">
-                                <input type="checkbox" id="{{id}}" name="req-id-{{id}}" value="selected">
+                                <input type="checkbox" id="{{id}}" name="requestid-{{id}}" value="{{id}}">
                               </td>
                               <th scope="row" class="topic p-0 align-middle">
                                 <div class="p-3 p-l-0">
@@ -86,7 +98,7 @@
                           </tbody>
                         </table>
                         <div>
-        <div class="w-25 row">
+        <div class="w-50 row">
         <div class="col">
           <input class="form-control" type="datetime-local" id="date" name="date">
         </div>

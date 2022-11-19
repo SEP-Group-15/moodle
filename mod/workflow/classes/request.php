@@ -77,21 +77,37 @@ class request
         }
     }
 
-    public function processExtensions($activityid, $studentid, $extended_date, $type)
+    public function processExtensions($activityid, $studentid, $extended_date, $type, $isbatchreq)
     {
         global $DB;
         $record = new stdClass();
-        $pure_id = substr($activityid,1);
-        if(strpos($activityid, 'a') === 0){
-            $table = 'assign_overrides';
-            $record->assignid = $pure_id;
-            $record->duedate = $extended_date;
+        $pure_id = substr($activityid, 1);
+        if ($isbatchreq === '0') {
+            if (strpos($activityid, 'a') === 0) {
+                $table = 'assign_overrides';
+                $record->assignid = $pure_id;
+                $record->duedate = $extended_date;
 
-        } else if (strpos($activityid, 'q') === 0){
-            $table = 'quiz_overrides';
-            $record->quiz = $pure_id;
-            $record->timeclose = $extended_date;
+            } else if (strpos($activityid, 'q') === 0) {
+                $table = 'quiz_overrides';
+                $record->quiz = $pure_id;
+                $record->timeclose = $extended_date;
 
+            }
+        } else if ($isbatchreq === '1') {
+            if (strpos($activityid, 'a') === 0) {
+                $table = 'assign';
+                $record->id = $pure_id;
+                $record->duedate = $extended_date;
+
+            } else if (strpos($activityid, 'q') === 0) {
+                $table = 'quiz';
+                $timegap = $this->getTimeGap($pure_id, 'timeopen', 'timeclose', $table);
+                $record->id = $pure_id;
+                $record->timeopen = $extended_date;
+                $record->timeclose = $extended_date + $timegap;
+
+            }
         }
         $record->userid = $studentid;
 
@@ -114,7 +130,8 @@ class request
         $filename,
         $instructorcomment = "",
         $lecturercomment = ""
-    ) {
+    )
+    {
 
         global $DB;
         $record = new stdClass();
@@ -137,6 +154,7 @@ class request
             return false;
         }
     }
+
     public function getAllRequests()
     {
         global $DB;
@@ -217,7 +235,7 @@ class request
         global $DB;
         $sql = 'id=:id';
         $params = [
-            'id'=>$requestid
+            'id' => $requestid
         ];
         return $DB->get_field_select('request', 'activityid', $sql, $params);
     }
@@ -231,12 +249,12 @@ class request
 
         $sql = 'id=:id';
         $params = [
-            'id'=>$pure_activityid
+            'id' => $pure_activityid
         ];
-        if(substr($activityid,0, 1) === 'a') {
+        if (substr($activityid, 0, 1) === 'a') {
             $table = 'assign';
             $name = 'name';
-        }else if (substr($activityid,0, 1) === 'q') {
+        } else if (substr($activityid, 0, 1) === 'q') {
             $table = 'quiz';
             $name = 'name';
         }
@@ -249,9 +267,51 @@ class request
         global $DB;
         $sql = 'id=:id';
         $params = [
-            'id'=>$id
+            'id' => $id
         ];
         return $DB->get_field_select('request', 'studentid', $sql, $params);
+    }
+
+    public function finalizeRequest(
+        $id,
+        $validity,
+        $timestamp,
+        $lec_comment
+    )
+    {
+        $request = $this->getRequest($id);
+
+        $status = array();
+        $status['0'] = "approved";
+        $status['1'] = "rejected";
+
+        $this->approve(
+            $id,
+            $status[$validity],
+            $lec_comment
+        );
+        if ($status[$validity] === "approved") {
+
+            $this->processExtensions(
+                $request->activityid,
+                $request->studentid,
+                $timestamp,
+                $request->type,
+                $request->isbatchrequest
+            );
+        }
+
+    }
+
+    public function getTimeGap($id, $start, $end, $table) {
+        global $DB;
+        $record = $DB->get_record(
+            $table,
+            [
+                'id' => $id
+            ]
+        );
+        return $record->$end - $record->$start;
     }
 
 }

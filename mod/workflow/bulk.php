@@ -45,117 +45,27 @@ $PAGE->set_heading('Approve Bulk Requests');
 $PAGE->navbar->add('Approve Bulk Request');
 $PAGE->set_cm($cm, $course);
 
-$mform = new bulk_approve();
-
-if ($fromform = $mform->get_data()) {
-
-    print_r($fromform);
-    die;
-}
+//$mform = new bulk_approve();
 
 $request_ids = array();
 if (isset($_POST)) {
     $timestamp = strtotime($_POST['date']);
     $validity = $_POST['validity'];
     foreach ($_POST as $elem => $sel) {
-        if ($elem == 'date' or $elem=='validity') {
-            continue;
+        if (strpos($elem, 'requestid') === 0) {
+            $request_ids[] = $sel;
         }
-        //        $elem format : req-id-<requestid>
-        $request_ids[] = substr($elem, 7);
     }
 }
+
 $request_manager = new request();
-$status['0'] = "approved";
-$status['1'] = "rejected";
 
 foreach ($request_ids as $id) {
-//    echo var_dump($id);
-//    echo var_dump($status[$validity]);
-//    echo var_dump($id);
-    $request_manager->approve(
-        $id,
-        $status[$validity],
-        ''
-    );
-
-    $request = $request_manager->getRequest($id);
-    if ($status[$validity] === "approved") {
-
-        $activityid = $request_manager->getActivityId($id);
-        $request_manager->processExtensions(
-            $activityid,
-            $request->studentid,
-            $timestamp,
-            $request->type
-        );
-    }
-    //        $msg_handler->send($fromform->studentid, 'Your request ' . $fromform->id . ' is ' . ucwords($status[$fromform->approval]), $cmid);
+    $request_manager->finalizeRequest($id, $validity, $timestamp, '');
+//            $msg_handler->send($fromform->studentid, 'Your request ' . $fromform->id . ' is ' . ucwords($status[$fromform->approval]), $cmid);
 }
 redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $cmid, 'Requests are approved');
 
-
-
-// if ($mform->is_cancelled()) {
-//     //go back to manage page
-//     redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $cmid, 'Approving is Cancelled');
-// //} else if(!($mform->is_submitted())) {
-// //    $request_manager = new request();
-// //    $status['0'] = "approved";
-// //    $status['1'] = "rejected";
-// //    foreach ($request_ids as $id) {
-// //        $request_manager->approve(
-// //            $id,
-// //            $status[0],
-// //            ''
-// //        );
-// //
-// //        if (1) {
-// //
-// //            $activityid = $request_manager->getActivityId($id);
-// //            $request_manager->processExtensions(
-// //                $activityid,
-// //                $request_manager->getStudentID($id),
-// //                1668981900,
-// //                ''
-// //            );
-// //        }
-// ////        $msg_handler->send($fromform->studentid, 'Your request ' . $fromform->id . ' is ' . ucwords($status[$fromform->approval]), $cmid);
-// //    }
-// //    redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $fromform->cmid, 'Request is approved');
-// //}
-// }else if ($fromform = $mform->get_data()) {
-
-//     print_r($fromform);
-//     die;
-
-//     $request_manager = new request();
-//     $status['0'] = "approved";
-//     $status['1'] = "rejected";
-
-//     foreach ($request_ids as $id) {
-
-//         $request_manager->approve(
-//             $id,
-//             $status[$fromform->approval],
-//             $fromform->lec_comment
-//         );
-
-//         if ($status[$fromform->approval] === "approved") {
-
-//             $activityid = $request_manager->getActivityId($id);
-//             $request_manager->processExtensions(
-//                 $activityid,
-//                 $fromform->studentid,
-//                 $fromform->extended_date,
-//                 $fromform->type
-//             );
-//         }
-// //        $msg_handler->send($fromform->studentid, 'Your request ' . $fromform->id . ' is ' . ucwords($status[$fromform->approval]), $cmid);
-//     }
-//     redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $fromform->cmid, 'Request is approved');
-// }
-
-// echo $OUTPUT->header();
-// $mform->display();
-// echo $OUTPUT->footer();
+ echo $OUTPUT->header();
+ $mform->display();
+ echo $OUTPUT->footer();

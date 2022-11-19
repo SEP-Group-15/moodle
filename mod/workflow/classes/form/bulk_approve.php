@@ -31,6 +31,8 @@ require_once("$CFG->libdir/formslib.php");
 
 class bulk_approve extends moodleform
 {
+    protected $request_ids;
+
     public function definition()
     {
         $mform = $this->_form;
@@ -55,5 +57,13 @@ class bulk_approve extends moodleform
 //        $buttonarray1[] = $mform->createElement('submit', 'submitbutton', "Approve");
 //        $buttonarray1[] = $mform->createElement('cancel');
 //        $mform->addGroup($buttonarray1, 'buttonar', '', ' ', false);
+    }
+
+    public function setRequestIds($ids){
+        $this->request_ids = $ids;
+    }
+
+    public function getRequestIds() {
+        return $this->request_ids;
     }
 }

@@ -66,31 +66,15 @@ if ($requestid) {
     $mform->set_data($request);
 
     $activityname = $request_manager->getActivityName($requestid);
-    $PAGE->set_heading('Approve Request - '.$activityname);
+    $PAGE->set_heading('Approve Request - ' . $activityname);
 }
 
 if ($mform->is_cancelled()) {
     //go back to manage page
     redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $cmid, 'Approving is Cancelled');
 } else if ($fromform = $mform->get_data()) {
-    $request_manager = new request();
-    $status['0'] = "approved";
-    $status['1'] = "rejected";
-    $request_manager->approve(
-        $fromform->id,
-        $status[$fromform->approval],
-        $fromform->lec_comment
-    );
-    if($status[$fromform->approval] === "approved"){
+    $request_manager->finalizeRequest($fromform->id, $fromform->approval, $fromform->extended_date, $fromform->lec_comment);
 
-        $activityid = $request_manager->getActivityId($requestid);
-        $request_manager->processExtensions(
-            $activityid,
-            $fromform->studentid,
-            $fromform->extended_date,
-            $fromform->type
-        );
-    }
     $msg_handler->send($fromform->studentid, 'Your request ' . $fromform->id . ' is ' . ucwords($status[$fromform->approval]), $cmid);
 
     redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $fromform->cmid, 'Request is approved');
