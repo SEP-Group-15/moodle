@@ -43,7 +43,7 @@ $PAGE->set_url(new moodle_url('/mod/workflow/validate.php'));
 $PAGE->set_context($context);
 $request_manager = new request();
 $activityname = $request_manager->getActivityName($id);
-$PAGE->set_heading('Validate Request - '.$activityname);
+$PAGE->set_heading('Validate Request - ' . $activityname);
 $PAGE->set_title('Validate request');
 $PAGE->navbar->add('Validate Request');
 $PAGE->set_cm($cm, $course);
@@ -66,9 +66,9 @@ if ($mform->is_cancelled()) {
     );
     $workflowid = $request_manager->getRequest($fromform->id)->workflowid;
     $workflow_curr = $workflow->getWorkflow($workflowid);
-    $lec_msg = $USER->firstname.' '.$USER->lastname. ' has validated a request of ID: '.$fromform->id.' as '.$validity[$fromform->validity].'.';
+    $lec_msg = $USER->firstname . ' ' . $USER->lastname . ' has validated a request of ID: ' . $fromform->id . ' as ' . $validity[$fromform->validity] . '.';
     $msg_handler->send($fromform->studentid, 'Your request of ID:' . $fromform->id . ' is validated as ' . ucwords($validity[$fromform->validity]), $cmid);
-    if ($validity[$fromform->validity] == "valid"){
+    if ($validity[$fromform->validity] == "valid") {
         $msg_handler->send($workflow_curr->lecturerid, $lec_msg, $cmid);
     }
     redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $fromform->cmid, 'Request is validated');
@@ -79,6 +79,7 @@ if ($id) {
         "Deadline extension" => '0',
         "Failure to attempt" => '1',
         "Late submission" => '2',
+        "Other" => '3',
     ];
     $request_manager = new request();
     $request = $request_manager->getRequest($id);

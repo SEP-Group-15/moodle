@@ -6,9 +6,16 @@
             <th scope="col" class="p-l-0">
                 <a href="" aria-label="">Request</a>
             </th>
+            {{#general}}
+            <th scope="col" class="p-l-0">
+                <a href="" aria-label="">Activity</a>
+            </th>
+            {{/general}}
+            {{#activityrelated}}
             <th scope="col" class="p-l-0">
                 <a href="" aria-label="">Type</a>
             </th>
+            {{/activityrelated}}
             <th scope="col" class="p-l-0">
                 <a href="" aria-label="">Student</a>
             </th>
@@ -33,11 +40,18 @@
                         </a>
                     </div>
                 </th>
+                {{#workflowtype=general}}
                 <td class="p-0 align-middle fit-content">
-                    {{type}}
+                {{activity}}
                 </td>
+                {{/workflowtype=general}}
+                {{#workflowtype=activity-related}}
                 <td class="p-0 align-middle fit-content">
-                    Student {{studentid}}
+                {{type}}
+                </td>
+                {{/workflowtype=activity-related}}
+                <td class="p-0 align-middle fit-content">
+                    {{student}}
                 </td>
                 <td class="p-0 align-middle fit-content">
                     {{#isbatchrequest}}

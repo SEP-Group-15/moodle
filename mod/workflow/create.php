@@ -56,6 +56,7 @@ if ($mform->is_cancelled()) {
     $types['0'] = "Deadline extension";
     $types['1'] = "Failure to attempt";
     $types['2'] = "Late submission";
+    $types['3'] = "Other";
     if (isset($fromform->type)) {
         $type = $types[$fromform->type];
     } else {
@@ -73,8 +74,8 @@ if ($mform->is_cancelled()) {
     }
     // $filename = $name != 0 ? $name : '';
     // mkdir('C:\\xampp\\htdocs\\moodle\\workflow_files\\' . $fromform->files, 0777, true);
-    $uploadFolder = __DIR__.'\\uploads\\';
-    mkdir($uploadFolder.$fromform->files, 0777, true);
+    $uploadFolder = __DIR__ . '\\uploads\\';
+    mkdir($uploadFolder . $fromform->files, 0777, true);
     $success = $mform->save_file('files', $uploadFolder . $fromform->files . '\\' . $name);
     $request_manager->createRequest(
         $fromform->request,

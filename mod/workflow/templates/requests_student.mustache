@@ -6,9 +6,16 @@
             <th scope="col" class="p-l-0">
                 <a href="" aria-label="">Request</a>
             </th>
+            {{#general}}
+            <th scope="col" class="p-l-0">
+                <a href="" aria-label="">Activity</a>
+            </th>
+            {{/general}}
+            {{#activityrelated}}
             <th scope="col" class="p-l-0">
                 <a href="" aria-label="">Type</a>
             </th>
+            {{/activityrelated}}
             <th scope="col" class="p-l-0">
                 <a href="" aria-label="">Individual/Batch</a>
             </th>
@@ -19,8 +26,11 @@
                 <a href="" aria-label="">Time Created</a>
             </th>
             <th scope="col" class="p-l-0">
-              <a href="" aria-label="">Feedback</a>
-          </th>
+              <a href="" aria-label="">Instructor Feedback</a>
+            </th>
+            <th scope="col" class="p-l-0">
+              <a href="" aria-label="">Lecturer Feedback</a>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -31,9 +41,16 @@
                         {{request}}
                     </div>
                 </th>
+                {{#general}}
+                <td class="p-0 align-middle fit-content">
+                    {{activity}}
+                </td>
+                {{/general}}
+                {{#activityrelated}}
                 <td class="p-0 align-middle fit-content">
                     {{type}}
                 </td>
+                {{/activityrelated}}
                 <td class="p-0 align-middle fit-content">
                     {{#isbatchrequest}}
                         Batch
@@ -50,6 +67,9 @@
                 </td>
                 <td class="p-0 align-middle fit-content">
                   {{instructorcomment}}
+              </td>
+              <td class="p-0 align-middle fit-content">
+                  {{lecturercomment}}
               </td>
             </tr>
         {{/requests}}
