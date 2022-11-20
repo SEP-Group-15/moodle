@@ -82,7 +82,17 @@ class create extends moodleform
         } else {
             $mform->addElement('hidden', 'activityid');
             $mform->setDefault('activityid', $temp_workflow->activityid);
-        }
+            if ($temp_workflow->activityid[0] == 'q') {
+                $types = array();
+                $types['1'] = "Failure to attempt";
+                $types['3'] = "Other";
+            } else if ($temp_workflow->activityid[0] == 'a') {
+                $types = array();
+                $types['0'] = "Deadline extension";
+                $types['1'] = "Failure to attempt";
+                $types['2'] = "Late submission";
+                $types['3'] = "Other";
+            }        
 
         $types = array();
         $types['0'] = "Deadline extension";
