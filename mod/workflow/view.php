@@ -68,6 +68,11 @@ if ($cap_approve) {
         $requests = $request_manager->getValidRequestsByWorkflow($workflowid);
     }
     $requests = $request_manager->processRequests($requests);
+    foreach ($requests as $request) {
+        $user = $DB->get_record('user', array('id' => $request->studentid));
+        $request->student = $user->firstname . ' ' . $user->lastname;
+    }
+
     $templatecontext = (object)[
         'requests' => array_values($requests),
         'url' => $CFG->wwwroot . '/mod/workflow/approve.php?id=',
@@ -75,6 +80,9 @@ if ($cap_approve) {
         'cmid' => $cmid,
         'workflow' => $workflow->name,
         'activity' => $activityname,
+        'workflowtype' => $workflow->type,
+        'general' => $workflow->type == 'general',
+        'activityrelated' => $workflow->type == 'activity-related',
     ];
     if(empty($requests)){
         echo '<br><br>No requests to display<br><br>';
@@ -89,6 +97,21 @@ if ($cap_approve) {
     if ($USER->id === $instructor) {
         $requests = $request_manager->getRequestsByWorkflow($workflowid);
         $requests = $request_manager->processRequests($requests);
+        foreach ($requests as $request) {
+            if ($request->activityid != '') {
+                if ($request->activityid[0] == 'q') {
+                    $activity = $DB->get_record('quiz', array('id' => substr($request->activityid, 1)));
+                    $activity_name = $activity->name;
+                } else if ($request->activityid[0] == 'a') {
+                    $activity = $DB->get_record('assign', array('id' => substr($request->activityid, 1)));
+                    $activity_name = $activity->name;
+                }
+                $request->activity = $activity_name;
+            } else {
+                $request->activity = 'None';
+            }
+        }
+
         $templatecontext = (object)[
             'requests' => array_values($requests),
             'text' => 'text',
@@ -96,6 +119,9 @@ if ($cap_approve) {
             'cmid' => $cm->id,
             'workflow' => $workflow->name,
             'activity' => $activityname,
+            'workflowtype' => $workflow->type,
+            'general' => $general,
+            'activityrelated' => $workflow->type == 'activity-related',
         ];
         if(empty($requests)){
             echo '<br><br>No pending requests to display<br><br>';
@@ -110,6 +136,21 @@ if ($cap_approve) {
     $activityname = $workflow_manager->getActivityName($workflowid);
     $requests = $request_manager->getRequestsByWorkflow_Student($USER->id, $workflowid);
     $requests = $request_manager->processRequests($requests);
+    foreach ($requests as $request) {
+        if ($request->activityid != '') {
+            if ($request->activityid[0] == 'q') {
+                $activity = $DB->get_record('quiz', array('id' => substr($request->activityid, 1)));
+                $activity_name = $activity->name;
+            } else if ($request->activityid[0] == 'a') {
+                $activity = $DB->get_record('assign', array('id' => substr($request->activityid, 1)));
+                $activity_name = $activity->name;
+            }
+            $request->activity = $activity_name;
+        } else {
+            $request->activity = 'None';
+        }
+    }
+
     $templatecontext = (object)[
         'requests' => array_values($requests),
         'text' => 'text',
@@ -117,6 +158,8 @@ if ($cap_approve) {
         'cmid' => $cmid,
         'workflow' => $workflow->name,
         'activity' => $activityname,
+        'general' => $workflow->type == 'general',
+        'activityrelated' => $workflow->type == 'activity-related',
     ];
     $workflow_curr = $workflow_manager->getWorkflow($workflowid);
     $now = time();
