@@ -75,6 +75,7 @@ if ($cap_approve) {
 
     $templatecontext = (object)[
         'requests' => array_values($requests),
+        'norequests' => array_values($requests) == [],
         'url' => $CFG->wwwroot . '/mod/workflow/approve.php?id=',
         'url_bulk' => $CFG->wwwroot . '/mod/workflow/bulk.php?cmid=',
         'cmid' => $cmid,
@@ -110,6 +111,7 @@ if ($cap_approve) {
 
         $templatecontext = (object)[
             'requests' => array_values($requests),
+            'norequests' => array_values($requests) == [],
             'text' => 'text',
             'url' => $CFG->wwwroot . '/mod/workflow/validate.php?id=',
             'cmid' => $cm->id,
@@ -146,6 +148,7 @@ if ($cap_approve) {
 
     $templatecontext = (object)[
         'requests' => array_values($requests),
+        'norequests' => array_values($requests) == [],
         'text' => 'text',
         'url' => $CFG->wwwroot . '/mod/workflow/validate.php?id=',
         'cmid' => $cmid,

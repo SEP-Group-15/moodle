@@ -23,7 +23,7 @@
 <h4>{{workflow}} - {{activity}}</h4>
 <p>{{description}}</p>
 <table class="table discussion-list">
-    {{#requests}}
+    {{^norequests}}
     <thead>
         <tr>
             <th scope="col" class="p-l-0">
@@ -53,7 +53,7 @@
             </th>
         </tr>
     </thead>
-    {{/requests}}
+    {{/norequests}}
     <tbody>
         {{#requests}}
             <tr>
@@ -64,16 +64,16 @@
                         </a>
                     </div>
                 </th>
-                {{#workflowtype=general}}
+                {{#general}}
                 <td class="p-0 align-middle fit-content">
                 {{activity}}
                 </td>
-                {{/workflowtype=general}}
-                {{#workflowtype=activity-related}}
+                {{/general}}
+                {{#activityrelated}}
                 <td class="p-0 align-middle fit-content">
                 {{type}}
                 </td>
-                {{/workflowtype=activity-related}}
+                {{/activityrelated}}
                 <td class="p-0 align-middle fit-content">
                     {{student}}
                 </td>
@@ -96,7 +96,7 @@
     </tbody>
 </table>
 
-{{^requests}}
+{{#norequests}}
 <p>No requests yet.</p>
-{{/requests}}
+{{/norequests}}
 </div>

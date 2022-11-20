@@ -23,7 +23,7 @@
 <h4>{{workflow}} - {{activity}}</h4>
 <p>{{description}}</p>
 <table class="table discussion-list">
-    {{#requests}}
+    {{^norequests}}
     <thead>
         <tr>
             <th scope="col" class="p-l-0">
@@ -56,7 +56,7 @@
             </th>
         </tr>
     </thead>
-    {{/requests}}
+    {{/norequests}}
     <tbody>
     {{#requests}}
             <tr>
@@ -99,7 +99,7 @@
         {{/requests}}
     </tbody>
 </table>
-{{^requests}}
+{{#norequests}}
 <p>No requests yet.</p>
-{{/requests}}
+{{/norequests}}
 </div>
