@@ -124,3 +124,4 @@ class create extends moodleform
         $this->add_action_buttons();
     }
 }
+}
