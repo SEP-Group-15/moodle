@@ -94,10 +94,6 @@ class create extends moodleform
                 $types['3'] = "Other";
             }        
 
-        $types = array();
-        $types['0'] = "Deadline extension";
-        $types['1'] = "Failure to attempt";
-        $types['2'] = "Late submission";
 
         $mform->addElement('select', 'type', 'Select type', $types);
         $mform->setDefault('type', null);
