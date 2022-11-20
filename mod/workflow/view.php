@@ -76,9 +76,11 @@ if ($cap_approve) {
         'workflow' => $workflow->name,
         'activity' => $activityname,
     ];
-    echo $OUTPUT->render_from_template('mod_workflow/requests_lecturer', $templatecontext);
-    //    $table_requests = new requests($cmid);
-    //    $table_requests->out(10, true, '');
+    if(empty($requests)){
+        echo '<br><br>No requests to display<br><br>';
+    } else {
+        echo $OUTPUT->render_from_template('mod_workflow/requests_lecturer', $templatecontext);
+    }
 
 } else if ($cap_validate) {
     $workflowid = $workflow_manager->getWorkflowbyCMID($cmid)->id;
@@ -95,7 +97,11 @@ if ($cap_approve) {
             'workflow' => $workflow->name,
             'activity' => $activityname,
         ];
-        echo $OUTPUT->render_from_template('mod_workflow/requests_instructor', $templatecontext);
+        if(empty($requests)){
+            echo '<br><br>No pending requests to display<br><br>';
+        } else {
+            echo $OUTPUT->render_from_template('mod_workflow/requests_instructor', $templatecontext);
+        }
     } else {
         redirect($CFG->wwwroot . '/course/view.php?id=' . $course->id, 'You are not assigned to this workflow', null, \core\output\notification::NOTIFY_ERROR);
     }
@@ -136,7 +142,11 @@ if ($cap_approve) {
     if (!($startdate == 0 and $enddate == 0)) {
         echo $html;
     }
-    echo $OUTPUT->render_from_template('mod_workflow/requests_student', $templatecontext);
+    if(empty($requests)){
+        echo '<br><br>No previous requests to display<br><br>';
+    } else {
+        echo $OUTPUT->render_from_template('mod_workflow/requests_student', $templatecontext);
+    }
 }
 
 echo $OUTPUT->footer();

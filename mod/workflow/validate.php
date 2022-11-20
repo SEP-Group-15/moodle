@@ -62,7 +62,7 @@ if ($mform->is_cancelled()) {
     $request_manager->validate(
         $fromform->id,
         $validity[$fromform->validity],
-        $fromform->instructor_comment,
+        $fromform->instructor_comment
     );
     $workflowid = $request_manager->getRequest($fromform->id)->workflowid;
     $workflow_curr = $workflow->getWorkflow($workflowid);

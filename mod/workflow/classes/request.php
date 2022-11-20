@@ -291,7 +291,7 @@ class request
             $status[$validity],
             $lec_comment
         );
-        if ($status[$validity] === "approved") {
+        if ($status[$validity] === "approved" && $request->activity != 'other') {
 
             $this->processExtensions(
                 $request->activityid,
