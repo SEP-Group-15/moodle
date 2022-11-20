@@ -92,12 +92,12 @@ class create extends moodleform
                 $types['1'] = "Failure to attempt";
                 $types['2'] = "Late submission";
                 $types['3'] = "Other";
-            }        
-        }
+            }
 
-        $mform->addElement('select', 'type', 'Select type', $types);
-        $mform->setDefault('type', null);
-        $mform->hideIf('type', 'activityid', 'eq', null);
+            $mform->addElement('select', 'type', 'Select type', $types);
+            $mform->setDefault('type', null);
+            $mform->hideIf('type', 'activityid', 'eq', null);
+        }
 
         if ($temp_workflow->filesallowed) {
             // $mform->addElement(
