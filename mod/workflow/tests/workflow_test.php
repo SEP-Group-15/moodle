@@ -40,6 +40,7 @@ class mod_workflow_workflow_test extends advanced_testcase
         $this->assertEmpty($workflows);
 
         $name = "Test workflow";
+        $description = "Test workflow description";
         $courseid = '100';
         $activityid = "100";
         $instructorid = "200";
@@ -52,6 +53,7 @@ class mod_workflow_workflow_test extends advanced_testcase
 
         $result = $workflow->create(
             $name,
+            $description,
             $courseid,
             $activityid,
             $instructorid,
@@ -84,6 +86,7 @@ class mod_workflow_workflow_test extends advanced_testcase
         $this->assertEmpty($workflows);
 
         $name = "Test workflow";
+        $description = "Test workflow description";
         $courseid = '100';
         $activityid = "100";
         $instructorid = "200";
@@ -95,6 +98,7 @@ class mod_workflow_workflow_test extends advanced_testcase
 
         $result = $workflow->create(
             $name,
+            $description,
             $courseid,
             $activityid,
             $instructorid,

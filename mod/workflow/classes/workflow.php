@@ -29,11 +29,12 @@ use dml_exception;
 
 class workflow
 {
-    public function create($name, $courseid, $activityid, $instructorid, $startdate, $enddate, $commentsallowed, $filesallowed,$representativeid,$lecturerid)
+    public function create($name, $description, $courseid, $activityid, $instructorid, $startdate, $enddate, $commentsallowed, $filesallowed, $representativeid, $lecturerid)
     {
         global $DB;
         $record = new stdClass();
         $record->name = $name;
+        $record->description = $description;
         $record->courseid = $courseid;
         $record->activityid = $activityid;
         $record->instructorid = $instructorid;
@@ -57,24 +58,25 @@ class workflow
         $DB->delete_records_select('workflow', 'id = ?', [$id]);
     }
 
-    public function getActivityName($workflowid){
+    public function getActivityName($workflowid)
+    {
         global $DB;
         $workflow = $this->getWorkflow($workflowid);
 
-        if ($workflow->type == 'general'){
+        if ($workflow->type == 'general') {
             return 'General';
-        }else{
+        } else {
             $activityid = $workflow->activityid;
             $pure_activityid = substr($activityid, 1);
 
             $sql = 'id=:id';
             $params = [
-                'id'=>$pure_activityid
+                'id' => $pure_activityid
             ];
-            if(substr($activityid,0, 1) === 'a') {
+            if (substr($activityid, 0, 1) === 'a') {
                 $table = 'assign';
                 $name = 'name';
-            }else if (substr($activityid,0, 1) === 'q') {
+            } else if (substr($activityid, 0, 1) === 'q') {
                 $table = 'quiz';
                 $name = 'name';
             }
@@ -115,53 +117,57 @@ class workflow
         }
     }
 
-    public function getWorkflowbyCMID($cmid){
+    public function getWorkflowbyCMID($cmid)
+    {
         global $DB;
         $sql = 'id=:cmid';
         $params = [
-            'cmid'=>$cmid
+            'cmid' => $cmid
         ];
         $workflowid = $DB->get_field_select('course_modules', 'instance', $sql, $params);
         $workflow = $this->getWorkflow($workflowid);
         return $workflow;
     }
 
-    public function getRepresentativeId($workflowid){
+    public function getRepresentativeId($workflowid)
+    {
         global $DB;
 
         $sql = 'id=:id';
         $params = [
-            'id'=>$workflowid
+            'id' => $workflowid
         ];
         return $DB->get_field_select('workflow', 'representativeid', $sql, $params);
     }
 
-    public function getInstructor($workflowid){
+    public function getInstructor($workflowid)
+    {
         global $DB;
         $sql = 'id=:id';
         $params = [
-            'id'=>$workflowid
+            'id' => $workflowid
         ];
         return $DB->get_field_select('workflow', 'instructorid', $sql, $params);
     }
 
-    public function getActivityid($workflowid){
+    public function getActivityid($workflowid)
+    {
         global $DB;
         $sql = 'id=:id';
         $params = [
-            'id'=>$workflowid
+            'id' => $workflowid
         ];
         $activityid = $DB->get_field_select('workflow', 'activityid', $sql, $params);
         $type = $activityid[0];
-        $id = substr($activityid,1);
+        $id = substr($activityid, 1);
         $params = [
-            'id'=>$id
+            'id' => $id
         ];
-        if ($type == 'a'){
-            $activity_name = $DB->get_field_select('assign', 'name', $sql,$params);
-        }else{
-            $activity_name = $DB->get_field_select('quiz', 'name', $sql,$params);
+        if ($type == 'a') {
+            $activity_name = $DB->get_field_select('assign', 'name', $sql, $params);
+        } else {
+            $activity_name = $DB->get_field_select('quiz', 'name', $sql, $params);
         }
-        return array($activityid,$activity_name);
+        return array($activityid, $activity_name);
     }
 }
