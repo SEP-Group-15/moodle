@@ -108,7 +108,10 @@ if ($cap_approve) {
                 $request->activity = 'None';
             }
         }
-
+        foreach ($requests as $request) {
+            $user = $DB->get_record('user', array('id' => $request->studentid));
+            $request->student = $user->firstname . ' ' . $user->lastname;
+        }
         $templatecontext = (object)[
             'requests' => array_values($requests),
             'norequests' => array_values($requests) == [],
@@ -145,7 +148,10 @@ if ($cap_approve) {
             $request->activity = 'None';
         }
     }
-
+    foreach ($requests as $request) {
+        $user = $DB->get_record('user', array('id' => $request->studentid));
+        $request->student = $user->firstname . ' ' . $user->lastname;
+    }
     $templatecontext = (object)[
         'requests' => array_values($requests),
         'norequests' => array_values($requests) == [],
