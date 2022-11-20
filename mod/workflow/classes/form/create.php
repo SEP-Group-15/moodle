@@ -93,7 +93,7 @@ class create extends moodleform
                 $types['2'] = "Late submission";
                 $types['3'] = "Other";
             }        
-
+        }
 
         $mform->addElement('select', 'type', 'Select type', $types);
         $mform->setDefault('type', null);
@@ -123,5 +123,4 @@ class create extends moodleform
 
         $this->add_action_buttons();
     }
-}
 }
