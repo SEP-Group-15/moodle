@@ -54,6 +54,7 @@ if ($requestid) {
         "Deadline extension" => '0',
         "Failure to attempt" => '1',
         "Late submission" => '2',
+        "Other" => '3'
     ];
     $request_manager = new request();
     $request = $request_manager->getRequest($requestid);
