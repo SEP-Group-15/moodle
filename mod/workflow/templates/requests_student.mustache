@@ -1,6 +1,7 @@
 <div>
 <h4>{{workflow}} - {{activity}}</h4>
 <p>{{description}}</p>
+{{#requests}}
 <table class="table discussion-list">
     <thead>
         <tr>
@@ -35,7 +36,6 @@
         </tr>
     </thead>
     <tbody>
-        {{#requests}}
             <tr>
                 <th scope="row" class="topic p-0 align-middle">
                     <div class="p-3 p-l-0">
@@ -73,7 +73,10 @@
                   {{lecturercomment}}
               </td>
             </tr>
-        {{/requests}}
     </tbody>
 </table>
+{{/requests}}
+{{^requests}}
+<p>No requests yet.</p>
+{{/requests}}
 </div>

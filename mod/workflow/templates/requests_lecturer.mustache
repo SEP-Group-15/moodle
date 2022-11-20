@@ -24,6 +24,7 @@
 <p>{{description}}</p>
     <form name='bulk-request-handling' action="{{url_bulk}}{{cmid}}" method='POST'>
 
+        {{#requests}}
         <div>
             <table class="table discussion-list">
                 <thead>
@@ -58,7 +59,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{#requests}}
                         <tr>
                             <td class="p-0 align-middle fit-content">
                                 <input type="checkbox" id="{{id}}" name="requestid-{{id}}" value="{{id}}">
@@ -98,9 +98,9 @@
                                 {{timecreated}}
                               </td>
                             </tr>
-                            {{/requests}}
                           </tbody>
                         </table>
+                        
                         <div>
         <div class="w-50 row">
         <div class="col">
@@ -116,6 +116,10 @@
               Bulk Edit
           </button>
         </div>
+        {{/requests}}
+        <p>No requests yet.</p>
+        {{^requests}}
+        {{/requests}}
     </form>
 </div>
 
