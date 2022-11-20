@@ -79,6 +79,7 @@ if ($cap_approve) {
         'url_bulk' => $CFG->wwwroot . '/mod/workflow/bulk.php?cmid=',
         'cmid' => $cmid,
         'workflow' => $workflow->name,
+        'description' => $workflow->description,
         'activity' => $activityname,
         'workflowtype' => $workflow->type,
         'general' => $workflow->type == 'general',
@@ -118,6 +119,7 @@ if ($cap_approve) {
             'url' => $CFG->wwwroot . '/mod/workflow/validate.php?id=',
             'cmid' => $cm->id,
             'workflow' => $workflow->name,
+            'description' => $workflow->description,
             'activity' => $activityname,
             'workflowtype' => $workflow->type,
             'general' => $general,
@@ -157,6 +159,7 @@ if ($cap_approve) {
         'url' => $CFG->wwwroot . '/mod/workflow/validate.php?id=',
         'cmid' => $cmid,
         'workflow' => $workflow->name,
+        'description' => $workflow->description,
         'activity' => $activityname,
         'general' => $workflow->type == 'general',
         'activityrelated' => $workflow->type == 'activity-related',
@@ -173,6 +176,7 @@ if ($cap_approve) {
         $createurl = $CFG->wwwroot . '/mod/workflow/create.php?cmid=' . $cm->id . '&workflowid=' . $workflowid;
         echo '<a class="btn btn-primary" href="' . $createurl . '">Create New Request</a>';
     }
+
     $period = '';
     if ($startdate != 0 and $enddate != 0) {
         $period = 'from ' . date("Y-m-d, H:i:s", $startdate) . ' until ' . date("Y-m-d, H:i:s", $enddate);

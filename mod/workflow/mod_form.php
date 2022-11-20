@@ -53,6 +53,9 @@ class mod_workflow_mod_form extends moodleform_mod
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
+        $mform->addElement('textarea', 'description', "Description", 'wrap="virtual" rows="5" cols="50"');
+        $mform->setDefault('description', '');
+
         $mform->addElement('hidden', 'courseid');
         $mform->setType('courseid', PARAM_INT);
         $mform->setDefault('courseid', $courseid);
@@ -113,7 +116,7 @@ class mod_workflow_mod_form extends moodleform_mod
         $mform->setExpanded('availabilityhdr');
 
         $mform->addElement('date_time_selector', 'startdate', 'Start date', array('optional' => true));
-        
+
         $mform->addElement('date_time_selector', 'enddate', 'Due date', array('optional' => true));
 
         // Add standard elements.
