@@ -95,6 +95,14 @@ class request
                 $record->timeopen = $extended_date;
                 $record->timeclose = $extended_date + $timegap;
             }
+            
+            $record->userid = $studentid;
+    
+            try {
+                return $DB->insert_record($table, $record, false);
+            } catch (dml_exception $e) {
+                return false;
+            }
         } else if ($isbatchreq === '1') {
             if (strpos($activityid, 'a') === 0) {
                 $table = 'assign';
@@ -109,13 +117,12 @@ class request
                 $record->timeclose = $extended_date + $timegap;
 
             }
-        }
-        $record->userid = $studentid;
-
-        try {
-            return $DB->insert_record($table, $record, false);
-        } catch (dml_exception $e) {
-            return false;
+            
+            try{
+                return $DB->update_record($table,$record);
+            }catch (dml_exception $e){
+                return false;
+            }
         }
     }
 
