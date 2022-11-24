@@ -97,7 +97,6 @@ class request
             }
             
             $record->userid = $studentid;
-    
             try {
                 return $DB->insert_record($table, $record, false);
             } catch (dml_exception $e) {
@@ -117,7 +116,7 @@ class request
                 $record->timeclose = $extended_date + $timegap;
 
             }
-            
+
             try{
                 return $DB->update_record($table,$record);
             }catch (dml_exception $e){
@@ -203,6 +202,13 @@ class request
         );
     }
 
+    public function getAllPendingRequestsbyWorkflow($workflowid){
+        global $DB;
+        return $DB->get_records_select('request', 'workflowid = :workflowid and status=:status', [
+            'workflowid' => $workflowid,
+            'status' => 'pending'
+        ]);
+    }
     public function getRequestsByWorkflow($cmid)
     {
         global $DB;
@@ -253,6 +259,9 @@ class request
         global $DB;
 
         $activityid = $this->getActivityId($requestid);
+        if ($activityid === ''){
+            return 'General';
+        }
         $pure_activityid = substr($activityid, 1);
 
         $sql = 'id=:id';
@@ -298,7 +307,7 @@ class request
             $status[$validity],
             $lec_comment
         );
-        if ($status[$validity] === "approved" && $request->activity != 'other') {
+        if ($status[$validity] === "approved" && $request->activityid != '') {
 
             $this->processExtensions(
                 $request->activityid,

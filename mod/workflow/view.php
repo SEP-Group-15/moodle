@@ -63,7 +63,7 @@ if ($cap_approve) {
     $activityname = $workflow_manager->getActivityName($workflowid);
     $workflow_cur = $workflow_manager->getWorkflow($workflowid);
     if ($workflow_cur->instructorid == '0') {
-        $requests = $request_manager->getRequestsByWorkflow($workflowid);
+        $requests = $request_manager->getAllPendingRequestsbyWorkflow($workflowid);
     } else {
         $requests = $request_manager->getValidRequestsByWorkflow($workflowid);
     }

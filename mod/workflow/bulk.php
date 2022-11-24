@@ -63,10 +63,12 @@ if(empty($request_ids)) {
 }
 
 $request_manager = new request();
+$msg_handler = new message_handler();
 
 foreach ($request_ids as $id) {
     $request_manager->finalizeRequest($id, $validity, $timestamp, '');
-//            $msg_handler->send($fromform->studentid, 'Your request ' . $fromform->id . ' is ' . ucwords($status[$fromform->approval]), $cmid);
+    $request= $request_manager->getRequest($id);
+    $msg_handler->send($request->studentid, 'Your request ID:' . $id . ' is ' . ucwords($request->status), $cmid);
 }
 redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $cmid, 'Requests are approved');
 

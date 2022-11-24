@@ -56,17 +56,17 @@ class validate extends moodleform
         $radioarray[] = $mform->createElement('radio', 'isbatchrequest', '', 'Batch', 1);
         $elem_radio = $mform->addGroup($radioarray, 'isbatchrequest', 'Individual/Batch request', array(' '), false);
 
-        $types = array();
-        $types['0'] = "Deadline extension";
-        $types['1'] = "Failure to attempt";
-        $types['2'] = "Late submission";
-        $types['3'] = "Other";
-
-        $elem_type = $mform->addElement('select', 'type', 'Select type', $types);
-        $mform->setDefault('type', 0);
-
-        // $link = '/moodle/workflow_files/' . $request->files . '/' . $request->filename;
-        // $html = '<a class="" href="' . $link . '" download = "' . $link . '">' . $request->filename . '</a>';
+        if ($request->activityid !== ''){
+            $types = array();
+            $types['0'] = "Deadline extension";
+            $types['1'] = "Failure to attempt";
+            $types['2'] = "Late submission";
+            $types['3'] = "Other";
+    
+            $elem_type = $mform->addElement('select', 'type', 'Select type', $types);
+            $mform->setDefault('type', 0);
+            $elem_type->freeze();
+        }
 
         if ($request->filename != '') {
             $link = '/moodle/mod/workflow/uploads/' . $request->files . '/' . $request->filename;
@@ -76,21 +76,8 @@ class validate extends moodleform
         }
         $mform->addElement('static', 'File submission', 'File submission', $html);
 
-        // $elem_file = $mform->addElement(
-        //     'filemanager',
-        //     'files',
-        //     'File submission',
-        //     null,
-        //     array(
-        //         'subdirs' => 0, 'maxbytes' => 50, 'areamaxbytes' => 10485760, 'maxfiles' => 50,
-        //         'return_types' => 'FILE_INTERNAL' | 'FILE_EXTERNAL'
-        //     )
-        // );
-
         $elem_request->freeze();
         $elem_radio->freeze();
-        $elem_type->freeze();
-        // $elem_file->freeze();
 
         $mform->addElement('textarea', 'instructor_comment', "Comments", 'wrap="virtual" rows="5" cols="50"');
         $mform->setDefault('instructor_comment', "");

@@ -45,11 +45,8 @@ class approve extends moodleform
         $mform->addElement('hidden', 'cmid');
         $mform->setType('cmid', PARAM_INT);
 
-        //        $mform->addElement('hidden', 'studentid');
-        //        $mform->setType('studentid', PARAM_INT);
-
         $elem_request1 = $mform->addElement('textarea', 'studentid', "Student ID", 'wrap="virtual" rows="1" cols="50"');
-        $mform->setDefault('studentid', "Enter your request");
+        $mform->setDefault('studentid', "");
 
         $elem_request = $mform->addElement('textarea', 'request', "Request", 'wrap="virtual" rows="5" cols="50"');
         $mform->setDefault('request', "Enter your request");
@@ -59,14 +56,17 @@ class approve extends moodleform
         $radioarray[] = $mform->createElement('radio', 'isbatchrequest', '', 'Batch', 1);
         $elem_radio = $mform->addGroup($radioarray, 'isbatchrequest', 'Individual/Batch request', array(' '), false);
 
-        $types = array();
-        $types['0'] = "Deadline extension";
-        $types['1'] = "Failure to attempt";
-        $types['2'] = "Late submission";
-        $types['3'] = "Other";
-
-        $elem_type = $mform->addElement('select', 'type', 'Select type', $types);
-        $mform->setDefault('type', 0);
+        if ($request->activityid !== ''){
+            $types = array();
+            $types['0'] = "Deadline extension";
+            $types['1'] = "Failure to attempt";
+            $types['2'] = "Late submission";
+            $types['3'] = "Other";
+    
+            $elem_type = $mform->addElement('select', 'type', 'Select type', $types);
+            $mform->setDefault('type', 0);
+            $elem_type->freeze();
+        }
 
         if ($request->filename != '') {
             $link = '/moodle/mod/workflow/uploads/' . $request->files . '/' . $request->filename;
@@ -75,51 +75,69 @@ class approve extends moodleform
             $html = 'None';
         }
         $mform->addElement('static', 'File submission', 'File submission', $html);
+        
+        $workflowid = $request->workflowid;
+        $workflow =  $DB->get_record('workflow', ['id' => $workflowid]);
 
-        // $elem_file = $mform->addElement(
-        //     'filemanager',
-        //     'files',
-        //     'File submission',
-        //     null,
-        //     array(
-        //         'subdirs' => 0, 'maxbytes' => 50, 'areamaxbytes' => 10485760, 'maxfiles' => 50,
-        //         'return_types' => 'FILE_INTERNAL' | 'FILE_EXTERNAL'
-        //     )
-        // );
+        if ($workflow->instructorid !== '0'){
+            $elem_instructor_comment = $mform->addElement('textarea', 'instructorcomment', "Comments by instructor", 'wrap="virtual" rows="5" cols="50"');
+            $mform->setDefault('instructorcomment', "Enter comments regarding request");
+            $elem_instructor_comment->freeze();
+        }
 
-        $elem_instructor_comment = $mform->addElement('textarea', 'instructorcomment', "Comments by instructor", 'wrap="virtual" rows="5" cols="50"');
-        $mform->setDefault('instructorcomment', "Enter comments regarding request");
+        if ($request->activityid === ''){
+            if ($workflow->instructorid !== '0'){
+                $validity = array();
+                $validity['0'] = "Valid";
+                $validity['1'] = "Reject";
+        
+                $elem_validty = $mform->addElement('select', 'validity', 'Validity', $validity);
+                $mform->setDefault('validity', 0);
+                $elem_validty->freeze();
+            }
+            $elem_lec_comment = $mform->addElement('textarea', 'lec_comment', "Feedback", 'wrap="virtual" rows="5" cols="50"');
+            $mform->setDefault('lec_comment', "");
+            $buttonarray = array();
+            $buttonarray[] = $mform->createElement('submit', 'submitbutton', "Submit");
+            $buttonarray[] = $mform->createElement('cancel');
+            $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
 
-        $validity = array();
-        $validity['0'] = "Valid";
-        $validity['1'] = "Reject";
+            $mform->addElement('hidden', 'approval');
+            $mform->setType('approval', PARAM_INT);
+            $mform->setDefault('approval', 0);
 
-        $elem_validty = $mform->addElement('select', 'validity', 'Validity', $validity);
-        $mform->setDefault('validity', 0);
-
+        }else{
+            if ($workflow->instructorid !== '0'){
+                $validity = array();
+                $validity['0'] = "Valid";
+                $validity['1'] = "Reject";
+        
+                $elem_validty = $mform->addElement('select', 'validity', 'Validity', $validity);
+                $mform->setDefault('validity', 0);
+                $elem_validty->freeze();
+            }
+            
+            $elem_lec_comment = $mform->addElement('textarea', 'lec_comment', "Feedback", 'wrap="virtual" rows="5" cols="50"');
+            $mform->setDefault('lec_comment', "");
+            
+            $mform->addElement('date_time_selector', 'extended_date', "Extend due date to");
+            
+            $buttonarray = array();
+            $buttonarray[] = $mform->createElement('submit', 'submitbutton', "Submit");
+            $buttonarray[] = $mform->createElement('cancel');
+            
+            $validity = array();
+            $validity['0'] = "Approve";
+            $validity['1'] = "Reject";
+            
+            $elem_approval = $mform->addElement('select', 'approval', '', $validity);
+            $mform->setDefault('approval', 0);
+            $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
+        }
+        
         $elem_request1->freeze();
         $elem_request->freeze();
         $elem_radio->freeze();
-        $elem_type->freeze();
         // $elem_file->freeze();
-        $elem_validty->freeze();
-        $elem_instructor_comment->freeze();
-
-        $elem_lec_comment = $mform->addElement('textarea', 'lec_comment', "Feedback", 'wrap="virtual" rows="5" cols="50"');
-        $mform->setDefault('lec_comment', "");
-
-        $mform->addElement('date_time_selector', 'extended_date', "Extend due date to");
-
-        $buttonarray = array();
-        $buttonarray[] = $mform->createElement('submit', 'submitbutton', "Submit");
-        $buttonarray[] = $mform->createElement('cancel');
-
-        $validity = array();
-        $validity['0'] = "Approve";
-        $validity['1'] = "Reject";
-
-        $elem_approval = $mform->addElement('select', 'approval', '', $validity);
-        $mform->setDefault('approval', 0);
-        $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
     }
 }

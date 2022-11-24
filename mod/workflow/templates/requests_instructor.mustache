@@ -27,6 +27,9 @@
     <thead>
         <tr>
             <th scope="col" class="p-l-0">
+                <a href="" aria-label="">ID</a>
+            </th>
+            <th scope="col" class="p-l-0">
                 <a href="" aria-label="">Request</a>
             </th>
             {{#general}}
@@ -51,12 +54,18 @@
             <th scope="col" class="p-l-0">
                 <a href="" aria-label="">Time Created</a>
             </th>
+            <th scope="col" class="p-l-0">
+                <a href="" aria-label="">Feedback</a>
+            </th>
         </tr>
     </thead>
     {{/norequests}}
     <tbody>
         {{#requests}}
             <tr>
+                <td class="p-0 align-middle fit-content">
+                    {{id}}
+                </td>    
                 <th scope="row" class="topic p-0 align-middle">
                     <div class="p-3 p-l-0">
                         <a class="w-100 h-100 d-block" href="{{url}}{{id}}&cmid={{cmid}}" title="Request 1" aria-label="Request 1">
@@ -90,6 +99,9 @@
                 </td>
                 <td class="p-0 align-middle fit-content">
                     {{timecreated}}
+                </td>
+                <td class="p-0 align-middle fit-content">
+                    {{instructorcomment}}
                 </td>
             </tr>
             {{/requests}}

@@ -64,7 +64,7 @@ class workflow
         $workflow = $this->getWorkflow($workflowid);
 
         if ($workflow->type == 'general') {
-            return 'General';
+            return 'None';
         } else {
             $activityid = $workflow->activityid;
             $pure_activityid = substr($activityid, 1);
