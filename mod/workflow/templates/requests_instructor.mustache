@@ -20,7 +20,7 @@
 }}
 
 <div>
-<h4>{{workflow}} - {{activity}}</h4>
+<h4>{{workflow}}{{#activityrelated}} - {{activity}}{{/activityrelated}}</h4>
 <p>{{description}}</p>
 <table class="table discussion-list">
     {{^norequests}}
@@ -97,6 +97,6 @@
 </table>
 
 {{#norequests}}
-<p>No requests yet.</p>
+<p>No requests.</p>
 {{/norequests}}
 </div>
