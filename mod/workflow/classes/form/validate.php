@@ -54,7 +54,7 @@ class validate extends moodleform
         $radioarray = array();
         $radioarray[] = $mform->createElement('radio', 'isbatchrequest', '', 'Individual', 0);
         $radioarray[] = $mform->createElement('radio', 'isbatchrequest', '', 'Batch', 1);
-        $elem_radio = $mform->addGroup($radioarray, 'isbatchrequest', 'Batch/ Individual request', array(' '), false);
+        $elem_radio = $mform->addGroup($radioarray, 'isbatchrequest', 'Individual/Batch request', array(' '), false);
 
         $types = array();
         $types['0'] = "Deadline extension";

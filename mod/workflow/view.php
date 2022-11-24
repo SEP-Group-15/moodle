@@ -174,7 +174,7 @@ if ($cap_approve) {
         ($startdate <= $now and $enddate == 0)
     ) {
         $createurl = $CFG->wwwroot . '/mod/workflow/create.php?cmid=' . $cm->id . '&workflowid=' . $workflowid;
-        echo '<a class="btn btn-primary" href="' . $createurl . '">Create New Request</a>';
+        echo '<a class="btn btn-primary" href="' . $createurl . '">Create New Request</a><br><br>';
     }
 
     $period = '';
@@ -185,7 +185,7 @@ if ($cap_approve) {
     } else if ($startdate != 0 and $enddate == 0) {
         $period = 'from ' . date("Y-m-d, H:i:s", $startdate);
     }
-    $html = '<br><br>Requests are accepted ' . $period . '<br><br>';
+    $html = 'Requests are accepted ' . $period . '<br><br>';
     if (!($startdate == 0 and $enddate == 0)) {
         echo $html;
     }
