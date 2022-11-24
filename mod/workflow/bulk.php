@@ -70,7 +70,11 @@ foreach ($request_ids as $id) {
     $request= $request_manager->getRequest($id);
     $msg_handler->send($request->studentid, 'Your request ID:' . $id . ' is ' . ucwords($request->status), $cmid);
 }
-redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $cmid, 'Requests are approved');
+$status = array();
+$status['0'] = "approved";
+$status['1'] = "rejected";
+
+redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $cmid, 'Requests are '.$status[$validity]);
 
  echo $OUTPUT->header();
  $mform->display();

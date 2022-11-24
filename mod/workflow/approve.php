@@ -80,7 +80,7 @@ if ($mform->is_cancelled()) {
     $request_manager->finalizeRequest($fromform->id, $fromform->approval, $fromform->extended_date, $fromform->lec_comment);
     $msg_handler->send($fromform->studentid, 'Your request ' . $fromform->id . ' is ' . ucwords($status[$fromform->approval]), $cmid);
 
-    redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $fromform->cmid, 'Request is approved');
+    redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $fromform->cmid, 'Request is '.ucwords($status[$fromform->approval]));
 }
 
 echo $OUTPUT->header();
