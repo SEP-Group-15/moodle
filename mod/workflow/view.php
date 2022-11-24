@@ -27,7 +27,6 @@ use mod_workflow\workflow;
 use mod_workflow\table\requests;
 
 
-// require('../../config.php');
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/course/format/lib.php');
 require_login();
@@ -56,7 +55,6 @@ $request_manager = new request();
 $workflow_manager = new workflow();
 $requests = $request_manager->getAllRequests();
 $cmid = $cm->id;
-
 
 if ($cap_approve) {
     $workflowid = $workflow_manager->getWorkflowbyCMID($cmid)->id;
@@ -122,7 +120,7 @@ if ($cap_approve) {
             'description' => $workflow->description,
             'activity' => $activityname,
             'workflowtype' => $workflow->type,
-            'general' => $general,
+            'general' => $workflow->type == 'general',
             'activityrelated' => $workflow->type == 'activity-related',
         ];
         echo $OUTPUT->render_from_template('mod_workflow/requests_instructor', $templatecontext);

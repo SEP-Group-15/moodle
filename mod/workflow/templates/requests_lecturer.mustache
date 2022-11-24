@@ -20,7 +20,7 @@
 }}
 
 <div>
-<h4>{{workflow}} - {{activity}}</h4>
+<h4>{{workflow}}{{#activityrelated}} - {{activity}}{{/activityrelated}}</h4>
 <p>{{description}}</p>
     <form name='bulk-request-handling' action="{{url_bulk}}{{cmid}}" method='POST'>
 
@@ -126,7 +126,7 @@
         </div>
         {{/norequests}}
         {{#norequests}}
-        <p>No requests yet.</p>
+        <p>No requests.</p>
         {{/norequests}}
     </form>
 </div>
