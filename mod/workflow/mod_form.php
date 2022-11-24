@@ -39,7 +39,12 @@ class mod_workflow_mod_form extends moodleform_mod
     public function definition()
     {
         global $DB, $USER;
-        $courseid = optional_param('course', true, PARAM_INT);
+        $courseid = optional_param('course', false, PARAM_INT);
+        if (!$courseid) {
+            $id = optional_param('update', true, PARAM_INT);
+            [$course, $cm] = get_course_and_cm_from_cmid($id, 'workflow');
+            $courseid = $course->id;
+        }
         $context = context_course::instance($courseid);
 
         $mform = $this->_form;
@@ -69,7 +74,6 @@ class mod_workflow_mod_form extends moodleform_mod
         $typearray[] = $mform->createElement('radio', 'type', 'Activity-related (Assignments, Quizzes)', null, 'activity-related');
         $mform->setDefault('type', 'general');
         $mform->addGroup($typearray, null, 'Type');
-        // $mform->addElement('advcheckbox', 'type', 'General', 'Yes');
 
         $quizzes = $DB->get_records_select('quiz', 'course = ' . $courseid);
         $assignments = $DB->get_records_select('assign', 'course = ' . $courseid);
@@ -105,12 +109,7 @@ class mod_workflow_mod_form extends moodleform_mod
         $mform->addElement('select', 'representativeid', 'Representative', $students);
         $mform->setDefault('representative', null);
 
-        // $mform->addElement('header', 'optionshdr', 'Options');
-        // $mform->setExpanded('optionshdr');
-
         $mform->addElement('advcheckbox', 'filesallowed', 'File submissions', 'Allow');
-
-        // $mform->addElement('advcheckbox', 'commentsallowed', 'Comments', 'Allow');
 
         $mform->addElement('header', 'availabilityhdr', 'Availability');
         $mform->setExpanded('availabilityhdr');
