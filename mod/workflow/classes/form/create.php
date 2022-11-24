@@ -60,7 +60,7 @@ class create extends moodleform
             $radioarray = array();
             $radioarray[] = $mform->createElement('radio', 'isbatchrequest', '', 'Individual', 0);
             $radioarray[] = $mform->createElement('radio', 'isbatchrequest', '', 'Batch', 1);
-            $mform->addGroup($radioarray, 'isbatchrequest', 'Batch/ Individual request', array(' '), false);
+            $mform->addGroup($radioarray, 'isbatchrequest', 'Individual/Batch request', array(' '), false);
         } else {
             $mform->addElement('hidden', 'isbatchrequest');
             $mform->setType('isbatchrequest', PARAM_INT);
