@@ -26,7 +26,6 @@ namespace mod_workflow\form;
 
 use moodleform;
 
-//moodleform is defined in formslib.php
 require_once("$CFG->libdir/formslib.php");
 
 class validate extends moodleform
@@ -37,7 +36,7 @@ class validate extends moodleform
         $requestid = required_param('id', PARAM_INT);
         $request = $DB->get_record('request', ['id' => $requestid]);
 
-        $mform = $this->_form; // Don't forget the underscore!
+        $mform = $this->_form;
 
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
@@ -56,13 +55,13 @@ class validate extends moodleform
         $radioarray[] = $mform->createElement('radio', 'isbatchrequest', '', 'Batch', 1);
         $elem_radio = $mform->addGroup($radioarray, 'isbatchrequest', 'Individual/Batch request', array(' '), false);
 
-        if ($request->activityid !== ''){
+        if ($request->activityid !== '') {
             $types = array();
             $types['0'] = "Deadline extension";
             $types['1'] = "Failure to attempt";
             $types['2'] = "Late submission";
             $types['3'] = "Other";
-    
+
             $elem_type = $mform->addElement('select', 'type', 'Select type', $types);
             $mform->setDefault('type', 0);
             $elem_type->freeze();

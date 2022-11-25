@@ -27,9 +27,8 @@ use mod_workflow\request;
 use mod_workflow\workflow;
 use mod_workflow\message_handler;
 
-require_once(__DIR__ . '/../../config.php'); // setup moodle
+require_once(__DIR__ . '/../../config.php');
 require_login();
-// require_capability('local/workflow:validaterequests',$context);
 
 global $DB;
 
@@ -71,7 +70,7 @@ if ($mform->is_cancelled()) {
     if ($validity[$fromform->validity] == "valid") {
         $msg_handler->send($workflow_curr->lecturerid, $lec_msg, $cmid);
     }
-    redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $fromform->cmid, 'Request is '.$validity[$fromform->validity]);
+    redirect($CFG->wwwroot . '/mod/workflow/view.php?id=' . $fromform->cmid, 'Request is ' . $validity[$fromform->validity]);
 }
 
 if ($id) {

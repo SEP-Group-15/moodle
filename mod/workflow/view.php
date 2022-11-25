@@ -83,6 +83,7 @@ if ($cap_approve) {
         'workflowtype' => $workflow->type,
         'general' => $workflow->type == 'general',
         'activityrelated' => $workflow->type == 'activity-related',
+        'noinstructor' => $workflow->instructorid == '0',
     ];
     echo $OUTPUT->render_from_template('mod_workflow/requests_lecturer', $templatecontext);
 } else if ($cap_validate) {
@@ -161,6 +162,7 @@ if ($cap_approve) {
         'activity' => $activityname,
         'general' => $workflow->type == 'general',
         'activityrelated' => $workflow->type == 'activity-related',
+        'noinstructor' => $workflow->instructorid == '0',
     ];
     $workflow_curr = $workflow_manager->getWorkflow($workflowid);
     $now = time();

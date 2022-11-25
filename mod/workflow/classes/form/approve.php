@@ -26,7 +26,6 @@ namespace mod_workflow\form;
 
 use moodleform;
 
-//moodleform is defined in formslib.php
 require_once("$CFG->libdir/formslib.php");
 
 class approve extends moodleform
@@ -37,7 +36,7 @@ class approve extends moodleform
         $requestid = required_param('id', PARAM_INT);
         $request = $DB->get_record('request', ['id' => $requestid]);
 
-        $mform = $this->_form; // Don't forget the underscore!
+        $mform = $this->_form;
 
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
@@ -56,13 +55,13 @@ class approve extends moodleform
         $radioarray[] = $mform->createElement('radio', 'isbatchrequest', '', 'Batch', 1);
         $elem_radio = $mform->addGroup($radioarray, 'isbatchrequest', 'Individual/Batch request', array(' '), false);
 
-        if ($request->activityid !== ''){
+        if ($request->activityid !== '') {
             $types = array();
             $types['0'] = "Deadline extension";
             $types['1'] = "Failure to attempt";
             $types['2'] = "Late submission";
             $types['3'] = "Other";
-    
+
             $elem_type = $mform->addElement('select', 'type', 'Select type', $types);
             $mform->setDefault('type', 0);
             $elem_type->freeze();
@@ -75,22 +74,22 @@ class approve extends moodleform
             $html = 'None';
         }
         $mform->addElement('static', 'File submission', 'File submission', $html);
-        
+
         $workflowid = $request->workflowid;
         $workflow =  $DB->get_record('workflow', ['id' => $workflowid]);
 
-        if ($workflow->instructorid !== '0'){
+        if ($workflow->instructorid !== '0') {
             $elem_instructor_comment = $mform->addElement('textarea', 'instructorcomment', "Comments by instructor", 'wrap="virtual" rows="5" cols="50"');
             $mform->setDefault('instructorcomment', "Enter comments regarding request");
             $elem_instructor_comment->freeze();
         }
 
-        if ($request->activityid === ''){
-            if ($workflow->instructorid !== '0'){
+        if ($request->activityid === '') {
+            if ($workflow->instructorid !== '0') {
                 $validity = array();
                 $validity['0'] = "Valid";
                 $validity['1'] = "Reject";
-        
+
                 $elem_validty = $mform->addElement('select', 'validity', 'Validity', $validity);
                 $mform->setDefault('validity', 0);
                 $elem_validty->freeze();
@@ -105,39 +104,37 @@ class approve extends moodleform
             $mform->addElement('hidden', 'approval');
             $mform->setType('approval', PARAM_INT);
             $mform->setDefault('approval', 0);
-
-        }else{
-            if ($workflow->instructorid !== '0'){
+        } else {
+            if ($workflow->instructorid !== '0') {
                 $validity = array();
                 $validity['0'] = "Valid";
                 $validity['1'] = "Reject";
-        
+
                 $elem_validty = $mform->addElement('select', 'validity', 'Validity', $validity);
                 $mform->setDefault('validity', 0);
                 $elem_validty->freeze();
             }
-            
+
             $elem_lec_comment = $mform->addElement('textarea', 'lec_comment', "Feedback", 'wrap="virtual" rows="5" cols="50"');
             $mform->setDefault('lec_comment', "");
-            
+
             $mform->addElement('date_time_selector', 'extended_date', "Extend due date to");
-            
+
             $buttonarray = array();
             $buttonarray[] = $mform->createElement('submit', 'submitbutton', "Submit");
             $buttonarray[] = $mform->createElement('cancel');
-            
+
             $validity = array();
             $validity['0'] = "Approve";
             $validity['1'] = "Reject";
-            
+
             $elem_approval = $mform->addElement('select', 'approval', '', $validity);
             $mform->setDefault('approval', 0);
             $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
         }
-        
+
         $elem_request1->freeze();
         $elem_request->freeze();
         $elem_radio->freeze();
-        // $elem_file->freeze();
     }
 }

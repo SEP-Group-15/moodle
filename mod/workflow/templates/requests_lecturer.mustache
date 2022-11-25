@@ -58,6 +58,12 @@
                         </th>
                         <th scope="col" class="p-l-0">
                             <a href="" aria-label="">Time Created</a>
+                        </th>
+                        {{^noinstructor}}
+                        <th scope="col" class="p-l-0">
+                          <a href="" aria-label="">Instructor Feedback</a>
+                        </th>
+                        {{/noinstructor}}
                     </tr>
                 </thead>
                 {{/norequests}}
@@ -104,6 +110,11 @@
                               <td class="p-0 align-middle fit-content">
                                 {{timecreated}}
                               </td>
+                              {{^noinstructor}}
+                              <td class="p-0 align-middle fit-content">
+                                {{instructorcomment}}
+                              </td>
+                              {{/noinstructor}}
                             </tr>
                             {{/requests}}
                           </tbody>

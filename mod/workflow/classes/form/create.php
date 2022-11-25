@@ -26,7 +26,6 @@ namespace mod_workflow\form;
 
 use moodleform;
 
-//moodleform is defined in formslib.php
 require_once("$CFG->libdir/formslib.php");
 
 use mod_workflow\workflow;
@@ -37,7 +36,7 @@ class create extends moodleform
     {
         global $SESSION, $USER, $DB;
 
-        $mform = $this->_form; // Don't forget the underscore!
+        $mform = $this->_form;
 
         $workflow = new workflow();
         $representativeid = $workflow->getRepresentativeId($SESSION->workflowid);
@@ -100,14 +99,6 @@ class create extends moodleform
         }
 
         if ($temp_workflow->filesallowed) {
-            // $mform->addElement(
-            //     'filemanager',
-            //     'files',
-            //     'File submission',
-            //     null,
-            //     array('subdirs' => 1, 'maxfiles' => 1, 'accepted_types' => '*')
-            // );
-
             $mform->addElement(
                 'filepicker',
                 'files',
